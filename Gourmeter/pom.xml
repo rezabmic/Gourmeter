@@ -12,6 +12,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.hibernate.version>4.1.7.Final</org.hibernate.version>        
     </properties>
     
     <dependencies>
@@ -21,6 +22,72 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Driver pro PostgreSQL, pokud pouzivate jinou databazi, tak jej vymente -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
+        </dependency>        
+        
+        <!-- Connection pool -->            
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency> 
+        
+        <!-- AspectJ  -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.6.12</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- AOP dependency -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2</version>
+        </dependency>        
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>jdbc-stdext</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.0.1B</version>
+        </dependency> 
+        
+        
+        <!-- 
+            ********************************************************************************************************************************************************
+            *  HIBERNATE - START (http://docs.jboss.org/hibernate/core/4.0/quickstart/en-US/html/hibernate-gsg-obtain.html#hibernate-gsg-setup-mavenRepoArtifacts) * 
+            ********************************************************************************************************************************************************
+        -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${org.hibernate.version}</version>
+        </dependency>           
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId> 
+            <version>5.1.0.Final</version>
+        </dependency>
+        <!-- HIBERNATE - END -->
+        
+        
     </dependencies>
 
     <build>
@@ -72,5 +139,24 @@
             </plugin>
         </plugins>
     </build>
-
+    <repositories>
+        <repository>
+            <id>javarepo</id>
+            <name>Repository for java stanadard dependencies</name>
+            <layout>default</layout>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+        
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+        
+        <repository>
+            <id>org.springframework.security.taglibs.facelets</id>
+            <url>http://spring-security-facelets-taglib.googlecode.com/svn/repo/</url>
+        </repository>
+    </repositories>
 </project>
