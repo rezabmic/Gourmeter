@@ -17,8 +17,9 @@ public class AbstractBusinessObject implements Serializable
     @Id
     @GeneratedValue(generator = "system-sequence")
     @GenericGenerator(name="system-sequence", strategy = "sequence")
-    protected Long id;
-
+    protected Long id;    
+    
+    //GETTERS & SETTERS
     public Long getId() {
         return id;
     }

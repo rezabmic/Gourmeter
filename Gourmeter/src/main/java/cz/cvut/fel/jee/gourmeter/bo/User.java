@@ -3,7 +3,7 @@ package cz.cvut.fel.jee.gourmeter.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -20,7 +20,7 @@ public class User extends AbstractBusinessObject
     String passwdHash;
     @Column(nullable = true)    
     String fullName;
-    @OneToMany            
+    @ManyToOne            
     UserRole userRole;
     
     //GETTER & SETTER
@@ -55,4 +55,5 @@ public class User extends AbstractBusinessObject
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
+
 }
