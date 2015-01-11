@@ -5,7 +5,7 @@
 
 	<groupId>cz.cvut.fel.jee</groupId>
 	<artifactId>Gourmeter</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>war</packaging>
 
 	<name>Gourmeter</name>
@@ -150,6 +150,25 @@
 	</dependencies>
 
 	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+			<testResource> <!-- Copy context and properties files in order to be available for tests -->
+				<directory>src/main/webapp</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/properties/*.properties</include>
+				</includes>
+			</testResource>
+		</testResources>
+
+		<!-- Maven will append the version to the finalName -->
+		<!-- (Which is the name given to the generated war, and hence the context 
+			root) -->
+		<finalName>${project.artifactId}</finalName>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
