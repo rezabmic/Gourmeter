@@ -1,36 +1,48 @@
-
 package cz.cvut.fel.jee.gourmeter.bo;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author Jan Šrogl
  */
-public class UserRole extends AbstractBusinessObject
-{
-    @Column(nullable = false)
-    String name;
-    @OneToMany(mappedBy = "userRole")
-    Set<User> users;
+@Entity
+@Table(name = "user_role")
+public class UserRole extends AbstractBusinessObject {
+	
+	private static final long serialVersionUID = 1L;
 
-    //GETTER & SETTER
-    public String getName() {
-        return name;
-    }
+	@NotNull
+	@Column
+	private String name;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@OneToMany(mappedBy = "userRole")
+	private List<User> users;
 
-    public Set<User> getUsers() {
-        return users;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<User> getUsers() {
+		if (users == null) {
+			users = new ArrayList<>();
+		}
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 
 }

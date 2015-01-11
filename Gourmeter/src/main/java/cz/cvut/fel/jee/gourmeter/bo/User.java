@@ -1,59 +1,64 @@
-
 package cz.cvut.fel.jee.gourmeter.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author Jan Šrogl
  */
 @Entity
-@Table(name = "Users")
-public class User extends AbstractBusinessObject
-{
-    @Column(nullable = false)
-    String login;
-    @Column(nullable = false)    
-    String passwdHash;
-    @Column(nullable = true)    
-    String fullName;
-    @ManyToOne            
-    UserRole userRole;
-    
-    //GETTER & SETTER
-    public String getLogin() {
-        return login;
-    }
+@Table(name = "users")
+public class User extends AbstractBusinessObject {
+	private static final long serialVersionUID = 1L;
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
+	@NotNull
+	@Column
+	private String login;
 
-    public String getPasswdHash() {
-        return passwdHash;
-    }
+	@Column
+	private String passwdHash;
 
-    public void setPasswdHash(String passwdHash) {
-        this.passwdHash = passwdHash;
-    }
+	@NotNull
+	@Column
+	private String fullName;
 
-    public String getFullName() {
-        return fullName;
-    }
+	@ManyToOne
+	private UserRole userRole;
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+	public String getLogin() {
+		return login;
+	}
 
-    public UserRole getUserRole() {
-        return userRole;
-    }
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
+	public String getPasswdHash() {
+		return passwdHash;
+	}
+
+	public void setPasswdHash(String passwdHash) {
+		this.passwdHash = passwdHash;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public UserRole getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}
 
 }

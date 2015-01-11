@@ -1,53 +1,83 @@
-
 package cz.cvut.fel.jee.gourmeter.bo;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author Jan Šrogl
  */
 @Entity
-public class CateringFacility extends AbstractBusinessObject
-{
-    @Column(nullable = false)
-    String name;
-    @Column(nullable = true)
-    String popis;
-    @ManyToOne
-    Category category;
-    @Column(nullable = false)    
-    String url;
-    @Column(nullable = false)
-    String city;
-    @Column(nullable = true)
-    String cityDistrict;
-    @Column(nullable = false)    
-    String coordinates;
-    @ManyToOne    
-    User creator;
-    @Column(nullable = false)    
-    Boolean additionConfirmed;
-    @Column(nullable = false)    
-    Date dateOfConfirmation;
-    @OneToMany
-    Set<Tag> tags;
-    @Column(nullable = true)    
-    Date menuFrom;
-    @Column(nullable = true)    
-    Date menuTo;
-    @Column(nullable = true)    
-    String menuUrl;    
+@Table(name = "catering_facility")
+public class CateringFacility extends AbstractBusinessObject {
+	private static final long serialVersionUID = 1L;
+
+	@NotNull
+	@Column(nullable = false)
+	private String name;
+
+	@Column(nullable = true)
+	private String description;
+
+	@Column(nullable = false)
+	private String url;
+
+	@Column(nullable = false)
+	private String city;
+
+	@Column(nullable = true)
+	private String cityDistrict;
+
+	@Column(nullable = false)
+	private String coordinates;
+
+	@Column(nullable = false)
+	private Boolean additionConfirmed;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date dateOfConfirmation;
+
+	@Temporal(TemporalType.TIME)
+	@Column(nullable = true)
+	private Date menuFrom;
+
+	@Temporal(TemporalType.TIME)
+	@Column(nullable = true)
+	private Date menuTo;
+
+	@Column(nullable = true)
+	private String menuUrl;
+
+	@ManyToOne
+	private Category category;
+
+	@ManyToOne
+	private User creator;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<OpeningHours> openingHours;
+
+    @ManyToMany
+    @JoinTable(name = "catering_facility_tags", 
+    		   joinColumns = @JoinColumn(name = "facility_id"),
+    		   inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tag> tags;
     
-    @OneToMany
-    Set<OpeningHours> openingHours;
-    
-    //GETTERS & SETTERS
     public String getName() {
         return name;
     }
@@ -56,15 +86,15 @@ public class CateringFacility extends AbstractBusinessObject
         this.name = name;
     }
 
-    public String getPopis() {
-        return popis;
-    }
+    public String getDescription() {
+		return description;
+	}
 
-    public void setPopis(String popis) {
-        this.popis = popis;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public Category getCategory() {
+	public Category getCategory() {
         return category;
     }
 
@@ -128,14 +158,6 @@ public class CateringFacility extends AbstractBusinessObject
         this.dateOfConfirmation = dateOfConfirmation;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
     public Date getMenuFrom() {
         return menuFrom;
     }
@@ -160,12 +182,26 @@ public class CateringFacility extends AbstractBusinessObject
         this.menuUrl = menuUrl;
     }
 
-    public Set<OpeningHours> getOpeningHours() {
-        return openingHours;
-    }
+	public List<OpeningHours> getOpeningHours() {
+		if (openingHours == null) {
+			openingHours = new ArrayList<>();
+		}
+		return openingHours;
+	}
 
-    public void setOpeningHours(Set<OpeningHours> openingHours) {
-        this.openingHours = openingHours;
-    }
-    
+	public void setOpeningHours(List<OpeningHours> openingHours) {
+		this.openingHours = openingHours;
+	}
+
+	public List<Tag> getTags() {
+		if (tags == null) {
+			tags = new ArrayList<>();
+		}
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
 }

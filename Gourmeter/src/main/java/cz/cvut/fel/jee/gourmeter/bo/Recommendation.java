@@ -1,57 +1,62 @@
-
 package cz.cvut.fel.jee.gourmeter.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Jan Šrogl
  */
 @Entity
-public class Recommendation extends AbstractBusinessObject
-{
-    @ManyToOne
-    Tag tag;
-    @ManyToOne
-    CateringFacility cateringFacility;
-    @ManyToOne
-    User user;    
-    @Column(nullable = false)
-    Boolean recommended;
+@Table(name = "recommendation")
+public class Recommendation extends AbstractBusinessObject {
 
-    //GETTERS & SETTERS
-    public Tag getTag() {
-        return tag;
-    }
+	private static final long serialVersionUID = 1L;
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
-    }
+	@Column(nullable = false)
+	private Boolean recommended;
 
-    public CateringFacility getCateringFacility() {
-        return cateringFacility;
-    }
+	@ManyToOne
+	private Tag tag;
 
-    public void setCateringFacility(CateringFacility cateringFacility) {
-        this.cateringFacility = cateringFacility;
-    }
+	@ManyToOne
+	private CateringFacility cateringFacility;
 
-    public User getUser() {
-        return user;
-    }
+	@ManyToOne
+	private User user;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public Tag getTag() {
+		return tag;
+	}
 
-    public Boolean getRecommended() {
-        return recommended;
-    }
+	public void setTag(Tag tag) {
+		this.tag = tag;
+	}
 
-    public void setRecommended(Boolean recommended) {
-        this.recommended = recommended;
-    }
+	public CateringFacility getCateringFacility() {
+		return cateringFacility;
+	}
+
+	public void setCateringFacility(CateringFacility cateringFacility) {
+		this.cateringFacility = cateringFacility;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Boolean getRecommended() {
+		return recommended;
+	}
+
+	public void setRecommended(Boolean recommended) {
+		this.recommended = recommended;
+	}
 
 }

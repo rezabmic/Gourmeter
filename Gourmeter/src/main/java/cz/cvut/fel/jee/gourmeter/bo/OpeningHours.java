@@ -1,79 +1,92 @@
-
 package cz.cvut.fel.jee.gourmeter.bo;
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author Jan Šrogl
  */
 @Entity
-public class OpeningHours extends AbstractBusinessObject
-{
-    @Column(nullable = false)
-    short dayNum;
-    @Column(nullable = false)    
-    Date timeFrom;
-    @Column(nullable = false)
-    Date timeTo;
-    @Column(nullable = true)
-    Date breakFrom;
-    @Column(nullable = true)
-    Date breakTo;
-    
-    @ManyToOne
-    CateringFacility facility;
-    
-    //GETTERS & SETTERS
-    public short getDayNum() {
-        return dayNum;
-    }
+@Table(name = "opening_hours")
+public class OpeningHours extends AbstractBusinessObject {
 
-    public void setDayNum(short dayNum) {
-        this.dayNum = dayNum;
-    }
+	private static final long serialVersionUID = 1L;
 
-    public Date getTimeFrom() {
-        return timeFrom;
-    }
+	@Column(nullable = false)
+	private short dayNum;
 
-    public void setTimeFrom(Date timeFrom) {
-        this.timeFrom = timeFrom;
-    }
+	@Temporal(TemporalType.TIME)
+	@Column(nullable = false)
+	private Date timeFrom;
 
-    public Date getTimeTo() {
-        return timeTo;
-    }
+	@Temporal(TemporalType.TIME)
+	@Column(nullable = false)
+	private Date timeTo;
 
-    public void setTimeTo(Date timeTo) {
-        this.timeTo = timeTo;
-    }
+	@Temporal(TemporalType.TIME)
+	@Column(nullable = true)
+	private Date breakFrom;
 
-    public Date getBreakFrom() {
-        return breakFrom;
-    }
+	@Temporal(TemporalType.TIME)
+	@Column(nullable = true)
+	private Date breakTo;
 
-    public void setBreakFrom(Date breakFrom) {
-        this.breakFrom = breakFrom;
-    }
+	@ManyToOne
+	private CateringFacility facility;
 
-    public Date getBreakTo() {
-        return breakTo;
-    }
+	public short getDayNum() {
+		return dayNum;
+	}
 
-    public void setBreakTo(Date breakTo) {
-        this.breakTo = breakTo;
-    }
+	public void setDayNum(short dayNum) {
+		this.dayNum = dayNum;
+	}
 
-    public CateringFacility getFacility() {
-        return facility;
-    }
+	public Date getTimeFrom() {
+		return timeFrom;
+	}
 
-    public void setFacility(CateringFacility facility) {
-        this.facility = facility;
-    }
+	public void setTimeFrom(Date timeFrom) {
+		this.timeFrom = timeFrom;
+	}
+
+	public Date getTimeTo() {
+		return timeTo;
+	}
+
+	public void setTimeTo(Date timeTo) {
+		this.timeTo = timeTo;
+	}
+
+	public Date getBreakFrom() {
+		return breakFrom;
+	}
+
+	public void setBreakFrom(Date breakFrom) {
+		this.breakFrom = breakFrom;
+	}
+
+	public Date getBreakTo() {
+		return breakTo;
+	}
+
+	public void setBreakTo(Date breakTo) {
+		this.breakTo = breakTo;
+	}
+
+	public CateringFacility getFacility() {
+		return facility;
+	}
+
+	public void setFacility(CateringFacility facility) {
+		this.facility = facility;
+	}
 
 }
