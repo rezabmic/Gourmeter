@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,7 +25,20 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "catering_facility")
+@NamedQueries({
+		@NamedQuery(
+					name = "CateringFacility.findByCoordinates",
+					query = "SELECT e FROM CateringFacility e "
+							+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
+							+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin"),
+		@NamedQuery(
+					name = "CateringFacility.findByCoordinatesAndTag",
+					query = "SELECT e FROM CateringFacility e "
+							+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
+							+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin "
+							+ "AND :tag MEMBER OF e.tags") })
 public class CateringFacility extends AbstractBusinessObject {
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
@@ -42,8 +57,8 @@ public class CateringFacility extends AbstractBusinessObject {
 	@Column(nullable = true)
 	private String cityDistrict;
 
-	@Column(nullable = false)
-	private String coordinates;
+	@Column(nullable = true)
+	private String menuUrl;
 
 	@Column(nullable = false)
 	private Boolean additionConfirmed;
@@ -60,8 +75,11 @@ public class CateringFacility extends AbstractBusinessObject {
 	@Column(nullable = true)
 	private Date menuTo;
 
-	@Column(nullable = true)
-	private String menuUrl;
+	@Column(name = "latitude")
+	private double latitude;
+
+	@Column(name = "longitude")
+	private double longitude;
 
 	@ManyToOne
 	private Category category;
@@ -72,21 +90,21 @@ public class CateringFacility extends AbstractBusinessObject {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<OpeningHours> openingHours;
 
-    @ManyToMany
-    @JoinTable(name = "catering_facility_tags", 
-    		   joinColumns = @JoinColumn(name = "facility_id"),
-    		   inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> tags;
-    
-    public String getName() {
-        return name;
-    }
+	@ManyToMany
+	@JoinTable(name = "catering_facility_tags",
+				joinColumns = @JoinColumn(name = "facility_id"),
+				inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private List<Tag> tags;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getDescription() {
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
 		return description;
 	}
 
@@ -95,92 +113,84 @@ public class CateringFacility extends AbstractBusinessObject {
 	}
 
 	public Category getCategory() {
-        return category;
-    }
+		return category;
+	}
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    public String getCityDistrict() {
-        return cityDistrict;
-    }
+	public String getCityDistrict() {
+		return cityDistrict;
+	}
 
-    public void setCityDistrict(String cityDistrict) {
-        this.cityDistrict = cityDistrict;
-    }
+	public void setCityDistrict(String cityDistrict) {
+		this.cityDistrict = cityDistrict;
+	}
 
-    public String getCoordinates() {
-        return coordinates;
-    }
+	public User getCreator() {
+		return creator;
+	}
 
-    public void setCoordinates(String coordinates) {
-        this.coordinates = coordinates;
-    }
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
 
-    public User getCreator() {
-        return creator;
-    }
+	public Boolean getAdditionConfirmed() {
+		return additionConfirmed;
+	}
 
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
+	public void setAdditionConfirmed(Boolean additionConfirmed) {
+		this.additionConfirmed = additionConfirmed;
+	}
 
-    public Boolean getAdditionConfirmed() {
-        return additionConfirmed;
-    }
+	public Date getDateOfConfirmation() {
+		return dateOfConfirmation;
+	}
 
-    public void setAdditionConfirmed(Boolean additionConfirmed) {
-        this.additionConfirmed = additionConfirmed;
-    }
+	public void setDateOfConfirmation(Date dateOfConfirmation) {
+		this.dateOfConfirmation = dateOfConfirmation;
+	}
 
-    public Date getDateOfConfirmation() {
-        return dateOfConfirmation;
-    }
+	public Date getMenuFrom() {
+		return menuFrom;
+	}
 
-    public void setDateOfConfirmation(Date dateOfConfirmation) {
-        this.dateOfConfirmation = dateOfConfirmation;
-    }
+	public void setMenuFrom(Date menuFrom) {
+		this.menuFrom = menuFrom;
+	}
 
-    public Date getMenuFrom() {
-        return menuFrom;
-    }
+	public Date getMenuTo() {
+		return menuTo;
+	}
 
-    public void setMenuFrom(Date menuFrom) {
-        this.menuFrom = menuFrom;
-    }
+	public void setMenuTo(Date menuTo) {
+		this.menuTo = menuTo;
+	}
 
-    public Date getMenuTo() {
-        return menuTo;
-    }
+	public String getMenuUrl() {
+		return menuUrl;
+	}
 
-    public void setMenuTo(Date menuTo) {
-        this.menuTo = menuTo;
-    }
-
-    public String getMenuUrl() {
-        return menuUrl;
-    }
-
-    public void setMenuUrl(String menuUrl) {
-        this.menuUrl = menuUrl;
-    }
+	public void setMenuUrl(String menuUrl) {
+		this.menuUrl = menuUrl;
+	}
 
 	public List<OpeningHours> getOpeningHours() {
 		if (openingHours == null) {
@@ -202,6 +212,22 @@ public class CateringFacility extends AbstractBusinessObject {
 
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 }
