@@ -2,6 +2,7 @@ package cz.cvut.fel.jee.gourmeter.ejb;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -9,6 +10,7 @@ import javax.persistence.TypedQuery;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 
+@Stateless
 public class DataSessionBean implements DataSessionLocal {
 
 	@PersistenceContext
