@@ -64,7 +64,7 @@ public class CateringFacility extends AbstractBusinessObject {
 	private Boolean additionConfirmed;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Date dateOfConfirmation;
 
 	@Temporal(TemporalType.TIME)

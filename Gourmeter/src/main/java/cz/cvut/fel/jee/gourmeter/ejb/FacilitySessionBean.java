@@ -29,7 +29,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	 */
 	private static final double DEFAULT_SEARCH_RADIUS_KM = 3;
 
-	@PersistenceContext
+	@PersistenceContext(unitName = "GourmeterPU")
 	private EntityManager em;
 
 	@EJB
@@ -70,7 +70,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
 				longitude, kmCircle);
 		return dao.findFacilitiesByGPSAndTag(csw, tag);
-	}
+	} 
 
 	private CoordinateSearchWrapper getCoordinatesWrapper(double latitude,
 															double longitude,
