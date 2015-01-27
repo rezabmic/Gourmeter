@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
+<html ng-app="app">
+<head>
+<meta charset="UTF-8">
+<!-- Bootstrap -->
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="resources/css/style.css" rel="stylesheet">
+<title>jee project</title>
+
+</head>
+<body>
+
+	<div id="wrapper">
+		<section id="top">
+			<h1>Gourmeter</h1>
+			<nav>
+				<ul>
+					<li><a href="#/index">Přidat stravovací zařízení</a></li>
+					<li><a href="#/map">Mapa</a></li>
+				</ul>
+			</nav>
+		</section>
+
+		<section id="content" ng-view></section>
+		<!-- ng-view directive includes content of a proper page.
+		Proper page is choosen based on routing rules -->
+	</div>
+
+
+
+	<script type="text/javascript" src="resources/js/angular.min.js"></script>
+	<script type="text/javascript" src="resources/js/angular-route.min.js"></script>
+	<script type="text/javascript" src="resources/js/ui-bootstrap-tpls-0.12.0.min.js"></script>
+	<script type="text/javascript" src="resources/js/app.js"></script>
+	<script type="text/javascript" src="resources/js/controllers.js"></script>
+	<script src="resources/js/lodash.js"></script>
+	<script src="resources/js/angular-google-maps.js"></script>
+	<script type="text/javascript"
+		src="https://maps.googleapis.com/maps/api/js"></script>
+
+</body>
 </html>

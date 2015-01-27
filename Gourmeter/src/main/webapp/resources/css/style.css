@@ -1,0 +1,33 @@
+div#wrapper {
+	padding: 40px;
+	width: 60%;
+}
+
+.nav, .pagination, .carousel, .panel-title a {
+	cursor: pointer;
+}
+
+.inline {
+	display: inline;
+}
+
+table#hours>tbody>tr>td {
+	padding-right: 20px;
+}
+
+#days label {
+	padding-right: 10px;
+}
+
+#address td {
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+
+.angular-google-map-container {
+	height: 550px;
+}
+
+table#reviews td {
+	padding-right: 10px;
+}
