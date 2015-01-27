@@ -15,7 +15,7 @@
 		<javaee7.web.spec.version>1.0.1.Final</javaee7.web.spec.version>
 		<wildfly.version>8.1.0.Final</wildfly.version>
 		<org.hibernate.version>4.3.5.Final</org.hibernate.version>
-		<org.infinispan.version>7.0.0.Final</org.infinispan.version>
+		<infinispan.version>7.0.3.Final</infinispan.version>
 	</properties>
 
 	<dependencyManagement>
