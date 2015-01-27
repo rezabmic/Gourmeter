@@ -18,10 +18,10 @@ public class User extends AbstractBusinessObject {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	@Column
+	@Column(name= "login")
 	private String login;
 
-	@Column
+	@Column(name= "passwd_hash")
 	private String passwdHash;
 
 	@NotNull
