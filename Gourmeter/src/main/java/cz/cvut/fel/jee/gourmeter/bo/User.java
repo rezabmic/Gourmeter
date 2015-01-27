@@ -6,6 +6,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Email;
+
 /**
  *
  * @author Jan Šrogl
@@ -23,8 +25,15 @@ public class User extends AbstractBusinessObject {
 	private String passwdHash;
 
 	@NotNull
-	@Column
+	@Column(name = "full_name")
 	private String fullName;
+
+	@Email
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "city")
+	private String city;
 
 	@ManyToOne
 	private UserRole userRole;

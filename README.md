@@ -14,5 +14,5 @@ Wildfly jako takovy nema ve vychozim stavu instalovany zadny jdbc connector, pro
 	
 	
 ## Konfigurace Arquillianu
-Jako testovaci framework pouzivame Arquillian. Pro spravne spousteni testu je potreba nastavit umisteni aplikacniho serveru (WildFly 8). To se nachazi v souboru **test/resources/arquillian.xml** a v elementu **jbossHome**. Arquillian je nastaven tak, aby se chytnul beziciho Wildfly 8.2. Proto pokud buildujete projekt bez prepinace -DskipTests=true, pustetne pred buildem Wildfly
+Jako testovaci framework pouzivame Arquillian. Pro spravne spousteni testu je potreba nastavit umisteni aplikacniho serveru (WildFly 8). To se nachazi v souboru **test/resources/arquillian.xml** a v elementu **jbossHome**. Arquillian je nastaven tak, aby se chytnul beziciho Wildfly 8.2. Proto pokud buildujete projekt bez prepinace -DskipTests=true, spustte pred buildem Wildfly.
 

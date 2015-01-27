@@ -1,0 +1,24 @@
+MAPA
+	1) poslat default stred mapy a zarizeni v okruhu
+	2) pohnuti mapou - vratit stred, rozptyl zarizeni v okruhu
+	
+DTO	
+	- vytvorit specifikaci
+REST
+	- definovat metody 
+		- vyhledavani atd.
+		- schvalovani zarizeni testerem (zabezpeceni pro roli tester)
+
+Inifinispan
+	- konfigurace, pro zacatek 2nd level cache
+
+JMS
+	- at to posila maily
+
+Concurency a Batching API
+	- UC1: vyhledavani duplikaci
+	- UC2: vytvaret doporuceni nebo oznacit zarizeni treba jak hnus
+	- UC3: posilani mailu testerum, at vyrazi do nove restaurace
+
+Business objekty
+	- user + email a mesto
