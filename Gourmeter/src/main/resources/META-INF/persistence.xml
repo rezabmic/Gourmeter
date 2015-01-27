@@ -8,6 +8,17 @@
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
+			
+			<!-- INFINISPAN as 2nd level cache of Hibernate -->
+			<!-- enable 2nd level cache -->
+			<property name="hibernate.cache.use_second_level_cache" value="true" />
+			<property name="hibernate.cache.use_query_cache" value="true" />
+			
+			<!-- Infinispan cache config -->
+			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.infinispan.JndiInfinispanRegionFactory" />
+			<property name="hibernate.cache.infinispan.cachemanager" value="java:CacheManager" />
+			
+			<!-- END INFINISPAN as 2nd level cache of Hibernate -->
 		</properties>
 	</persistence-unit>
 </persistence>
