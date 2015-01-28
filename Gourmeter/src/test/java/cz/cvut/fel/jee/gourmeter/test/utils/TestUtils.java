@@ -4,12 +4,17 @@ import java.util.Date;
 
 import javax.persistence.EntityManager;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+
 import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 
 public class TestUtils {
 
+	private static final String TEST_STREET = "test_street";
+	private static final String TEST_HOUSE_NUMBER = "test_house_number";
 	public static final int TEST_LATITUDE = 45;
 	public static final int TEST_LONGITUDE = 10;
 	public static final String TEST_URL = "http://google.com";
@@ -51,6 +56,8 @@ public class TestUtils {
 		cf.setDateOfConfirmation(TEST_INSTANT);
 		cf.setCategory(createCategory(em));
 		cf.setCity(TEST_CITY);
+		cf.setStreet(TEST_STREET);
+		cf.setHouseNumber(TEST_HOUSE_NUMBER);
 		cf.setCityDistrict(TEST_CITY_DISTRICT);
 		cf.setCreator(null); // TODO
 		cf.setDateOfConfirmation(null); // TODO

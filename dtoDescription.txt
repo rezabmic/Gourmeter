@@ -33,6 +33,11 @@ CateringFacilityDTO
           from : ,
           to : 
      }
+     address : {
+	city :
+	street:
+	cp: 	
+     }
      openingHours: [openingHourDTO,...],
 }
 

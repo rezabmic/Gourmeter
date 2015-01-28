@@ -26,17 +26,13 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "catering_facility")
 @NamedQueries({
-		@NamedQuery(
-					name = "CateringFacility.findByCoordinates",
-					query = "SELECT e FROM CateringFacility e "
-							+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
-							+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin"),
-		@NamedQuery(
-					name = "CateringFacility.findByCoordinatesAndTag",
-					query = "SELECT e FROM CateringFacility e "
-							+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
-							+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin "
-							+ "AND :tag MEMBER OF e.tags") })
+		@NamedQuery(name = "CateringFacility.findByCoordinates", query = "SELECT e FROM CateringFacility e "
+				+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
+				+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin"),
+		@NamedQuery(name = "CateringFacility.findByCoordinatesAndTag", query = "SELECT e FROM CateringFacility e "
+				+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
+				+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin "
+				+ "AND :tag MEMBER OF e.tags") })
 public class CateringFacility extends AbstractBusinessObject {
 
 	private static final long serialVersionUID = 1L;
@@ -53,6 +49,12 @@ public class CateringFacility extends AbstractBusinessObject {
 
 	@Column(nullable = false)
 	private String city;
+
+	@Column(name = "street", nullable = false)
+	private String street;
+
+	@Column(name = "house_number", nullable = false)
+	private String houseNumber;
 
 	@Column(nullable = true)
 	private String cityDistrict;
@@ -90,10 +92,14 @@ public class CateringFacility extends AbstractBusinessObject {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<OpeningHours> openingHours;
 
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Recommendation> recommendations;
+
 	@ManyToMany
-	@JoinTable(name = "catering_facility_tags",
-				joinColumns = @JoinColumn(name = "facility_id"),
-				inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	@JoinTable(name = "catering_facility_tags", 
+				joinColumns = @JoinColumn(name = "facility_id"), 
+				inverseJoinColumns = @JoinColumn(name = "tag_id")
+	)
 	private List<Tag> tags;
 
 	public String getName() {
@@ -210,6 +216,17 @@ public class CateringFacility extends AbstractBusinessObject {
 		return tags;
 	}
 
+	public List<Recommendation> getRecommendations() {
+		if (recommendations == null) {
+			recommendations = new ArrayList<>();
+		}
+		return recommendations;
+	}
+
+	public void setRecommendations(List<Recommendation> recommendations) {
+		this.recommendations = recommendations;
+	}
+
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
@@ -228,6 +245,22 @@ public class CateringFacility extends AbstractBusinessObject {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
 	}
 
 }

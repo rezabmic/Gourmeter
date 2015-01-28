@@ -177,16 +177,22 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
-		
+
 		<!-- INFINISPAN -->
-		
+
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-embedded</artifactId>
 			<version>${infinispan.version}</version>
 		</dependency>
-		
+
 		<!-- END INFINISPAN -->
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.7</version>
+		</dependency>
 
 
 	</dependencies>

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 
 @Local
 public interface FacilitySessionLocal {
@@ -20,5 +21,7 @@ public interface FacilitySessionLocal {
 														double longitude,
 														double kilometerSearchDistance,
 														long tagId);
+	
+	public void createNewFacility(CateringFacilityDTO dto, Long userId);
 
 }
