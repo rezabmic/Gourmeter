@@ -27,8 +27,9 @@ import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 @Stateless
 public class FacilitySessionBean implements FacilitySessionLocal {
 
-	private static final Logger log = LoggerFactory.getLogger(FacilitySessionBean.class);
-	
+	private static final Logger log = LoggerFactory
+			.getLogger(FacilitySessionBean.class);
+
 	/**
 	 * Conversion ratio for kilometer to coordinate degree. TODO check this
 	 * value
@@ -85,6 +86,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 
 	@Override
 	public void createNewFacility(CateringFacilityDTO dto, Long userId) {
+		if (dto == null || dto.getAddress() == null) {
+			throw new IllegalArgumentException("Wrong dto format."); // nasrat
+		}
 		DateFormat df = new SimpleDateFormat("hh:mm");
 
 		CateringFacility f = new CateringFacility();
@@ -98,7 +102,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		try {
 			f.setMenuFrom(df.parse(dto.getMenu().getFrom()));
 			f.setMenuTo(df.parse(dto.getMenu().getTo()));
-		} catch (ParseException e) {
+		} catch (ParseException | NullPointerException e) {
 			log.warn(e.getMessage());
 		}
 		f.setMenuUrl(dto.getUrl()); // TODO
@@ -107,16 +111,24 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		f.setUrl(dto.getUrl());
 
 		f.setCategory(null); // TODO
-		f.setCreator(em.find(User.class, userId));
+		User creator = em.find(User.class, userId);
+		if (creator == null) {
+			log.warn("Catering facility creator not found");
+		}
+		f.setCreator(creator);
+		setOpeningHours(dto.getOpeningHours(), df, f);
+		setTags(dto.getTags(), f);
 
-		setOpeningHours(dto, df, f);
-		setTags(dto, f);
-		
 		em.persist(f);
 	}
 
-	private void setTags(CateringFacilityDTO dto, CateringFacility f) {
-		for (TagDTO t : dto.getTags()) {
+	private void setTags(List<TagDTO> tags, CateringFacility f) {
+		if (tags == null || tags.isEmpty()) {
+			log.warn("Empty tags.");
+			return;
+		}
+		
+		for (TagDTO t : tags) {
 			TypedQuery<Tag> q = em.createNamedQuery("Tag.findByName", Tag.class);
 			q.setParameter("name", t.getName());
 			Tag tag = null;
@@ -128,15 +140,20 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				tag.setCategory(null); // TODO
 				em.persist(tag);
 			}
-			
+
 			f.getTags().add(tag);
 		}
 	}
 
-	private void setOpeningHours(	CateringFacilityDTO dto,
+	private void setOpeningHours(	List<OpeningHoursDTO> openingHours,
 									DateFormat df,
 									CateringFacility f) {
-		for (OpeningHoursDTO ohDto : dto.getOpeningHours()) {
+		if (openingHours == null || openingHours.isEmpty()) {
+			log.warn("Empty opening hours.");
+			return;
+		}
+		
+		for (OpeningHoursDTO ohDto : openingHours) {
 			for (Day day : ohDto.getDays()) {
 				// for all open days
 				if (day.getSelected()) {
@@ -149,14 +166,15 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 						log.warn(e.getMessage());
 						continue;
 					}
-					
+
 					try {
 						oh.setBreakFrom(df.parse(ohDto.getBreakFrom()));
 						oh.setBreakTo(df.parse(ohDto.getBreakTo()));
 					} catch (ParseException | NullPointerException e) {
-						log.warn("createNewFacility: opening breaks : " + e.getMessage());
+						log.warn("createNewFacility: opening breaks : "
+								+ e.getMessage());
 					}
-					
+
 					oh.setDayNum(day.getDayNum());
 					oh.setFacility(f);
 					f.getOpeningHours().add(oh);

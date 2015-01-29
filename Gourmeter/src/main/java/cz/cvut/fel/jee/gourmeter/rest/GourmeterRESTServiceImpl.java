@@ -12,7 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Application;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -45,7 +45,8 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@POST
 	@Path("/cateringFacility")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNewFacility(CateringFacilityDTO facility, Long userId) {
+	public Response createNewFacility(	CateringFacilityDTO facility,
+										@QueryParam("userId") Long userId) {
 		try {
 			facilitySession.createNewFacility(facility, userId);
 		} catch (Exception e) {
@@ -75,11 +76,13 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@Override
 	@GET
-	@Path("/cateringFacility")
+	@Path("/cateringFacility/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public CateringFacilityDTO getFacilityById(@PathParam("id") Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		CateringFacilityDTO cf = new CateringFacilityDTO();
+		cf.setTitle("test");
+		cf.setDescription("dobry den");
+		return cf;
 	}
 
 	@Override
