@@ -5,9 +5,12 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -24,7 +27,7 @@ import cz.cvut.fel.jee.gourmeter.exception.SignInException;
 
 @Path("")
 @ApplicationScoped
-public class GourmeterRESTServiceImpl extends Application implements GourmeterRESTService {
+public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@Inject
 	private FacilitySessionLocal facilitySession;
@@ -39,6 +42,9 @@ public class GourmeterRESTServiceImpl extends Application implements GourmeterRE
 		return "testovaci metoda!!!";
 	}
 
+	@POST
+	@Path("/cateringFacility")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewFacility(CateringFacilityDTO facility, Long userId) {
 		try {
 			facilitySession.createNewFacility(facility, userId);
@@ -68,7 +74,10 @@ public class GourmeterRESTServiceImpl extends Application implements GourmeterRE
 	}
 
 	@Override
-	public CateringFacilityDTO getFacilityById(Long id) {
+	@GET
+	@Path("/cateringFacility")
+	@Produces(MediaType.APPLICATION_JSON)
+	public CateringFacilityDTO getFacilityById(@PathParam("id") Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -107,6 +116,9 @@ public class GourmeterRESTServiceImpl extends Application implements GourmeterRE
 	}
 
 	@Override
+	@GET
+	@Path("/category/all")
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<CategoryDTO> getAllCategories() {
 		// TODO Auto-generated method stub
 		return null;
