@@ -5,6 +5,8 @@ MarkerDTO
      id: ,
      title : '',
      category: '',
+     url : '',
+     description : '',
      latitude: ,
      longitude: ,
      tags: [{
@@ -17,10 +19,6 @@ MarkerDTO
              recommended : ,
              reviewed: 
      }],
-     url : '',
-     description : '',
-     latitude: ,
-     longitude: ,
      menu: {
           from : ,
           to : ,
@@ -34,13 +32,11 @@ CateringFacilityDTO
      id: ,
      title : '',
      category: '',
-     latitude: ,
-     longitude: ,
-     tags : ['','',...],
      url : '',
      description : '',
      latitude: ,
      longitude: ,
+     tags : ['','',...],
      menu: {
           from : ,
           to : ,
