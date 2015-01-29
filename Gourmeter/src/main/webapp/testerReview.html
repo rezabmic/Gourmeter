@@ -1,7 +1,7 @@
 ﻿
-<h2>Přidat stravovací zařízení</h2>
+<h2>Upravit stravovací zařízení</h2>
 
-<form name="addForm" ng-controller="MainController as main"
+<form name="addForm" ng-controller="EditCateringFacilityController as editCFCtrl"
 	ng-submit="addForm.$valid && main.submit()" novalidate>
 
 	<div class="form-group">
@@ -136,7 +136,10 @@
 				id="menuUrl" class="form-control" ng-model="cateringFacility.menu.url">
 		</fieldset>
 	</div>
+	
+	<div>
+		<button type="submit" class="btn-default" ng-click="">Zamítnout</button>
+		<button type="submit" class="btn-primary" ng-click="">Doporučit</button>
+	</div>
 
-	<button type="submit" class="btn-primary" ng-click="main.submit()">Přidat stravovací
-		zařízení</button>
 </form>

@@ -1,0 +1,27 @@
+﻿<div ng-controller="TesterController as testerCtrl">
+	<div ng-repeat="catFacility in testerCtrl.cateringFacilities">
+		<h3>{{catFacility.title}}</h3>
+		<p>{{catFacility.description}}</p>
+		<table class="paddingRight">
+			<tbody>
+				<tr>
+					<td>Tagy:</td>
+					<td><span class="tag" ng-repeat="tag in catFacility.tags">{{tag}}</span></td>
+				</tr>
+				<tr>
+					<td>Url:</td>
+					<td><a href="#">{{catFacility.url}}</a></td>
+				</tr>
+				<tr>
+					<td>Menu:</td>
+					<td ng-controller="MenuController as menuCtrl">{{menuCtrl.menuToString(catFacility.menu)}}</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div>
+			<a href="#/cateringFacilities/{{catFacility.id}}">Posoudit</a>
+		</div>
+	</div>
+
+</div>

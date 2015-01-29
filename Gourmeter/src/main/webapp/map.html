@@ -1,29 +1,46 @@
 ﻿<script id="window.tpl.html" type="text/ng-template">
-<div ng-controller="WindowController" ng-init="showPlaceDetails(parameter)">
-    <strong>{{selected.cateringFacility.name}} | {{selected.cateringFacility.type}}</strong>
+<div class="infoWindow">
+
+    <strong>{{parameter.title}} | {{parameter.category}}</strong>
 	
-	<table id="reviews">
+	<div id="info">
+		<p>{{parameter.description}}</p>
+		<a href="#">{{parameter.url}}</a>
+	</div>
+
+	<div>
+		<table class="paddingRight">
 			<thead>
 				<tr>
-				<td>Název</td> <td>Hodnocení</td>
+					<td>Název</td>
+					<td>Hodnocení</td>
 				</tr>
 			</thead>
 			<tbody>	
-				<tr ng-repeat="tag in selected.cateringFacility.tags">
-				<td>{{tag.name}}</td><td>{{tag.recommended}} / {{tag.reviewed}}</td>
+				<tr ng-repeat="tag in parameter.tags">
+					<td>{{tag.name}}</td>
+					<td>{{tag.recommended}} / {{tag.reviewed}}</td>
+				</tr>
 			</tbody>
 		</table>
+	</div>
 
-	<p>This is an info window at {{ selected.latitude | number:4 }}, {{
-		selected.longitude | number:4 }}!</p>
+	<div id="menu" ng-controller="MenuController as menuCtrl">
+		<strong>Denní menu</strong>
+		<ul>
+			<li>{{menuCtrl.menuToString(parameter.menu)}}</li>
+			<li ng-if="parameter.menu"><a href="#">{{parameter.menu.url}}</a></li>
+		</ul>
+	</div>		
 </div>
-</script>
+</script>	
+
 
 <div ng-controller="MapController as mapCtrl">
 
-	<ui-gmap-google-map center='map.center' zoom='map.zoom'>
+	<ui-gmap-google-map center="map.center" zoom="map.zoom" events="map.events">
 		
-		<ui-gmap-markers models='map.markers' coords="'self'" click="'onClicked'">		 
+		<ui-gmap-markers models="map.markers" coords="'self'" click="'onClicked'">		 
 		</ui-gmap-markers>
 		
 		<ui-gmap-window coords="selected" id="selected.id" closeClick="selected.closeClick()" options="selected.options" templateUrl="'window.tpl.html'" templateParameter="selected" ng-cloak>

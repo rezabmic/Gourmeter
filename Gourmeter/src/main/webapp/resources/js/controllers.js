@@ -1,88 +1,166 @@
 (function() {
-	var appControllers = angular.module("appControllers", ['uiGmapgoogle-maps']);
+	var appControllers = angular.module("appControllers", ['uiGmapgoogle-maps', 'appServices']);
+	
+	appControllers.controller('MenuController', ['$scope', '$filter', function($scope, $filter){
+		this.menuToString = function(menu){
+			if(menu === null){
+				return "Restaurace nemá denní menu";
+			} else{
+				
+				return "Od " + $filter('date')(menu.from,"HH:mm") + " Do " +  $filter('date')(menu.to,"HH:mm"); 
+			}
+		}	
+	}]);
+	
+	appControllers.controller("EditCateringFacilityController", ["$scope", "$http", '$routeParams', function($scope, $http, $routeParams) {
 
-	appControllers.controller('WindowController', function ($scope) {
-		$scope.selected = {};
-		$scope.showPlaceDetails = function(param) {
-			$scope.selected = param;
-		}
-	})
+		$scope.catFacilityId = $routeParams.catFacilityId;
+		
+		$scope.cateringFacility = {
+		    	 id: 1,
+			     title : 'Pražská pivnice',
+			     category: 'Restaurace',
+			     tags : ['česká kuchyně', 'regionální kuchyně'],
+			     url : 'www.prazska-pivnice.cz',
+			     description : 'Skvělé pivo a tlačenka.',
+			     latitude: 50.101500,
+				 longitude: 14.390791,
+			     menu: null,
+			     openingHours: [],
+		};
+		
+	}]);
+	
+	appControllers.controller("TesterController", ["$scope", "$http", function($scope, $http) {
+		var t1 = new Date();
+	    t1.setHours( 10 );
+	    t1.setMinutes( 0 );
+	    var t2 = new Date();
+	    t2.setHours( 14 );
+	    t2.setMinutes( 0 );
+		
+		this.cateringFacilities = [
+		     {
+		    	 id: 1,
+			     title : 'Pražská pivnice',
+			     category: 'Restaurace',
+			     tags : ['česká kuchyně', 'regionální kuchyně'],
+			     url : 'www.prazska-pivnice.cz',
+			     description : 'Skvělé pivo a tlačenka.',
+			     latitude: 50.101500,
+				 longitude: 14.390791,
+			     menu: null,
+			     openingHours: [],
+		     },
+		     {	
+		    	 id: 2,
+		    	 title : 'U studny',
+			     category: 'Restaurace',
+			     tags : ['česká kuchyně', 'regionální kuchyně'],
+			     url : 'www.ustudny.cz',
+			     description : 'Skvělé regionální pokrmy.',
+			     latitude: 50.101500,
+				 longitude: 14.390791,
+			     menu: {
+			          from : t1,
+			          to : t2,
+			          url : 'www.ustudny.cz/denni-menu.html'
+			     },
+			     openingHours: []
+		     }];
+	}]);
 	
 	appControllers.controller("MapController", ["$scope", "$http", function($scope, $http) {
 		$scope.selected = {
 				 options : {visible : false},
 				 
 			 };
-		
+		var t1 = new Date();
+	    t1.setHours( 10 );
+	    t1.setMinutes( 0 );
+	    var t2 = new Date();
+	    t2.setHours( 14 );
+	    t2.setMinutes( 0 );
+	    
 		$scope.map = { 
 				center: { latitude: 50.101500, longitude: 14.390791}, 
 				zoom: 15,
+				events : {
+				     bounds_changed: function(map){
+				    	 var bounds = map.getBounds();
+				    	 var ne = bounds.getNorthEast();
+				    	 var sw = bounds.getSouthWest(); 
+				     } 
+				},
 				markers: [
-				 {
-					 id: 1,
-					 latitude: 50.101500,
-					 longitude: 14.390791,
-					 cateringFacility: {
-						 name: 'U studny',
-						 type: 'Restaurace',
-						 tags: [{
-								name: 'česká kuchyně',
-								recommended : 10,
-								reviewed: 15
-							 },
-							 {
-								name: 'regionální kuchyně',
-								recommended : 8,
-								reviewed: 10
-							 }],
-					}
-				 },
-				 {
-					 id: 2,
-					 latitude: 50.102246,
-					 longitude: 14.392576,
-					 cateringFacility: {
-						 name: 'Pražská pivnice',
-						 type: 'Hospoda',
-						 tags: [{
-							name: 'česká kuchyně',
-							recommended : 10,
-							reviewed: 15
-						 },
-						 {
-							name: 'regionální kuchyně',
-							recommended : 8,
-							reviewed: 10
-						 }]
-					 }
-				 }]};
+				{
+					id: 1,
+					latitude: 50.101500,
+					longitude: 14.390791,
+					title: 'U studny',
+					description : 'Skvělé pivo a tlačenka.',
+					category: 'Restaurace',
+					url : 'www.ustudny.cz',
+					tags: [{
+						name: 'česká kuchyně',
+						recommended : 10,
+						reviewed: 15
+					},
+					{
+						name: 'regionální kuchyně',
+						recommended : 8,
+						reviewed: 10
+					}],
+					menu: {
+						from : t1,
+					    to : t2,
+					    url : 'www.ustudny.cz/denni-menu.html'
+					},
+					openingHours: []
+				},
+				{
+					id: 2,
+					latitude: 50.102246,
+					longitude: 14.392576,
+					title: 'Pražská pivnice',
+					description : 'Skvělé regionální pokrmy.',
+					category: 'Hospoda',
+					url : 'www.prazska-pivnice.cz',
+					tags: [{
+						name: 'česká kuchyně',
+						recommended : 10,
+						reviewed: 15
+					},
+					{
+						name: 'regionální kuchyně',
+						recommended : 8,
+						reviewed: 10
+					}],
+					menu: null,
+					 openingHours: []
+				}
+				]};
 		
 		_.each($scope.map.markers, function (marker) {
-			marker.options = {visible : false, pixelOffset: new google.maps.Size(-1, -25, 'px', 'px')};
+			marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
 			marker.closeClick = function () {
 				$scope.selected.options.visible = false;
 				//marker.options.visible = false;
 				return $scope.$apply();	
 			};
 			marker.onClicked = function () {
-				var v = $scope.selected;
-				var m = marker;
 				$scope.selected = marker;
 				$scope.selected.options.visible = true;
 				return $scope.$apply();
 			};
-			});
+		});
 	}]);
 	
-	appControllers.controller("MainController", ["$scope", "$http", function($scope, $http) {
-		this.categories = ['hlavní jídlo', 'rychlé občerstvení', 'potraviny'];
-		
-		//ajax request
-		//$http.get('url').success(function(data) {
-		//	this.categories = data;
-		//});
-		
-		
+	appControllers.controller("CategoriesController", [ 'Categories', function(Categories) {
+		this.categories = Categories();
+	}]);
+	
+	appControllers.controller("MainController", ["$scope", "$http", 'Categories', function($scope, $http, Categories) {
 		var menuFrom = new Date();
 	    menuFrom.setHours( 10 );
 	    menuFrom.setMinutes( 0 );
@@ -93,6 +171,7 @@
 		
 		$scope.cateringFacility = {
 			title : '',
+			category : '',
 			tags : [],
 			url : '',
 			description : '',
@@ -101,18 +180,22 @@
 				street: '',
 				cp : ''
 			},
-			menuFrom : menuFrom,
-			menuTo : menuTo
+			menu : {
+				from: menuFrom,
+				to : menuTo,
+				url : '',
+			}
 		};
 		
 		this.submit = function() {
-			this.cateringFacility = {};
+			var cf = $scope.cateringFacility;
+			
 		}
 	}]);
 	
-	appControllers.controller("TagController", ["$scope", function($scope) {
-		this.tags = ['menu','česká kuchyně','mezinárodní kuchyně', 'regionální kuchyně', 'grilované pokrmy', 'vegetariánské pokrmy'];
-		
+	appControllers.controller("TagController", ["$scope", 'Tags', function($scope, Tags) {
+		this.tags = Tags($scope.cateringFacility.category);
+
 		this.toggleSelection = function toggleSelection(tag) {
 		    var idx = $scope.cateringFacility.tags.indexOf(tag);
 		
@@ -128,8 +211,8 @@
 		};
 	}]);
 	
-	appControllers.controller("OpeningHoursController", function() {
-		this.days = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek',  'Pátek', 'Sobota', 'Neděle'];
+	appControllers.controller("OpeningHoursController", ["$scope", 'Days', function($scope, Days) {
+		this.days = Days();
 		
 		var t1 = new Date();
 	    t1.setHours( 8 );
@@ -149,7 +232,7 @@
 	    
 	    var id = 0;
 	    
-		this.openingHours = [{
+	    $scope.cateringFacility.openingHours = [{
 			id : id,
 			time1 : t1,
 			time2 : t2,
@@ -223,13 +306,13 @@
 		this.toggleSelection = function(day, openingHourID) {
 			day.selected = !day.selected;
 			
-			var nextOpeningHour = this.openingHours[openingHourID+1];
-			if(openingHourID+1 < this.openingHours.length){
+			var nextOpeningHour = $scope.cateringFacility.openingHours[openingHourID+1];
+			if(openingHourID+1 < $scope.cateringFacility.openingHours.length){
 				
 			    // is currently selected
 				if(day.selected) {
 					if(nextOpeningHour.days.length === 1){
-						this.openingHours.splice(openingHourID+1, 1);
+						$scope.cateringFacility.openingHours.splice(openingHourID+1, 1);
 					} else{
 						this.removeDay(nextOpeningHour.days, day);
 					}
@@ -257,7 +340,7 @@
 		this.addOpeningHours = function(){
 			//select days
 			var days = [];
-			var lastOpeningHour = this.openingHours[this.openingHours.length-1];
+			var lastOpeningHour = $scope.cateringFacility.openingHours[$scope.cateringFacility.openingHours.length-1];
 			for(var j = 0; j< lastOpeningHour.days.length; j++){
 				if(!lastOpeningHour.days[j].selected){
 					var d = lastOpeningHour.days[j];
@@ -276,11 +359,11 @@
 				pause : false,
 				days : days
 			};
-			this.openingHours.push(openingHour);
+			$scope.cateringFacility.openingHours.push(openingHour);
 		};
 		
 		this.isEnabledButton = function(){
-			var lastOpeningHour = this.openingHours[this.openingHours.length-1];
+			var lastOpeningHour = $scope.cateringFacility.openingHours[$scope.cateringFacility.openingHours.length-1];
 			for(var j = 0; j< lastOpeningHour.days.length; j++){
 				if(!lastOpeningHour.days[j].selected){
 					return true;
@@ -289,6 +372,6 @@
 			return false;
 		};
 		
-	});
+	}]);
 
 })();

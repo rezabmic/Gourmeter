@@ -1,6 +1,6 @@
 (function() {
 	//ui.bootstrap dependency contains angularJS components(e.g timePicker)
-	var app = angular.module('app', [ 'ui.bootstrap', 'ngRoute', 'appControllers' ]);
+	var app = angular.module('app', [ 'ui.bootstrap', 'ngRoute', 'appControllers']);
 
 	app.config([ '$routeProvider', function($routeProvider) {
 		$routeProvider.
@@ -15,7 +15,14 @@
 			}).
 			when('/map', {
 				templateUrl : 'map.html'
-			}).otherwise({
+			}).
+			when('/tester', {
+				templateUrl : 'tester.html'
+			}).
+			when('/cateringFacilities/:catFacilityId', {
+		        templateUrl: 'testerReview.html'
+		    }).
+			otherwise({
 				redirectTo : '/index'
 			});
 	}]);

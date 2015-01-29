@@ -28,6 +28,45 @@ table#hours>tbody>tr>td {
 	height: 550px;
 }
 
-table#reviews td {
+table.paddingRight td {
 	padding-right: 10px;
 }
+
+.tag{
+	background-color: #f5f5f5;
+	font-weight: bold;
+	margin: 0 5px 0 0px;
+	padding: 2px 5px 2px 5px;
+}
+
+.infoWindow div{
+	padding: 5px 0; 
+	width: 220px;
+}
+
+.infoWindow table thead{
+	border-bottom: 1px solid black; 
+}
+
+.infoWindow table tbody tr:nth-of-type(2n+1){
+	background-color: #f5f5f5;
+}
+
+.infoWindow table  td{
+	padding-left: 10px;
+}
+
+.infoWindow div#info p{
+	margin: 0;
+}
+
+.infoWindow div#menu ul{
+	padding: 0px 10px;
+}
+.infoWindow div#menu ul li{
+	list-style: none;
+}
+
+
+
+
