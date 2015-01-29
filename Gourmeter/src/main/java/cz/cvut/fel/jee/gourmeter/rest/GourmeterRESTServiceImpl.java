@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -22,9 +22,9 @@ import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.UserSessionLocal;
 import cz.cvut.fel.jee.gourmeter.exception.SignInException;
 
-@ApplicationPath("/service")
+@Path("")
 @ApplicationScoped
-public class GourmeterRESTServiceImpl implements GourmeterRESTService {
+public class GourmeterRESTServiceImpl extends Application implements GourmeterRESTService {
 
 	@Inject
 	private FacilitySessionLocal facilitySession;
