@@ -11,6 +11,8 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
+import cz.cvut.fel.jee.gourmeter.bo.User;
+import cz.cvut.fel.jee.gourmeter.bo.UserRole;
 
 @Stateless
 public class DataSessionBean implements DataSessionLocal {
@@ -19,8 +21,7 @@ public class DataSessionBean implements DataSessionLocal {
 	private EntityManager em;
 
 	@Override
-	public List<CateringFacility>
-			findFacilitiesByGPS(CoordinateSearchWrapper csw) {
+	public List<CateringFacility> findFacilitiesByGPS(CoordinateSearchWrapper csw) {
 
 		TypedQuery<CateringFacility> q = getFacilityGPSQuery(csw,
 				"CateringFacility.findByCoordinates");
@@ -29,8 +30,8 @@ public class DataSessionBean implements DataSessionLocal {
 	}
 
 	@Override
-	public List<CateringFacility>
-			findFacilitiesByGPSAndTag(CoordinateSearchWrapper csw, Tag tag) {
+	public List<CateringFacility> findFacilitiesByGPSAndTag(CoordinateSearchWrapper csw,
+															Tag tag) {
 
 		TypedQuery<CateringFacility> q = getFacilityGPSQuery(csw,
 				"CateringFacility.findByCoordinatesAndTag");
@@ -49,8 +50,34 @@ public class DataSessionBean implements DataSessionLocal {
 		return em.createQuery(cq).getResultList();
 	}
 
-	private TypedQuery<CateringFacility>
-			getFacilityGPSQuery(CoordinateSearchWrapper csw, String queryName) {
+	@Override
+	public UserRole findRoleByName(String roleName) {
+		TypedQuery<UserRole> q = em.createNamedQuery("UserRole.findByName",
+				UserRole.class);
+		q.setParameter("name", roleName);
+
+		List<UserRole> resultList = q.getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public User findUserByLogin(String login) {
+		TypedQuery<User> q = em
+				.createNamedQuery("User.findByLogin", User.class);
+		q.setParameter("login", login);
+
+		List<User> resultList = q.getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
+		}
+		return null;
+	}
+
+	private TypedQuery<CateringFacility> getFacilityGPSQuery(	CoordinateSearchWrapper csw,
+																String queryName) {
 
 		TypedQuery<CateringFacility> q = em.createNamedQuery(queryName,
 				CateringFacility.class);

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -14,11 +16,18 @@ import javax.validation.constraints.NotNull;
  * @author Jan Šrogl
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "UserRole.findByName", query = "select e from UserRole e where e.name = :name")
+})
 @Table(name = "user_role")
 public class UserRole extends AbstractBusinessObject {
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	public static final String USER_ROLE = "user";
+	public static final String TESTER_ROLE = "tester";
+	public static final String ADMIN_ROLE = "admin";
+	
 	@NotNull
 	@Column
 	private String name;

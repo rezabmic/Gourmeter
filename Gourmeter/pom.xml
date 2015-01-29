@@ -15,7 +15,7 @@
 		<javaee7.web.spec.version>1.0.1.Final</javaee7.web.spec.version>
 		<wildfly.version>8.1.0.Final</wildfly.version>
 		<org.hibernate.version>4.3.5.Final</org.hibernate.version>
-		<infinispan.version>7.0.3.Final</infinispan.version>
+		<infinispan.version>6.0.2.Final</infinispan.version>
 		<resteasy.version>3.0.8.Final</resteasy.version>
 	</properties>
 
@@ -183,8 +183,15 @@
 
 		<dependency>
 			<groupId>org.infinispan</groupId>
-			<artifactId>infinispan-embedded</artifactId>
+			<artifactId>infinispan-core</artifactId>
 			<version>${infinispan.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-cachestore-jdbc</artifactId>
+			<version>${infinispan.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- END INFINISPAN -->
@@ -201,14 +208,14 @@
 			<artifactId>jaxrs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
-			<dependency>
+
+		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxb-provider</artifactId>
 			<version>${resteasy.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson2-provider</artifactId>
