@@ -1,4 +1,4 @@
-Zakladni podporovane use case:
+ï»¿Zakladni podporovane use case:
 	1) vytvoreni noveho zarizeni 
 		- vstup 	
 			- cateringfacility DTO - serializovany JSON objekt
@@ -16,7 +16,7 @@ Zakladni podporovane use case:
 		- vstup
 			- user id - id uctu testera
 			- recommended - (ne)doporuceno
-			- editované facility DTO 
+			- editovanÃ© facility DTO 
 
 	4) detail strav. zarizeni
 		- vstup
@@ -33,13 +33,13 @@ Zakladni podporovane use case:
 
 	6) Tagy 
 	  6.1 getALL
-		- vıstup - array tagù
+		- vÃ½stup - array tagÅ¯
 	  6.2 getByCategory
 		- vstup - category
-		- vıstup - array tagù
+		- vÃ½stup - array tagÅ¯
 	7) getCategories
-		- vıstup - array kategorií
+		- vÃ½stup - array kategoriÃ­
 		
 	8) getCurrentUser
-		- vıstup UserDTO
+		- vÃ½stup UserDTO
 
