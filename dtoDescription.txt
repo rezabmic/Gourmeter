@@ -3,12 +3,11 @@ Tags,Categories - array of strings ['','',...]
 MarkerDTO
 {
      id: ,
+     title : '',
+     category: '',
      latitude: ,
      longitude: ,
-     cateringFacility: {
-          name: ,
-          type: ,
-          tags: [{
+     tags: [{
             name: ,
             recommended : ,
             reviewed: 
@@ -17,27 +16,36 @@ MarkerDTO
              name: ,
              recommended : ,
              reviewed: 
-          }],
-    }
-}
-
-CateringFacilityDTO 
-{
-     title : '',
-     tags : [],
+     }],
      url : '',
      description : '',
      latitude: ,
      longitude: ,
      menu: {
           from : ,
-          to : 
-     }
-     address : {
-	city :
-	street:
-	cp: 	
-     }
+          to : ,
+	  url
+     },
+     openingHours: [openingHourDTO,...],
+}
+
+CateringFacilityDTO 
+{
+     id: ,
+     title : '',
+     category: '',
+     latitude: ,
+     longitude: ,
+     tags : ['','',...],
+     url : '',
+     description : '',
+     latitude: ,
+     longitude: ,
+     menu: {
+          from : ,
+          to : ,
+	  url
+     },
      openingHours: [openingHourDTO,...],
 }
 
@@ -47,13 +55,5 @@ OpeningHourDTO
      time2 : ,
      time3 : ,
      time4 : ,
-     days : [
-          {id: 1, selected: false},
-          {id: 2, selected: false},
-          {id: 3, selected: false},
-          {id: 4, selected: false},
-          {id: 5, selected: false},
-          {id: 6, selected: false},
-          {id: 7, selected: false}
-     ]
+     days : [1, 2, 3,...] //selected days
 }
