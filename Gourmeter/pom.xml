@@ -16,7 +16,7 @@
 		<wildfly.version>8.1.0.Final</wildfly.version>
 		<org.hibernate.version>4.3.5.Final</org.hibernate.version>
 		<infinispan.version>7.0.3.Final</infinispan.version>
-		<resteasy.version>1.1.GA</resteasy.version>
+		<resteasy.version>3.0.8.Final</resteasy.version>
 	</properties>
 
 	<dependencyManagement>
@@ -194,15 +194,28 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.7</version>
 		</dependency>
-		
+
 		<!-- RESTeasy -->
-		        <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-maven-import</artifactId>
-                <version>${resteasy.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>jaxrs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+			<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+			<version>${resteasy.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson2-provider</artifactId>
+			<version>${resteasy.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- END RESTeasy -->
 
 	</dependencies>
