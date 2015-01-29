@@ -1,22 +1,29 @@
 package cz.cvut.fel.jee.gourmeter.test.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-
 import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
+import cz.cvut.fel.jee.gourmeter.dto.AddressDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
+import cz.cvut.fel.jee.gourmeter.dto.MenuDTO;
+import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
+import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 
 public class TestUtils {
+	
+	private static final DateFormat hmf = new SimpleDateFormat("hh:mm");
 
 	private static final String TEST_STREET = "test_street";
 	private static final String TEST_HOUSE_NUMBER = "test_house_number";
-	public static final int TEST_LATITUDE = 45;
-	public static final int TEST_LONGITUDE = 10;
+	public static final double TEST_LATITUDE = 45;
+	public static final double TEST_LONGITUDE = 10;
 	public static final String TEST_URL = "http://google.com";
 	public static final String TEST_FACILITY_NAME = "U testovaciho vycepu";
 	public static final String TEST_DECRIPTION = "test decription";
@@ -85,6 +92,41 @@ public class TestUtils {
 //		Date time = Date.from(i);
 //		return time;
 		return d;
+	}
+	
+	public static CateringFacilityDTO createFacilityDTO() {
+		AddressDTO a = new AddressDTO(TEST_CITY, TEST_STREET, TEST_HOUSE_NUMBER);
+		MenuDTO m = new MenuDTO(getHours(11, 0), getHours(14, 30));
+		OpeningHoursDTO o = getTestOpeningHoursDTO();
+		
+		CateringFacilityDTO cf = new CateringFacilityDTO();
+		cf.setAddress(a);
+		cf.setDescription(TEST_DECRIPTION);
+		cf.setLatitude(TEST_LATITUDE);
+		cf.setLongitude(TEST_LONGITUDE);
+		cf.setMenu(m);
+		cf.setTitle(TEST_FACILITY_NAME);
+		cf.setUrl(TEST_URL);
+		cf.setOpeningHours(Arrays.asList(o));
+		
+		TagDTO fish = new TagDTO("rybka", false, false);
+		TagDTO dog = new TagDTO("pejsek", false, false);
+		cf.setTags(Arrays.asList(fish, dog));
+		
+		return cf;
+	}
+
+	private static OpeningHoursDTO getTestOpeningHoursDTO() {
+		OpeningHoursDTO o = new OpeningHoursDTO();
+		o.setOpenFrom(hmf.format(getHours(7, 0)));
+		o.setOpenTo(hmf.format(getHours(21, 0)));
+		for (int i = 1; i <= 7; i++) {
+			OpeningHoursDTO.Day d = new OpeningHoursDTO.Day();
+			d.setDayNum((short) i);
+			d.setSelected(true);
+			o.getDays().add(d);
+		}
+		return o;
 	}
 
 	private static int getSerial() {

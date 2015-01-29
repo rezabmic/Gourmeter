@@ -138,18 +138,29 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 									CateringFacility f) {
 		for (OpeningHoursDTO ohDto : dto.getOpeningHours()) {
 			for (Day day : ohDto.getDays()) {
-				OpeningHours oh = new OpeningHours();
-				try {
-					oh.setBreakFrom(df.parse(ohDto.getBreakFrom()));
-					oh.setBreakTo(df.parse(ohDto.getBreakTo()));
-					oh.setTimeFrom(df.parse(ohDto.getOpenFrom()));
-					oh.setTimeTo(df.parse(ohDto.getOpenTo()));
-				} catch (ParseException e) {
-					log.warn(e.getMessage());
+				// for all open days
+				if (day.getSelected()) {
+					OpeningHours oh = new OpeningHours();
+					// required
+					try {
+						oh.setTimeFrom(df.parse(ohDto.getOpenFrom()));
+						oh.setTimeTo(df.parse(ohDto.getOpenTo()));
+					} catch (ParseException | NullPointerException e) {
+						log.warn(e.getMessage());
+						continue;
+					}
+					
+					try {
+						oh.setBreakFrom(df.parse(ohDto.getBreakFrom()));
+						oh.setBreakTo(df.parse(ohDto.getBreakTo()));
+					} catch (ParseException | NullPointerException e) {
+						log.warn("createNewFacility: opening breaks : " + e.getMessage());
+					}
+					
+					oh.setDayNum(day.getDayNum());
+					oh.setFacility(f);
+					f.getOpeningHours().add(oh);
 				}
-				oh.setDayNum(day.getDayNum());
-				oh.setFacility(f);
-				f.getOpeningHours().add(oh);
 			}
 		}
 	}

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -49,6 +50,23 @@ public class FacilitySessionBeanTest {
 		assertNotNull(cfs);
 		assertFalse(cfs.isEmpty());
 		assertEquals(cfs.get(0), cf);
+	}
+	
+	@Test
+	public void testCreateFacility() {
+		facilitySession.createNewFacility(TestUtils.createFacilityDTO(), 0L);
+		em.flush();
+		em.clear();
+		
+		TypedQuery<CateringFacility> q = em.createNamedQuery("CateringFacility.findByName", CateringFacility.class);
+		q.setParameter("name", TestUtils.TEST_FACILITY_NAME);
+		List<CateringFacility> resultList = q.getResultList();
+		assertEquals(1, resultList.size());
+		
+		CateringFacility cf = resultList.get(0);
+		assertEquals(7, cf.getOpeningHours().size());
+		assertEquals(2, cf.getTags().size());
+		assertEquals(0, cf.getRecommendations().size());
 	}
 
 }

@@ -1,0 +1,30 @@
+Zakladni podporovane use case:
+	1) vytvoreni noveho zarizeni 
+		- vstup 	
+			- cateringfacility DTO - serializovany JSON objekt
+			- user id - ID uctu uzivatele, ktery zarizeni vytvari
+		-signatura napr. ... #createNewFacility(CateringFacilityDTO cfDto, Long userId)
+
+	2) pridani doporuceni
+		- vstup
+			- tag id - tag (typ jidla), ktere uzivatel mel
+			- user id - id uctu uzivatele
+			- recommended - (ne)doporuceno
+
+	3) schvaleni testerem
+		- vstup
+			- user id - id uctu testera
+			- schvaleno - ano/ne // TODO pro Michala
+
+	4) detail strav. zarizeni
+		- vstup
+			- fac. ID
+		- vystup 
+			- facility DTO
+
+	5) strav. zarizeni v okoli
+		- vstup
+			- informace o poloze - stred mapy? (latitude, longitude)
+			- rozsah hledani (v km) nebo zoom nebo neco, z ceho ten rozsah urcime // TODO pro Michala
+		- vystup
+			- seznam MarkerDTO

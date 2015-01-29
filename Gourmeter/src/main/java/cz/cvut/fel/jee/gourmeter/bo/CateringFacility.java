@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "catering_facility")
 @NamedQueries({
+		@NamedQuery(name = "CateringFacility.findByName", query = "SELECT e FROM CateringFacility e WHERE e.name = :name"),
 		@NamedQuery(name = "CateringFacility.findByCoordinates", query = "SELECT e FROM CateringFacility e "
 				+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
 				+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin"),
@@ -41,19 +42,19 @@ public class CateringFacility extends AbstractBusinessObject {
 	@Column(nullable = false)
 	private String name;
 
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String description;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String url;
 
 	@Column(nullable = false)
 	private String city;
 
-	@Column(name = "street", nullable = false)
+	@Column(name = "street", nullable = true)
 	private String street;
 
-	@Column(name = "house_number", nullable = false)
+	@Column(name = "house_number", nullable = true)
 	private String houseNumber;
 
 	@Column(nullable = true)
@@ -62,7 +63,7 @@ public class CateringFacility extends AbstractBusinessObject {
 	@Column(nullable = true)
 	private String menuUrl;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Boolean additionConfirmed;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -77,11 +78,11 @@ public class CateringFacility extends AbstractBusinessObject {
 	@Column(nullable = true)
 	private Date menuTo;
 
-	@Column(name = "latitude")
-	private double latitude;
+	@Column(name = "latitude", nullable = false)
+	private Double latitude;
 
-	@Column(name = "longitude")
-	private double longitude;
+	@Column(name = "longitude", nullable = false)
+	private Double longitude;
 
 	@ManyToOne
 	private Category category;
