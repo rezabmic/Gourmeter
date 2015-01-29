@@ -5,16 +5,18 @@ Zakladni podporovane use case:
 			- user id - ID uctu uzivatele, ktery zarizeni vytvari
 		-signatura napr. ... #createNewFacility(CateringFacilityDTO cfDto, Long userId)
 
-	2) pridani doporuceni
+	2) pridani doporuceni - low priority
 		- vstup
 			- tag id - tag (typ jidla), ktere uzivatel mel
+			- CF id
 			- user id - id uctu uzivatele
 			- recommended - (ne)doporuceno
 
 	3) schvaleni testerem
 		- vstup
 			- user id - id uctu testera
-			- schvaleno - ano/ne // TODO pro Michala
+			- recommended - (ne)doporuceno
+			- editované facility DTO 
 
 	4) detail strav. zarizeni
 		- vstup
@@ -22,9 +24,22 @@ Zakladni podporovane use case:
 		- vystup 
 			- facility DTO
 
-	5) strav. zarizeni v okoli
+	5) strav. zarizeni v okoli - 
 		- vstup
-			- informace o poloze - stred mapy? (latitude, longitude)
-			- rozsah hledani (v km) nebo zoom nebo neco, z ceho ten rozsah urcime // TODO pro Michala
+			- leftTopCorner mapy
+			- rightBottomCorner mapy
 		- vystup
 			- seznam MarkerDTO
+
+	6) Tagy 
+	  6.1 getALL
+		- výstup - array tagù
+	  6.2 getByCategory
+		- vstup - category
+		- výstup - array tagù
+	7) getCategories
+		- výstup - array kategorií
+		
+	8) getCurrentUser
+		- výstup UserDTO
+
