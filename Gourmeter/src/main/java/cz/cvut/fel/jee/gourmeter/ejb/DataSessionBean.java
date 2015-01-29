@@ -1,5 +1,7 @@
 package cz.cvut.fel.jee.gourmeter.ejb;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -9,6 +11,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
+import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
@@ -21,7 +24,8 @@ public class DataSessionBean implements DataSessionLocal {
 	private EntityManager em;
 
 	@Override
-	public List<CateringFacility> findFacilitiesByGPS(CoordinateSearchWrapper csw) {
+	public List<CateringFacility> findFacilitiesByGPS(
+			CoordinateSearchWrapper csw) {
 
 		TypedQuery<CateringFacility> q = getFacilityGPSQuery(csw,
 				"CateringFacility.findByCoordinates");
@@ -30,8 +34,8 @@ public class DataSessionBean implements DataSessionLocal {
 	}
 
 	@Override
-	public List<CateringFacility> findFacilitiesByGPSAndTag(CoordinateSearchWrapper csw,
-															Tag tag) {
+	public List<CateringFacility> findFacilitiesByGPSAndTag(
+			CoordinateSearchWrapper csw, Tag tag) {
 
 		TypedQuery<CateringFacility> q = getFacilityGPSQuery(csw,
 				"CateringFacility.findByCoordinatesAndTag");
@@ -76,8 +80,8 @@ public class DataSessionBean implements DataSessionLocal {
 		return null;
 	}
 
-	private TypedQuery<CateringFacility> getFacilityGPSQuery(	CoordinateSearchWrapper csw,
-																String queryName) {
+	private TypedQuery<CateringFacility> getFacilityGPSQuery(
+			CoordinateSearchWrapper csw, String queryName) {
 
 		TypedQuery<CateringFacility> q = em.createNamedQuery(queryName,
 				CateringFacility.class);
@@ -86,5 +90,20 @@ public class DataSessionBean implements DataSessionLocal {
 		q.setParameter("longitudeMax", csw.getLongitudeMax());
 		q.setParameter("longitudeMin", csw.getLongitudeMin());
 		return q;
+	}
+
+	@Override
+	public List<Tag> getAllTags() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<Tag> getTagsForCategory(Long id) {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<Category> getAllCategories() {
+		return new ArrayList<>();
 	}
 }

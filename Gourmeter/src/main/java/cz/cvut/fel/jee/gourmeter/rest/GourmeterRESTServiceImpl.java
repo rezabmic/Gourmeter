@@ -16,11 +16,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import cz.cvut.fel.jee.gourmeter.bo.Category;
+import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
+import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 import cz.cvut.fel.jee.gourmeter.dto.UserDTO;
+import cz.cvut.fel.jee.gourmeter.ejb.DataSessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.UserSessionLocal;
 import cz.cvut.fel.jee.gourmeter.exception.SignInException;
@@ -34,6 +38,9 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@Inject
 	private UserSessionLocal userSession;
+
+	@Inject
+	private DataSessionLocal dataSession;
 
 	@GET
 	@Path("/hello")
@@ -56,19 +63,16 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	public Response addRecommendation(	Long facilityId,
-										Long tagId,
-										Long userId,
-										Boolean recommended) {
+	public Response addRecommendation(Long facilityId, Long tagId, Long userId,
+			Boolean recommended) {
 		// TODO Auto-generated method stub
 
 		return Response.ok().build();
 	}
 
 	@Override
-	public Response testerApproval(	CateringFacilityDTO facility,
-									Long userId,
-									Boolean approved) {
+	public Response testerApproval(CateringFacilityDTO facility, Long userId,
+			Boolean approved) {
 		// TODO Auto-generated method stub
 
 		return Response.ok().build();
@@ -79,6 +83,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public CateringFacilityDTO getFacilityById(@PathParam("id") Long id) {
+		// TODO
 		CateringFacilityDTO cf = new CateringFacilityDTO();
 		cf.setTitle("test");
 		cf.setDescription("dobry den");
@@ -107,15 +112,21 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
+	@GET
+	@Path("/tags/all")
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<TagDTO> getAllTags() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Tag> list = this.dataSession.getAllTags();
+		return DTOUtils.getTagDTOList(list);
 	}
 
 	@Override
-	public List<TagDTO> getTagsForCategory(Long categoryId) {
-		// TODO Auto-generated method stub
-		return null;
+	@GET
+	@Path("/tags/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<TagDTO> getTagsForCategory(@PathParam("id") Long categoryId) {
+		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
+		return DTOUtils.getTagDTOList(list);
 	}
 
 	@Override
@@ -123,8 +134,8 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/category/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<CategoryDTO> getAllCategories() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Category> c = this.dataSession.getAllCategories();
+		return DTOUtils.getListCategoryDTO(c);
 	}
 
 }
