@@ -16,7 +16,12 @@
 			
 			<!-- Infinispan cache config -->
 			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.infinispan.JndiInfinispanRegionFactory" />
-			<property name="hibernate.cache.infinispan.cachemanager" value="java:CacheManager" />
+			<property name="hibernate.cache.infinispan.cachemanager" value="java:jboss/infinispan/Gourmeter-CacheManager" />
+			
+			<!--  Nastaveni cache region factory-->
+			<!-- If using JPA, add to your persistence.xml -->
+<!-- 			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.infinispan.InfinispanRegionFactory"/> -->
+			
 			
 			<!-- END INFINISPAN as 2nd level cache of Hibernate -->
 		</properties>
