@@ -11,17 +11,16 @@ import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 public interface FacilitySessionLocal {
 
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
-														double longitude);
+			double longitude);
 
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
-														double longitude,
-														double kilometerSearchDistance);
+			double longitude, double kilometerSearchDistance);
 
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
-														double longitude,
-														double kilometerSearchDistance,
-														long tagId);
-	
+			double longitude, double kilometerSearchDistance, long tagId);
+
 	public void createNewFacility(CateringFacilityDTO dto, Long userId);
+
+	public CateringFacility getFacilityById(Long id);
 
 }

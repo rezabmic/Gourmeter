@@ -1,10 +1,15 @@
 package cz.cvut.fel.jee.gourmeter.dto;
 
+import cz.cvut.fel.jee.gourmeter.bo.Tag;
+
 public class TagDTO {
 
-	private final String name;
-	private final Boolean recommended;
-	private final Boolean reviewed;
+	private String name;
+	private Boolean recommended;
+	private Boolean reviewed;
+
+	public TagDTO() {
+	}
 
 	public TagDTO(String name, Boolean recommended, Boolean reviewed) {
 		this.name = name;
@@ -22,6 +27,18 @@ public class TagDTO {
 
 	public Boolean getReviewed() {
 		return reviewed;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setRecommended(Boolean recommended) {
+		this.recommended = recommended;
+	}
+
+	public void setReviewed(Boolean reviewed) {
+		this.reviewed = reviewed;
 	}
 
 }

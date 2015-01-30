@@ -19,6 +19,7 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
+import cz.cvut.fel.jee.gourmeter.bo.UserRole;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO.Day;
@@ -27,8 +28,9 @@ import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 @Stateless
 public class FacilitySessionBean implements FacilitySessionLocal {
 
-	private static final Logger log = LoggerFactory.getLogger(FacilitySessionBean.class);
-	
+	private static final Logger log = LoggerFactory
+			.getLogger(FacilitySessionBean.class);
+
 	/**
 	 * Conversion ratio for kilometer to coordinate degree. TODO check this
 	 * value
@@ -47,8 +49,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	private DataSessionLocal dao;
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude) {
+	public List<CateringFacility> getFacilitiesInArea(double latitude,
+			double longitude) {
 		// use default circle radius
 		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
 				longitude, DEFAULT_SEARCH_RADIUS_KM);
@@ -56,9 +58,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	}
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude,
-														double kmCircle) {
+	public List<CateringFacility> getFacilitiesInArea(double latitude,
+			double longitude, double kmCircle) {
 
 		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
 				longitude, kmCircle);
@@ -66,10 +67,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	}
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude,
-														double kmCircle,
-														long tagId) {
+	public List<CateringFacility> getFacilitiesInArea(double latitude,
+			double longitude, double kmCircle, long tagId) {
 
 		Tag tag = em.find(Tag.class, tagId);
 		if (tag == null) {
@@ -85,6 +84,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 
 	@Override
 	public void createNewFacility(CateringFacilityDTO dto, Long userId) {
+		if (dto == null || dto.getAddress() == null) {
+			throw new IllegalArgumentException("Wrong dto format."); // nasrat
+		}
 		DateFormat df = new SimpleDateFormat("hh:mm");
 
 		CateringFacility f = new CateringFacility();
@@ -98,7 +100,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		try {
 			f.setMenuFrom(df.parse(dto.getMenu().getFrom()));
 			f.setMenuTo(df.parse(dto.getMenu().getTo()));
-		} catch (ParseException e) {
+		} catch (ParseException | NullPointerException e) {
 			log.warn(e.getMessage());
 		}
 		f.setMenuUrl(dto.getUrl()); // TODO
@@ -107,17 +109,26 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		f.setUrl(dto.getUrl());
 
 		f.setCategory(null); // TODO
-		f.setCreator(em.find(User.class, userId));
+		User creator = em.find(User.class, userId);
+		if (creator == null) {
+			log.warn("Catering facility creator not found");
+		}
+		f.setCreator(creator);
+		setOpeningHours(dto.getOpeningHours(), df, f);
+		setTags(dto.getTags(), f);
 
-		setOpeningHours(dto, df, f);
-		setTags(dto, f);
-		
 		em.persist(f);
 	}
 
-	private void setTags(CateringFacilityDTO dto, CateringFacility f) {
-		for (TagDTO t : dto.getTags()) {
-			TypedQuery<Tag> q = em.createNamedQuery("Tag.findByName", Tag.class);
+	private void setTags(List<TagDTO> tags, CateringFacility f) {
+		if (tags == null || tags.isEmpty()) {
+			log.warn("Empty tags.");
+			return;
+		}
+
+		for (TagDTO t : tags) {
+			TypedQuery<Tag> q = em
+					.createNamedQuery("Tag.findByName", Tag.class);
 			q.setParameter("name", t.getName());
 			Tag tag = null;
 			try {
@@ -128,15 +139,19 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				tag.setCategory(null); // TODO
 				em.persist(tag);
 			}
-			
+
 			f.getTags().add(tag);
 		}
 	}
 
-	private void setOpeningHours(	CateringFacilityDTO dto,
-									DateFormat df,
-									CateringFacility f) {
-		for (OpeningHoursDTO ohDto : dto.getOpeningHours()) {
+	private void setOpeningHours(List<OpeningHoursDTO> openingHours,
+			DateFormat df, CateringFacility f) {
+		if (openingHours == null || openingHours.isEmpty()) {
+			log.warn("Empty opening hours.");
+			return;
+		}
+
+		for (OpeningHoursDTO ohDto : openingHours) {
 			for (Day day : ohDto.getDays()) {
 				// for all open days
 				if (day.getSelected()) {
@@ -149,14 +164,15 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 						log.warn(e.getMessage());
 						continue;
 					}
-					
+
 					try {
 						oh.setBreakFrom(df.parse(ohDto.getBreakFrom()));
 						oh.setBreakTo(df.parse(ohDto.getBreakTo()));
 					} catch (ParseException | NullPointerException e) {
-						log.warn("createNewFacility: opening breaks : " + e.getMessage());
+						log.warn("createNewFacility: opening breaks : "
+								+ e.getMessage());
 					}
-					
+
 					oh.setDayNum(day.getDayNum());
 					oh.setFacility(f);
 					f.getOpeningHours().add(oh);
@@ -165,9 +181,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 	}
 
-	private CoordinateSearchWrapper getCoordinatesWrapper(	double latitude,
-															double longitude,
-															double kmCircle) {
+	private CoordinateSearchWrapper getCoordinatesWrapper(double latitude,
+			double longitude, double kmCircle) {
 		double radius = getSearchRadius(kmCircle);
 		double latMin = latitude - radius;
 		double latMax = latitude + radius;
@@ -182,6 +197,18 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	private double getSearchRadius(double kilometerDistance) {
 		// return search radius
 		return COORDINATE_TO_KM * kilometerDistance / 2;
+	}
+
+	@Override
+	public CateringFacility getFacilityById(Long id) {
+		TypedQuery<CateringFacility> q = em.createNamedQuery(
+				"CateringFacility.findById", CateringFacility.class);
+		q.setParameter("id", id);
+		List<CateringFacility> resultList = q.getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
+		}
+		return null;
 	}
 
 }

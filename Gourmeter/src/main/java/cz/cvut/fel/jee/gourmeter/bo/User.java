@@ -6,14 +6,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 
 /**
  *
- * @author Jan Šrogl
+ * @author Jan Srogl
  */
 @Entity
 @NamedQueries({

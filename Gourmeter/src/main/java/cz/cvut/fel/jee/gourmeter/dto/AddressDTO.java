@@ -2,9 +2,12 @@ package cz.cvut.fel.jee.gourmeter.dto;
 
 public class AddressDTO {
 
-	private final String city;
-	private final String street;
-	private final String houseNumber;
+	private String city;
+	private String street;
+	private String houseNumber;
+
+	public AddressDTO() {
+	}
 
 	public AddressDTO(String city, String street, String houseNumber) {
 		this.city = city;
@@ -22,6 +25,18 @@ public class AddressDTO {
 
 	public String getHouseNumber() {
 		return houseNumber;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
 	}
 
 }
