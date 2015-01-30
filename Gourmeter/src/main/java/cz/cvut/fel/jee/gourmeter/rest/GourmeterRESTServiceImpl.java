@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import cz.cvut.fel.jee.gourmeter.bo.Category;
+import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
@@ -52,8 +53,8 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@POST
 	@Path("/cateringFacility")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNewFacility(	CateringFacilityDTO facility,
-										@QueryParam("userId") Long userId) {
+	public Response createNewFacility(CateringFacilityDTO facility,
+			@QueryParam("userId") Long userId) {
 		try {
 			facilitySession.createNewFacility(facility, userId);
 		} catch (Exception e) {
@@ -83,11 +84,14 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public CateringFacilityDTO getFacilityById(@PathParam("id") Long id) {
-		// TODO
-		CateringFacilityDTO cf = new CateringFacilityDTO();
-		cf.setTitle("test");
-		cf.setDescription("dobry den");
-		return cf;
+		CateringFacility cf = this.facilitySession.getFacilityById(id);
+		if (cf != null)
+			return DTOUtils.getCateringFacilityDTO(cf);
+		else {
+			// TODO - tady to chce vymyslet nejaky navratovy kod
+			// neco jako: return Response.noContent().build();
+			return null;
+		}
 	}
 
 	@Override

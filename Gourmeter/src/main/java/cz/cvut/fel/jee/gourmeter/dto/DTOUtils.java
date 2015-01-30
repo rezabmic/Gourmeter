@@ -38,6 +38,14 @@ public class DTOUtils {
 		return null;
 	}
 
+	public static CateringFacilityDTO getCateringFacilityDTO(
+			CateringFacility facility) {
+		if (facility != null)
+			return new CateringFacilityDTO(facility);
+		else
+			return null;
+	}
+
 	public static TagDTO getTagDTO(Tag tag) {
 		// TODO
 		return null;

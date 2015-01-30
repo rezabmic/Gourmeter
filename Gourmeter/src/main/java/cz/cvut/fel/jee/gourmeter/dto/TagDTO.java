@@ -1,5 +1,7 @@
 package cz.cvut.fel.jee.gourmeter.dto;
 
+import cz.cvut.fel.jee.gourmeter.bo.Tag;
+
 public class TagDTO {
 
 	private String name;

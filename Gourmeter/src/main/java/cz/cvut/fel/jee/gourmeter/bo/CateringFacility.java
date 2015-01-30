@@ -21,12 +21,13 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author Jan Šrogl
+ * @author Jan Srogl
  */
 @Entity
 @Table(name = "catering_facility")
 @NamedQueries({
 		@NamedQuery(name = "CateringFacility.findByName", query = "SELECT e FROM CateringFacility e WHERE e.name = :name"),
+		@NamedQuery(name = "CateringFacility.findById", query = "SELECT e FROM CateringFacility e WHERE e.id = :id"),
 		@NamedQuery(name = "CateringFacility.findByCoordinates", query = "SELECT e FROM CateringFacility e "
 				+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
 				+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin"),
