@@ -33,7 +33,7 @@ CateringFacilityDTO
 {
      id: ,
      title : '',
-     category: CategoryDTO,
+     categoryId: null,
      url : '',
      description : '',
      latitude: ,

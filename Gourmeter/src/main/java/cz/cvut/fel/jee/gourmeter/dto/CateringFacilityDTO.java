@@ -13,7 +13,7 @@ public class CateringFacilityDTO {
 	private String description;
 	private Double latitude;
 	private Double longitude;
-            
+    private Long categoryId;        
 	private MenuDTO menu;
 	private AddressDTO address;
 	private List<TagDTO> tags;
@@ -30,7 +30,7 @@ public class CateringFacilityDTO {
 		longitude = f.getLongitude();
 		menu = new MenuDTO(f.getMenuFrom(), f.getMenuTo());
 		address = new AddressDTO(f.getCity(), f.getStreet(), f.getHouseNumber());
-
+		categoryId = f.getCategory().getId();
 		tags = DTOUtils.getFacilityTags(f);
 		openingHours = new ArrayList<>();
 		for (OpeningHours oh : f.getOpeningHours()) {
@@ -110,5 +110,12 @@ public class CateringFacilityDTO {
 		this.openingHours = openingHours;
 	}
 
+	public Long getCategoryId() {
+		return categoryId;
+	}
+	
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
 
 }
