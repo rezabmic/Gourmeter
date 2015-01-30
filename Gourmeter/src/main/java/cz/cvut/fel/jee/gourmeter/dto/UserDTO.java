@@ -9,7 +9,6 @@ public class UserDTO {
 	private String fullName;
 	private String email;
 	private String city;
-	private String password;
 
 	public UserDTO() {
 	}
@@ -20,7 +19,6 @@ public class UserDTO {
 		fullName = u.getFullName();
 		email = u.getEmail();
 		city = u.getCity();
-		password = null;
 	}
 
 	public Long getUserId() {
@@ -62,13 +60,4 @@ public class UserDTO {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 }

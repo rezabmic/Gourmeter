@@ -1,45 +1,50 @@
 ﻿Zakladni podporovane use case:
-	1) vytvoreni noveho zarizeni 
+	1) vytvoreni noveho zarizeni - priorita:vysoká
 		- vstup 	
-			- cateringfacility DTO - serializovany JSON objekt
-			- user id - ID uctu uzivatele, ktery zarizeni vytvari
-		-signatura napr. ... #createNewFacility(CateringFacilityDTO cfDto, Long userId)
+			- cateringfacility DTO 
+			- user id - long
 
-	2) pridani doporuceni - low priority
-		- vstup
-			- tag id - tag (typ jidla), ktere uzivatel mel
-			- CF id
-			- user id - id uctu uzivatele
-			- recommended - (ne)doporuceno
+	2) pridani doporuceni - priorita:nízká		
+		2.1 
+		    - vstup 
+			- tag id - long
+			- CF id - long
+			- user id - long
+			- recommended - boolean // (ne)doporuceno
+		2.2- vstup
+			- pole dvojic [{tag= "název tagu", recommended = true/false},...]
+			- CF id - long
+			- user id - long
 
-	3) schvaleni testerem
+	3) schvaleni testerem - priorita:střední
 		- vstup
-			- user id - id uctu testera
-			- recommended - (ne)doporuceno
-			- editované facility DTO 
+			- user id - 
+			- facility DTO //editované  
 
-	4) detail strav. zarizeni
+	4) detail strav. zarizeni - priorita:vysoká
 		- vstup
-			- fac. ID
+			- fac. ID -long
 		- vystup 
-			- facility DTO
+			- facility DTO 
 
-	5) strav. zarizeni v okoli - 
+	5) strav. zarizeni v okoli - priorita:vysoká
 		- vstup
-			- leftTopCorner mapy
-			- rightBottomCorner mapy
+			- leftTopCorner mapy - {latitude: double, longitude: double}
+			- rightBottomCorner mapy - {latitude: double, longitude: double}
 		- vystup
-			- seznam MarkerDTO
+			- seznam MarkerDTO 
 
-	6) Tagy 
+	6) Tagy  - priorita:vysoká
 	  6.1 getALL
-		- výstup - array tagů
-	  6.2 getByCategory
-		- vstup - category
-		- výstup - array tagů
-	7) getCategories
-		- výstup - array kategorií
+		- výstup - ["název tagu",...]
+	  6.2 getByCategory 
+		- vstup - categoryId - long
+		- výstup - ["název tagu",...]
+	7) getCategories  - priorita:vysoká
+		- výstup - [CategoryDTO,...]
 		
-	8) getCurrentUser
+	8) getCurrentUser - priorita:vysoká
 		- výstup UserDTO
 
+	9) getMapCenter - priorita:vysoká
+		- výstup  {latitude: double, longitude: double}
