@@ -1,32 +1,42 @@
 ﻿
 <h2>Upravit stravovací zařízení</h2>
 
-<form name="addForm" ng-controller="EditCateringFacilityController as editCFCtrl"
-	ng-submit="addForm.$valid && main.submit()" novalidate>
-
+<form name="addForm" class="css-form" ng-controller="EditCateringFacilityController as editCFCtrl"
+	ng-submit="addForm.$valid" novalidate>
+<!-- novalidate is used to disable browser's native form validation. -->
 	<div class="form-group">
-		<label for="title">Název*</label> <input type="text"
-			class="form-control" id="title"
-			ng-model="cateringFacility.title" required>
+		<label for="title">Název*</label> 
+		<input type="text" name="title" class="form-control" ng-class="{inputError:(addForm.$submitted && addForm.title.$error.required)}" id="title" ng-model="cateringFacility.title" required>
+		<div ng-show="addForm.$submitted || addForm.title.$touched">
+	      <div ng-show="addForm.title.$error.required" class="error">Vyplňte prosím název.</div>
+	    </div>	
 	</div>
+	
 
 	<div class="form-group" ng-controller="CategoriesController as categoriesCtrl">
-		<label for="title">Kategorie*</label> <select class="form-control"
-			ng-model="cateringFacility.category"
-			ng-options="category for category in categoriesCtrl.categories" required>
-			<option value="">-- vyberte kategorii --</option>
+		<label for="title">Kategorie*</label> 
+		<select class="form-control" name="categories" ng-model="cateringFacility.categoryId" 
+				ng-options="category.id as category.name for category in categoriesCtrl.categories"
+				ng-class="{inputError:(addForm.$submitted && addForm.categories.$error.required)}" required>
 		</select>
+		<div ng-show="addForm.$submitted || addForm.categories.$touched">
+	      <div ng-show="addForm.categories.$error.required" class="error">Zvolte prosím kategorii.</div>
+	    </div>	
 	</div>
 
 	<div class="form-group">
-		<label for="url">Webová stránka</label> <input type="text"
-			class="form-control" id="url" ng-model="cateringFacility.url">
+		<label for="url">Krátký popis*</label>
+		<textarea class="form-control" name="description" ng-model="cateringFacility.description" rows="3" 
+		ng-class="{inputError:(addForm.$submitted && addForm.description.$error.required)}" required>
+		</textarea>
+		<div ng-show="addForm.$submitted || addForm.description.$touched">
+	      <div ng-show="addForm.description.$error.required" class="error">Vyplňte prosím popis.</div>
+	    </div>
 	</div>
-
+	
 	<div class="form-group">
-		<label for="url">Krátký popis</label>
-		<textarea class="form-control"
-			ng-model="cateringFacility.description" rows="3"></textarea>
+		<label for="url">Webová stránka</label> 
+		<input type="text" class="form-control" id="url" ng-model="cateringFacility.url">
 	</div>
 
 	<div class="form-group">
@@ -38,6 +48,9 @@
 				ng-click="tagCtrl.toggleSelection(tag)">{{tag}}
 			</label>
 		</fieldset>
+		<div ng-show="addForm.$submitted">
+	      <div ng-show="cateringFacility.tags.length == 0" class="error">Zvolte prosím vhodné tagy.</div>
+	    </div>
 	</div>
 
 	<div class="form-group">
@@ -106,18 +119,23 @@
 					</label>
 				</fieldset>
 				<br />
-				<p>
-					<!-- Souhrn: {{hoursCtrl.getText(openingHour)}} -->
-				</p>
+				<div ng-show="addForm.$submitted">
+					<div ng-hide="hoursCtrl.isValid(openingHour)" class="error">
+						 <p>Vyplňte prosím otevírací hodinu.</p>
+					</div>
+				</div>	
 			</div>
-
-			<button class="btn-default" ng-show="hoursCtrl.isEnabledButton()"
-				ng-click="hoursCtrl.addOpeningHours()">Přidat další</button>
+			<div>
+				<button type="button" class="btn btn-default" ng-show="hoursCtrl.isEnabledButton()"
+					ng-click="hoursCtrl.addOpeningHours()">Přidat další</button>
+			</div>
+			
 		</fieldset>
 	</div>
-	<div class="form-group">
-		<fieldset>
+	<div class="form-group" ng-controller="TagController as tagCtrl">
+		<fieldset ng-show="tagCtrl.isMenuSelected()">
 			<legend>Polední menu</legend>
+			
 			<table id="hours">
 				<tbody>
 					<tr>
@@ -136,10 +154,6 @@
 				id="menuUrl" class="form-control" ng-model="cateringFacility.menu.url">
 		</fieldset>
 	</div>
-	
-	<div>
-		<button type="submit" class="btn-default" ng-click="">Zamítnout</button>
-		<button type="submit" class="btn-primary" ng-click="">Doporučit</button>
-	</div>
 
+	<button type="submit" class="btn btn-primary">Editovat stravovací zařízení</button>
 </form>

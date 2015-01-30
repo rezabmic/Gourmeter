@@ -19,7 +19,7 @@
 		$scope.cateringFacility = {
 		    	 id: 1,
 			     title : 'Pražská pivnice',
-			     category: 'Restaurace',
+			     categoryId: 1, 
 			     tags : ['česká kuchyně', 'regionální kuchyně'],
 			     url : 'www.prazska-pivnice.cz',
 			     description : 'Skvělé pivo a tlačenka.',
@@ -38,12 +38,12 @@
 	    var t2 = new Date();
 	    t2.setHours( 14 );
 	    t2.setMinutes( 0 );
-		
+	    
 		this.cateringFacilities = [
 		     {
 		    	 id: 1,
 			     title : 'Pražská pivnice',
-			     category: 'Restaurace',
+			     category: {id:1, name: 'Restaurace'}, 
 			     tags : ['česká kuchyně', 'regionální kuchyně'],
 			     url : 'www.prazska-pivnice.cz',
 			     description : 'Skvělé pivo a tlačenka.',
@@ -55,7 +55,7 @@
 		     {	
 		    	 id: 2,
 		    	 title : 'U studny',
-			     category: 'Restaurace',
+		    	 category: {id:1, name: 'Restaurace'}, 
 			     tags : ['česká kuchyně', 'regionální kuchyně'],
 			     url : 'www.ustudny.cz',
 			     description : 'Skvělé regionální pokrmy.',
@@ -99,7 +99,7 @@
 					longitude: 14.390791,
 					title: 'U studny',
 					description : 'Skvělé pivo a tlačenka.',
-					category: 'Restaurace',
+					category: {id:1, name: 'Restaurace'}, 
 					url : 'www.ustudny.cz',
 					tags: [{
 						name: 'česká kuchyně',
@@ -124,7 +124,7 @@
 					longitude: 14.392576,
 					title: 'Pražská pivnice',
 					description : 'Skvělé regionální pokrmy.',
-					category: 'Hospoda',
+					category: {id:1, name: 'Restaurace'}, 
 					url : 'www.prazska-pivnice.cz',
 					tags: [{
 						name: 'česká kuchyně',
@@ -161,6 +161,8 @@
 	}]);
 	
 	appControllers.controller("MainController", ["$scope", "$http", 'Categories', function($scope, $http, Categories) {
+		$scope.menu = false;
+		
 		var menuFrom = new Date();
 	    menuFrom.setHours( 10 );
 	    menuFrom.setMinutes( 0 );
@@ -171,7 +173,7 @@
 		
 		$scope.cateringFacility = {
 			title : '',
-			category : '',
+			categoryId : null,
 			tags : [],
 			url : '',
 			description : '',
@@ -193,8 +195,18 @@
 		}
 	}]);
 	
-	appControllers.controller("TagController", ["$scope", 'Tags', function($scope, Tags) {
-		this.tags = Tags($scope.cateringFacility.category);
+	appControllers.controller("TagController", ["$scope", 'Tags', 'MenuTag', function($scope, Tags, MenuTag) {
+		this.tags = Tags($scope.cateringFacility.categoryId);
+		
+		this.isMenuSelected = function(){
+			var selected = $scope.cateringFacility.tags;
+			for(var i = 0; i<selected.length; i++){
+				if(selected[i] == MenuTag()){
+					return true;
+				}
+			}
+			return false;
+		};
 
 		this.toggleSelection = function toggleSelection(tag) {
 		    var idx = $scope.cateringFacility.tags.indexOf(tag);
@@ -231,6 +243,17 @@
 	    t4.setMinutes( 0 );
 	    
 	    var id = 0;
+	    
+	    this.isValid = function(openingHour){
+	    	var days =  openingHour.days;
+	    	var counter = 0; 
+	    	for(var i = 0; i < days.length; i++){
+	    		if(!days[i].selected){
+	    			counter++;
+	    		}
+	    	}
+	    	return counter != 7;
+	    };
 	    
 	    $scope.cateringFacility.openingHours = [{
 			id : id,
