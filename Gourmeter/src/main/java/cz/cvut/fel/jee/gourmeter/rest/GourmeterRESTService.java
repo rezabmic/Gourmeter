@@ -28,7 +28,7 @@ public interface GourmeterRESTService {
 	// TODO zabezpeceni??? krome https, samozrejme
 	public UserDTO signIn(String login, String password);
 	
-	public List<TagDTO> getAllTags();
+	public List<String> getAllTags();
 	
 	public List<TagDTO> getTagsForCategory(Long categoryId);
 

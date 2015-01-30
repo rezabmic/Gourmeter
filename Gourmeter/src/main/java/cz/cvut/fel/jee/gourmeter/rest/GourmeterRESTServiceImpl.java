@@ -1,5 +1,6 @@
 package cz.cvut.fel.jee.gourmeter.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -119,9 +120,14 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@GET
 	@Path("/tags/all")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<TagDTO> getAllTags() {
+	public List<String> getAllTags() {
 		List<Tag> list = this.dataSession.getAllTags();
-		return DTOUtils.getTagDTOList(list);
+		List<String> result = new ArrayList<>();
+		for (int i = 0; i < result.size(); i++) 
+		{
+			result.add(list.get(i).getName());			
+		}
+		return result;
 	}
 
 	@Override

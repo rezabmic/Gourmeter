@@ -94,16 +94,24 @@ public class DataSessionBean implements DataSessionLocal {
 
 	@Override
 	public List<Tag> getAllTags() {
-		return new ArrayList<>();
+		TypedQuery<Tag> q = em.createNamedQuery("Tag.getAll", Tag.class);
+		return q.getResultList();
 	}
 
 	@Override
 	public List<Tag> getTagsForCategory(Long id) {
-		return new ArrayList<>();
+		//TODO		
+		TypedQuery<Category> q = em.createNamedQuery("Category.findById", Category.class);
+		q.setParameter("id", id);
+		Category c = q.getSingleResult();
+		if (c != null) return c.getTags();
+		else return new ArrayList<>();
 	}
 
 	@Override
-	public List<Category> getAllCategories() {
-		return new ArrayList<>();
+	public List<Category> getAllCategories() 
+	{
+		TypedQuery<Category> q = em.createNamedQuery("Category.getAll", Category.class);
+		return q.getResultList();
 	}
 }

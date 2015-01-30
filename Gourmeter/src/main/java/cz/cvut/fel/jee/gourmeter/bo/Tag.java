@@ -10,11 +10,12 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Jan Šrogl
+ * @author Jan Srogl
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name = "Tag.findByName", query = "SELECT e FROM Tag e where e.name = :name")
+	@NamedQuery(name = "Tag.findByName", query = "SELECT e FROM Tag e where e.name = :name"),
+	@NamedQuery(name = "Tag.getAll", query = "SELECT e FROM Tag e")	
 })
 @Table(name = "tag",
 		indexes = {@Index(name = "index_tag_name", columnList = "name", unique = true)})

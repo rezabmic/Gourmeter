@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class MenuDTO {
 
-	private static final DateFormat df = new SimpleDateFormat("hh:mm");
+	private static final DateFormat df = new SimpleDateFormat("HH:mm");
 
 	private String from;
 	private String to;
