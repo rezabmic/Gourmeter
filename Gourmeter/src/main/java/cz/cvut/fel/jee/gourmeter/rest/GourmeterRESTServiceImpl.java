@@ -19,7 +19,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
@@ -28,7 +27,6 @@ import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
-import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 import cz.cvut.fel.jee.gourmeter.dto.UserDTO;
 import cz.cvut.fel.jee.gourmeter.ejb.DataSessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
@@ -59,7 +57,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewFacility(CateringFacilityDTO facility,
-			@QueryParam("userId") Long userId) {
+										@QueryParam("userId") Long userId) {
 		try {
 			facilitySession.createOrUpdateFacility(facility, userId);
 		} catch (Exception e) {
@@ -70,7 +68,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@Override
 	public Response addRecommendation(Long facilityId, Long tagId, Long userId,
-			Boolean recommended) {
+										Boolean recommended) {
 		// TODO Auto-generated method stub
 
 		return Response.ok().build();
@@ -80,16 +78,11 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@POST
 	@Path("/cateringFacility/update")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response testerApproval(CateringFacilityDTO facility, Long userId) 
-	{
-		//TODO - kontrola usera
-		//if ()
-		if (true)
-		{
-			this.facilitySession.createOrUpdateFacility(facility, userId);
-			return Response.ok().build();
-		}
-		else return Response.status(Status.UNAUTHORIZED).build();
+	public Response testerApproval(CateringFacilityDTO facility,
+									@QueryParam("userId") Long userId) {
+		// TODO - kontrola usera
+		this.facilitySession.createOrUpdateFacility(facility, userId);
+		return Response.ok().build();
 	}
 
 	@Override
@@ -109,9 +102,10 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@GET
 	@Path("/cateringFacility/near/{leftTop}/{rightBottom}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<MarkerDTO> facilitiesNearLocation(
-			@PathParam("leftTop") double[] leftTopCorner,
-			@PathParam("rightBottom") double[] rightBottomCorner) {
+	public
+			List<MarkerDTO>
+			facilitiesNearLocation(	@PathParam("leftTop") double[] leftTopCorner,
+									@PathParam("rightBottom") double[] rightBottomCorner) {
 		// TODO Auto-generated method stub
 
 		List<MarkerDTO> result = new ArrayList<>();

@@ -54,7 +54,7 @@ public class FacilitySessionBeanTest {
 	
 	@Test
 	public void testCreateFacility() {
-		facilitySession.createNewFacility(TestUtils.createFacilityDTO(), 0L);
+		facilitySession.createOrUpdateFacility(TestUtils.createFacilityDTO(), 0L);
 		em.flush();
 		em.clear();
 		
