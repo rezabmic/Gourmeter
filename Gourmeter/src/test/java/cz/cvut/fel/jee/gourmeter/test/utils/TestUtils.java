@@ -59,15 +59,12 @@ public class TestUtils {
 
 	public static CateringFacility createCateringFacility(EntityManager em) {
 		CateringFacility cf = new CateringFacility();
-		cf.setAdditionConfirmed(true);
-		cf.setDateOfConfirmation(TEST_INSTANT);
 		cf.setCategory(createCategory(em));
 		cf.setCity(TEST_CITY);
 		cf.setStreet(TEST_STREET);
 		cf.setHouseNumber(TEST_HOUSE_NUMBER);
 		cf.setCityDistrict(TEST_CITY_DISTRICT);
 		cf.setCreator(null); // TODO
-		cf.setDateOfConfirmation(null); // TODO
 		cf.setDescription(TEST_DECRIPTION);
 		cf.setLatitude(TEST_LATITUDE);
 		cf.setLongitude(TEST_LONGITUDE);

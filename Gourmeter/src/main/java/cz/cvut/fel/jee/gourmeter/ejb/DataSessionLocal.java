@@ -11,8 +11,6 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.bo.UserRole;
-import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
-import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 
 @Local
 public interface DataSessionLocal {

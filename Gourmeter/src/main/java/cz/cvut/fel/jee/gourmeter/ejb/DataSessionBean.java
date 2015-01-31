@@ -1,7 +1,6 @@
 package cz.cvut.fel.jee.gourmeter.ejb;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateless;

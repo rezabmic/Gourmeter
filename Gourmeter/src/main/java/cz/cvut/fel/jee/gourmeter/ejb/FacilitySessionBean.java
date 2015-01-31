@@ -19,7 +19,6 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
-import cz.cvut.fel.jee.gourmeter.bo.UserRole;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO.Day;
@@ -92,7 +91,6 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		CateringFacility f = new CateringFacility();
 		f.setCity(dto.getAddress().getCity());
 		f.setCityDistrict(null); // TODO
-		f.setDateOfConfirmation(null);
 		f.setDescription(dto.getDescription());
 		f.setHouseNumber(dto.getAddress().getHouseNumber());
 		f.setLatitude(dto.getLatitude());

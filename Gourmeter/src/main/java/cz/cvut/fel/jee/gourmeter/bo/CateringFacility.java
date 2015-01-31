@@ -64,13 +64,6 @@ public class CateringFacility extends AbstractBusinessObject {
 	@Column(nullable = true)
 	private String menuUrl;
 
-	@Column(nullable = true)
-	private Boolean additionConfirmed;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = true)
-	private Date dateOfConfirmation;
-
 	@Temporal(TemporalType.TIME)
 	@Column(nullable = true)
 	private Date menuFrom;
@@ -158,22 +151,6 @@ public class CateringFacility extends AbstractBusinessObject {
 
 	public void setCreator(User creator) {
 		this.creator = creator;
-	}
-
-	public Boolean getAdditionConfirmed() {
-		return additionConfirmed;
-	}
-
-	public void setAdditionConfirmed(Boolean additionConfirmed) {
-		this.additionConfirmed = additionConfirmed;
-	}
-
-	public Date getDateOfConfirmation() {
-		return dateOfConfirmation;
-	}
-
-	public void setDateOfConfirmation(Date dateOfConfirmation) {
-		this.dateOfConfirmation = dateOfConfirmation;
 	}
 
 	public Date getMenuFrom() {
