@@ -57,7 +57,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewFacility(CateringFacilityDTO facility,
-										@QueryParam("userId") Long userId) {
+			@QueryParam("userId") Long userId) {
 		try {
 			facilitySession.createOrUpdateFacility(facility, userId);
 		} catch (Exception e) {
@@ -67,8 +67,8 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	public Response addRecommendation(Long facilityId, Long tagId, Long userId,
-										Boolean recommended) {
+	public Response addRecommendation(Long tagId, Long facilityId, Long userId,
+			Boolean recommended) {
 		// TODO Auto-generated method stub
 
 		return Response.ok().build();
@@ -79,7 +79,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility/update")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response testerApproval(CateringFacilityDTO facility,
-									@QueryParam("userId") Long userId) {
+			@QueryParam("userId") Long userId) {
 		// TODO - kontrola usera
 		this.facilitySession.createOrUpdateFacility(facility, userId);
 		return Response.ok().build();
@@ -102,10 +102,9 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@GET
 	@Path("/cateringFacility/near/{leftTop}/{rightBottom}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public
-			List<MarkerDTO>
-			facilitiesNearLocation(	@PathParam("leftTop") double[] leftTopCorner,
-									@PathParam("rightBottom") double[] rightBottomCorner) {
+	public List<MarkerDTO> facilitiesNearLocation(
+			@PathParam("leftTop") double[] leftTopCorner,
+			@PathParam("rightBottom") double[] rightBottomCorner) {
 		// TODO Auto-generated method stub
 
 		List<MarkerDTO> result = new ArrayList<>();

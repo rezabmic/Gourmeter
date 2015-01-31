@@ -16,7 +16,7 @@
 			- CF id - long
 			- user id - long
 
-[ALMOST DONE]	3) schvaleni testerem - priorita:střední
+[DONE]	3) schvaleni testerem - priorita:střední
 		- vstup
 			- user id - 
 			- facility DTO //editované  
@@ -37,7 +37,7 @@
 []	6) Tagy  - priorita:vysoká
  [DONE] 	6.1 getALL
 		- výstup - ["název tagu",...]
- [REQUEST FOR CHECK] 6.2 getByCategory 
+ [DONE] 6.2 getByCategory 
 		- vstup - categoryId - long
 		- výstup - ["název tagu",...]
 [DONE]	7) getCategories  - priorita:vysoká
