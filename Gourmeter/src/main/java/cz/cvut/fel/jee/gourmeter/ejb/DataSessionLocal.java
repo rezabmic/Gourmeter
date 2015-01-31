@@ -34,4 +34,7 @@ public interface DataSessionLocal {
 	public List<Tag> getTagsForCategory(Long id);
 
 	public List<Category> getAllCategories();
+
+	public void addRecommendation(Long tagId, Long facilityId, Long userId,
+			Boolean recommended);
 }

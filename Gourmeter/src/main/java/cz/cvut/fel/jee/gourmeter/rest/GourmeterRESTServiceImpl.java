@@ -67,10 +67,15 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	public Response addRecommendation(Long tagId, Long facilityId, Long userId,
-			Boolean recommended) {
-		// TODO Auto-generated method stub
-
+	@GET
+	@Path("/recommendation/{tagId}/{facilityId}/{userId}/{recommended} ")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addRecommendation(@PathParam("tagId") Long tagId,
+			@PathParam("facilityId") Long facilityId,
+			@PathParam("userId") Long userId,
+			@PathParam("recommended") Boolean recommended) {
+		this.dataSession.addRecommendation(tagId, facilityId, userId,
+				recommended);
 		return Response.ok().build();
 	}
 

@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
+import cz.cvut.fel.jee.gourmeter.bo.Recommendation;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.bo.UserRole;
@@ -99,18 +100,41 @@ public class DataSessionBean implements DataSessionLocal {
 
 	@Override
 	public List<Tag> getTagsForCategory(Long id) {
-		//TODO		
-		TypedQuery<Category> q = em.createNamedQuery("Category.findById", Category.class);
+		// TODO
+		TypedQuery<Category> q = em.createNamedQuery("Category.findById",
+				Category.class);
 		q.setParameter("id", id);
 		Category c = q.getSingleResult();
-		if (c != null) return c.getTags();
-		else return new ArrayList<>();
+		if (c != null)
+			return c.getTags();
+		else
+			return new ArrayList<>();
 	}
 
 	@Override
-	public List<Category> getAllCategories() 
-	{
-		TypedQuery<Category> q = em.createNamedQuery("Category.getAll", Category.class);
+	public List<Category> getAllCategories() {
+		TypedQuery<Category> q = em.createNamedQuery("Category.getAll",
+				Category.class);
 		return q.getResultList();
+	}
+
+	@Override
+	public void addRecommendation(Long tagId, Long facilityId, Long userId,
+			Boolean recommended) {
+		// TODO - budeme kontrolovat pritomnost Recommendation v DB??
+
+		CateringFacility cf = this.em.find(CateringFacility.class, facilityId);
+		Tag t = this.em.find(Tag.class, tagId);
+		User u = this.em.find(User.class, userId);
+
+		if ((cf != null) && (t != null) && (u != null)) {
+			Recommendation r = new Recommendation();
+			r.setTag(t);
+			r.setUser(u);
+			r.setCateringFacility(cf);
+			r.setRecommended(recommended);
+			this.em.persist(r);
+		}
+
 	}
 }
