@@ -16,12 +16,12 @@
 			- CF id - long
 			- user id - long
 
-[]	3) schvaleni testerem - priorita:střední
+[ALMOST DONE]	3) schvaleni testerem - priorita:střední
 		- vstup
 			- user id - 
 			- facility DTO //editované  
 
-[]	4) detail strav. zarizeni - priorita:vysoká
+[DONE]	4) detail strav. zarizeni - priorita:vysoká
 		- vstup
 			- fac. ID -long
 		- vystup 

@@ -19,7 +19,7 @@ public interface FacilitySessionLocal {
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
 			double longitude, double kilometerSearchDistance, long tagId);
 
-	public void createNewFacility(CateringFacilityDTO dto, Long userId);
+	public void createOrUpdateFacility(CateringFacilityDTO dto, Long userId);
 
 	public CateringFacility getFacilityById(Long id);
 

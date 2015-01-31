@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
@@ -60,7 +61,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	public Response createNewFacility(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
 		try {
-			facilitySession.createNewFacility(facility, userId);
+			facilitySession.createOrUpdateFacility(facility, userId);
 		} catch (Exception e) {
 			throw new InternalServerErrorException(e);
 		}
@@ -76,11 +77,19 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	public Response testerApproval(CateringFacilityDTO facility, Long userId,
-			Boolean approved) {
-		// TODO Auto-generated method stub
-
-		return Response.ok().build();
+	@POST
+	@Path("/cateringFacility/update")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response testerApproval(CateringFacilityDTO facility, Long userId) 
+	{
+		//TODO - kontrola usera
+		//if ()
+		if (true)
+		{
+			this.facilitySession.createOrUpdateFacility(facility, userId);
+			return Response.ok().build();
+		}
+		else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
 	@Override
@@ -146,8 +155,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	public List<String> getTagsForCategory(@PathParam("id") Long categoryId) {
 		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
 		List<String> result = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) 
-		{
+		for (int i = 0; i < list.size(); i++) {
 			result.add(list.get(i).getName());
 		}
 		return result;

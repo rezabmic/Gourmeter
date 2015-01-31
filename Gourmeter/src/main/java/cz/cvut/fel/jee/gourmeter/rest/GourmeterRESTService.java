@@ -17,8 +17,7 @@ public interface GourmeterRESTService {
 	public Response addRecommendation(Long facilityId, Long tagId, Long userId,
 			Boolean recommended);
 
-	public Response testerApproval(CateringFacilityDTO facility, Long userId,
-			Boolean approved);
+	public Response testerApproval(CateringFacilityDTO facility, Long userId);
 
 	public CateringFacilityDTO getFacilityById(Long id);
 

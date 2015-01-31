@@ -82,13 +82,14 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	}
 
 	@Override
-	public void createNewFacility(CateringFacilityDTO dto, Long userId) {
+	public void createOrUpdateFacility(CateringFacilityDTO dto, Long userId) {
 		if (dto == null || dto.getAddress() == null) {
 			throw new IllegalArgumentException("Wrong dto format."); // nasrat
 		}
 		DateFormat df = new SimpleDateFormat("hh:mm");
-
+		
 		CateringFacility f = new CateringFacility();
+		f.setId(dto.getId());
 		f.setCity(dto.getAddress().getCity());
 		f.setCityDistrict(null); // TODO
 		f.setDescription(dto.getDescription());
@@ -115,7 +116,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		setOpeningHours(dto.getOpeningHours(), df, f);
 		setTags(dto.getTags(), f);
 
-		em.persist(f);
+		if (f.getId() == null) em.persist(f);
+		else em.merge(f);
 	}
 
 	private void setTags(List<TagDTO> tags, CateringFacility f) {
