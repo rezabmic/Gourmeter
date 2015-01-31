@@ -10,6 +10,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -91,9 +92,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 		if (cf != null)
 			return DTOUtils.getCateringFacilityDTO(cf);
 		else {
-			// TODO - tady to chce vymyslet nejaky navratovy kod
-			// neco jako: return Response.noContent().build();
-			return null;
+			throw new NotFoundException("No such a facility with id: " + id);
 		}
 	}
 
@@ -144,9 +143,14 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@GET
 	@Path("/tags/byCategory/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<TagDTO> getTagsForCategory(@PathParam("id") Long categoryId) {
+	public List<String> getTagsForCategory(@PathParam("id") Long categoryId) {
 		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
-		return DTOUtils.getTagDTOList(list);
+		List<String> result = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) 
+		{
+			result.add(list.get(i).getName());
+		}
+		return result;
 	}
 
 	@Override

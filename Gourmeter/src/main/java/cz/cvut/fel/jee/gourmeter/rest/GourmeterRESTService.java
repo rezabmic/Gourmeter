@@ -29,7 +29,7 @@ public interface GourmeterRESTService {
 
 	public List<String> getAllTags();
 
-	public List<TagDTO> getTagsForCategory(Long categoryId);
+	public List<String> getTagsForCategory(Long categoryId);
 
 	public List<CategoryDTO> getAllCategories();
 
