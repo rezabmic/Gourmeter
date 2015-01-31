@@ -72,15 +72,38 @@
 	
 	appControllers.controller("MapController", ["$scope", "$http", function($scope, $http) {
 		$scope.selected = {
-				 options : {visible : false},
-				 
-			 };
+			options : {visible : false},	 
+		};
+		
 		var t1 = new Date();
 	    t1.setHours( 10 );
 	    t1.setMinutes( 0 );
 	    var t2 = new Date();
 	    t2.setHours( 14 );
 	    t2.setMinutes( 0 );
+	    
+	    // Try HTML5 geolocation
+	    if(navigator.geolocation) {
+	  	    navigator.geolocation.getCurrentPosition(function(position) {
+
+		  	    $scope.map.center.latitude = position.coords.latitude;
+		  	    $scope.map.center.longitude = position.coords.longitude;
+		  	    $scope.$apply();
+	  	    }, function() {
+	  	    	handleNoGeolocation(true);
+	  	    });
+	  	} else {
+	  	    // Browser doesn't support Geolocation
+	  	    handleNoGeolocation(false);
+	  	}
+	
+	  	function handleNoGeolocation(errorFlag) { //TODO
+	  	  if (errorFlag) {
+	  	    var content = 'Error: The Geolocation service failed.';
+	  	  } else {
+	  	    var content = 'Error: Your browser doesn\'t support geolocation.';
+	  	  }
+	  	}
 	    
 		$scope.map = { 
 				center: { latitude: 50.101500, longitude: 14.390791}, 
@@ -139,7 +162,7 @@
 					menu: null,
 					 openingHours: []
 				}
-				]};
+		]};
 		
 		_.each($scope.map.markers, function (marker) {
 			marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
@@ -178,20 +201,33 @@
 			url : '',
 			description : '',
 			address : {
-				city: '',
-				street: '',
-				cp : ''
+				city: 'Praha',
+				street: 'Zikova',
+				cp : 702
 			},
 			menu : {
 				from: menuFrom,
 				to : menuTo,
 				url : '',
-			}
+			},
+			latitude: null,
+			longitude: null,
 		};
 		
 		this.submit = function() {
 			var cf = $scope.cateringFacility;
-			
+			var geocoder = new google.maps.Geocoder();
+			//address format House Number, Street Direction, Street Name, Street Suffix, City, State, Zip, Country
+			var address = cf.address.cp + ", " + cf.address.street + ", " + cf.address.city;
+			geocoder.geocode( {'address': address}, function(results, status) {
+			    if (status == google.maps.GeocoderStatus.OK) {
+			    	cf.latitude = results[0].geometry.location.k;
+			    	cf.longitude = results[0].geometry.location.D;
+			    } else {
+			      alert('Geocode was not successful for the following reason: ' + status);
+			    }
+			});
+
 		}
 	}]);
 	

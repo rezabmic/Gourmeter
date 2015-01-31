@@ -59,18 +59,34 @@
 			<table>
 				<tr>
 					<td><label for="city">Město</label></td>
-					<td><input type="text" id="city"
-						ng-model="cateringFacility.address.city"></td>
+					<td><input type="text" id="city" name="city" ng-class="{inputError:(addForm.$submitted && addForm.city.$error.required)}" 
+						ng-model="cateringFacility.address.city" required></td>
+				</tr>
+				<tr ng-show="addForm.$submitted || addForm.city.$touched">
+					<td colspan="2" ng-show="addForm.city.$error.required" class="error">
+						Vyplňte prosím město.
+					</td>
 				</tr>
 				<tr>
 					<td><label for="street">Ulice</label></td>
-					<td><input type="text" id="street"
-						ng-model="cateringFacility.address.street"></td>
+					<td><input type="text" id="street" name="street" ng-class="{inputError:(addForm.$submitted && addForm.street.$error.required)}" 
+						ng-model="cateringFacility.address.street" required></td>
+				</tr>
+				<tr ng-show="addForm.$submitted || addForm.street.$touched">
+					<td colspan="2" ng-show="addForm.street.$error.required" class="error">
+						Vyplňte prosím ulici.
+					</td>
 				</tr>
 				<tr>
-					<td><label for="num">Číslo popisné</label></td>
-					<td><input type="number" id="num" maxlength="3"
-						ng-model="cateringFacility.address.cp"></td>
+					<td><label for="houseNum">Číslo popisné</label></td>
+					<td><input type="text" id="houseNum" name="houseNum" 
+						ng-class="{inputError:(addForm.$submitted && addForm.houseNum.$error.required)}"
+						ng-model="cateringFacility.address.cp" required></td>
+				</tr>
+				<tr ng-show="addForm.$submitted || addForm.houseNum.$touched">
+					<td colspan="2" ng-show="addForm.houseNum.$error.required" class="error">
+						Vyplňte prosím číslo popisné.
+					</td>
 				</tr>
 			</table>
 		</fieldset>
