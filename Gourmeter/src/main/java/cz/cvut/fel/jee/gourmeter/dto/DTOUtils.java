@@ -14,23 +14,19 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 public class DTOUtils {
 
 	public static List<TagDTO> getFacilityTags(CateringFacility f) {
-		Map<Long, TagDTO> tagsMap = new HashMap<>();
-		for (Recommendation r : f.getRecommendations()) {
-			Tag tag = r.getTag();
-			tagsMap.put(
-					tag.getId(),
-					new TagDTO(tag.getName(), r.getRecommended(), f
-							.getAdditionConfirmed()));
-		}
-
-		for (Tag tag : f.getTags()) {
-			if (!tagsMap.containsKey(tag.getId())) {
-				tagsMap.put(tag.getId(),
-						new TagDTO(tag.getName(), false, false));
-			}
-		}
-
-		return new ArrayList<>(tagsMap.values());
+		// TODO
+		/*
+		 * Map<Long, TagDTO> tagsMap = new HashMap<>(); for (Recommendation r :
+		 * f.getRecommendations()) { Tag tag = r.getTag(); tagsMap.put(
+		 * tag.getId(), new TagDTO(tag.getName(), r.getRecommended(), f
+		 * .getAdditionConfirmed())); }
+		 * 
+		 * for (Tag tag : f.getTags()) { if (!tagsMap.containsKey(tag.getId()))
+		 * { tagsMap.put(tag.getId(), new TagDTO(tag.getName(), 0 , 0)); } }
+		 * 
+		 * return new ArrayList<>(tagsMap.values());/*
+		 */
+		return null;
 	}
 
 	public static CategoryDTO getCategoryDTO(Category category) {
@@ -52,9 +48,13 @@ public class DTOUtils {
 			return null;
 	}
 
-	public static TagDTO getTagDTO(Tag tag) {
-		// TODO
-		return null;
+	public static TagDTO getTagDTO(Tag tag, Integer recommended,
+			Integer reviewed) {
+		if (tag == null)
+			return null;
+		else {
+			return new TagDTO(tag, recommended, reviewed);
+		}
 	}
 
 	public static List<CategoryDTO> getListCategoryDTO(List<Category> list) {
@@ -66,9 +66,10 @@ public class DTOUtils {
 	}
 
 	public static List<TagDTO> getTagDTOList(List<Tag> tags) {
+		// TODO
 		List<TagDTO> result = new ArrayList<>();
 		for (int i = 0; i < tags.size(); i++) {
-			result.add(DTOUtils.getTagDTO(tags.get(i)));
+			result.add(DTOUtils.getTagDTO(tags.get(i), 0, 0));
 		}
 		return result;
 	}

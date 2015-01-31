@@ -109,8 +109,8 @@ public class TestUtils {
 		cf.setUrl(TEST_URL);
 		cf.setOpeningHours(Arrays.asList(o));
 		
-		TagDTO fish = new TagDTO("rybka", false, false);
-		TagDTO dog = new TagDTO("pejsek", false, false);
+		TagDTO fish = new TagDTO("rybka", -1, -1);
+		TagDTO dog = new TagDTO("pejsek", -1, -1);
 		cf.setTags(Arrays.asList(fish, dog));
 		
 		return cf;

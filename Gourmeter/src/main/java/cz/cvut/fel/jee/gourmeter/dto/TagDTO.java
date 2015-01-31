@@ -5,13 +5,19 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 public class TagDTO {
 
 	private String name;
-	private Boolean recommended;
-	private Boolean reviewed;
+	private Integer recommended;
+	private Integer reviewed;
 
 	public TagDTO() {
 	}
 
-	public TagDTO(String name, Boolean recommended, Boolean reviewed) {
+	public TagDTO(Tag bo, Integer recommended, Integer reviewed) {
+		this.name = bo.getName();
+		this.recommended = recommended;
+		this.reviewed = reviewed;
+	}
+
+	public TagDTO(String name, Integer recommended, Integer reviewed) {
 		this.name = name;
 		this.recommended = recommended;
 		this.reviewed = reviewed;
@@ -21,11 +27,11 @@ public class TagDTO {
 		return name;
 	}
 
-	public Boolean getRecommended() {
+	public Integer getRecommended() {
 		return recommended;
 	}
 
-	public Boolean getReviewed() {
+	public Integer getReviewed() {
 		return reviewed;
 	}
 
@@ -33,11 +39,11 @@ public class TagDTO {
 		this.name = name;
 	}
 
-	public void setRecommended(Boolean recommended) {
+	public void setRecommended(Integer recommended) {
 		this.recommended = recommended;
 	}
 
-	public void setReviewed(Boolean reviewed) {
+	public void setReviewed(Integer reviewed) {
 		this.reviewed = reviewed;
 	}
 

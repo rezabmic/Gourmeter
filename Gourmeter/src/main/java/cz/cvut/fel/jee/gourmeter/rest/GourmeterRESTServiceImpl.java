@@ -98,9 +98,18 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	public MarkerDTO facilitiesNearLocation() {
+	@GET
+	@Path("/cateringFacility/near")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MarkerDTO> facilitiesNearLocation(
+			@PathParam("leftTop") double[] leftTopCorner,
+			@PathParam("rightBottom") double[] rightBottomCorner) {
 		// TODO Auto-generated method stub
-		return null;
+
+		List<MarkerDTO> result = new ArrayList<>();
+		result.add(new MarkerDTO(new CateringFacility()));
+
+		return result;
 	}
 
 	@Override
@@ -125,16 +134,15 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	public List<String> getAllTags() {
 		List<Tag> list = this.dataSession.getAllTags();
 		List<String> result = new ArrayList<>();
-		for (int i = 0; i < result.size(); i++) 
-		{
-			result.add(list.get(i).getName());			
+		for (int i = 0; i < result.size(); i++) {
+			result.add(list.get(i).getName());
 		}
 		return result;
 	}
 
 	@Override
 	@GET
-	@Path("/tags/{id}")
+	@Path("/tags/byCategory/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TagDTO> getTagsForCategory(@PathParam("id") Long categoryId) {
 		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
@@ -149,13 +157,12 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 		List<Category> c = this.dataSession.getAllCategories();
 		return DTOUtils.getListCategoryDTO(c);
 	}
-	
+
 	@GET
 	@Path("/whatsyourip")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testIp(@Context HttpServletRequest request) {
-		
+
 		return request.getRemoteAddr().toString();
 	}
-
 }

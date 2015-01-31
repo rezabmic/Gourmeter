@@ -14,26 +14,26 @@ public interface GourmeterRESTService {
 
 	public Response createNewFacility(CateringFacilityDTO facility, Long userId);
 
-	public Response addRecommendation(	Long facilityId,
-									Long tagId,
-									Long userId,
-									Boolean recommended);
+	public Response addRecommendation(Long facilityId, Long tagId, Long userId,
+			Boolean recommended);
 
-	public Response testerApproval(CateringFacilityDTO facility, Long userId, Boolean approved);
+	public Response testerApproval(CateringFacilityDTO facility, Long userId,
+			Boolean approved);
 
 	public CateringFacilityDTO getFacilityById(Long id);
-	
+
 	public UserDTO getCurrentUser();
-	
+
 	// TODO zabezpeceni??? krome https, samozrejme
 	public UserDTO signIn(String login, String password);
-	
+
 	public List<String> getAllTags();
-	
+
 	public List<TagDTO> getTagsForCategory(Long categoryId);
 
 	public List<CategoryDTO> getAllCategories();
-	
-	// TODO podrobne parametry
-	public MarkerDTO facilitiesNearLocation(/* TODO */);
+
+	public List<MarkerDTO> facilitiesNearLocation(double[] leftTopCorner,
+			double[] rightBottomCorner);
+
 }
