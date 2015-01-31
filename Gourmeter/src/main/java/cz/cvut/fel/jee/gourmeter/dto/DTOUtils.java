@@ -34,8 +34,14 @@ public class DTOUtils {
 	}
 
 	public static CategoryDTO getCategoryDTO(Category category) {
-		// TODO
-		return null;
+		if (category == null)
+			return null;
+		else {
+			CategoryDTO dto = new CategoryDTO();
+			dto.setId(category.getId());
+			dto.setName(category.getName());
+			return dto;
+		}
 	}
 
 	public static CateringFacilityDTO getCateringFacilityDTO(
