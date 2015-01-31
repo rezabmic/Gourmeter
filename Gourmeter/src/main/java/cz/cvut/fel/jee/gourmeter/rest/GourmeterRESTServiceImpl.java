@@ -99,7 +99,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@Override
 	@GET
-	@Path("/cateringFacility/near")
+	@Path("/cateringFacility/near/{leftTop}/{rightBottom}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MarkerDTO> facilitiesNearLocation(
 			@PathParam("leftTop") double[] leftTopCorner,

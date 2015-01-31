@@ -7,13 +7,14 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 
 public class CateringFacilityDTO {
-            
+
+	private Long id;
 	private String title;
 	private String url;
 	private String description;
 	private Double latitude;
 	private Double longitude;
-    private Long categoryId;        
+	private Long categoryId;
 	private MenuDTO menu;
 	private AddressDTO address;
 	private List<TagDTO> tags;
@@ -21,7 +22,7 @@ public class CateringFacilityDTO {
 
 	public CateringFacilityDTO() {
 	}
-	
+
 	public CateringFacilityDTO(CateringFacility f) {
 		title = f.getName();
 		url = f.getUrl();
@@ -113,9 +114,17 @@ public class CateringFacilityDTO {
 	public Long getCategoryId() {
 		return categoryId;
 	}
-	
+
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }
