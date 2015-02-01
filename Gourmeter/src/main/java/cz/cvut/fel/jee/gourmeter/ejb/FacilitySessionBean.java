@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
@@ -84,9 +85,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	@Override
 	public void createOrUpdateFacility(CateringFacilityDTO dto, Long userId) {
 		if (dto == null || dto.getAddress() == null) {
-			throw new IllegalArgumentException("Wrong dto format."); // nasrat
+			throw new IllegalArgumentException("Wrong dto format.");
 		}
-		DateFormat df = new SimpleDateFormat("hh:mm");
+		DateFormat df = new SimpleDateFormat("HH:mm");
 		
 		CateringFacility f = new CateringFacility();
 		f.setId(dto.getId());
@@ -102,12 +103,14 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		} catch (ParseException | NullPointerException e) {
 			log.warn(e.getMessage());
 		}
-		f.setMenuUrl(dto.getUrl()); // TODO
+		f.setMenuUrl(dto.getMenu().getUrl());
 		f.setName(dto.getTitle());
 		f.setStreet(dto.getAddress().getStreet());
 		f.setUrl(dto.getUrl());
-
-		f.setCategory(null); // TODO
+		
+		Category category = em.find(Category.class, dto.getCategoryId());
+		f.setCategory(category); 
+		
 		User creator = em.find(User.class, userId);
 		if (creator == null) {
 			log.warn("Catering facility creator not found");
@@ -134,10 +137,12 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 			try {
 				tag = q.getSingleResult();
 			} catch (NoResultException e) {
+				// TODO
 				tag = new Tag();
 				tag.setName(t.getName());
 				tag.setCategory(null); // TODO
 				em.persist(tag);
+				//throw new IllegalArgumentException("unknown tag '" + t.getName() + "'");
 			}
 
 			f.getTags().add(tag);

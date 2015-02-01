@@ -10,13 +10,15 @@ public class MenuDTO {
 
 	private String from;
 	private String to;
+	private String url;
 
 	public MenuDTO() {
 	}
 
-	public MenuDTO(Date menuFrom, Date menuTo) {
+	public MenuDTO(Date menuFrom, Date menuTo, String url) {
 		from = df.format(menuFrom);
 		to = df.format(menuTo);
+		this.url = url;
 	}
 
 	public String getFrom() {
@@ -33,6 +35,14 @@ public class MenuDTO {
 
 	public void setTo(String to) {
 		this.to = to;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

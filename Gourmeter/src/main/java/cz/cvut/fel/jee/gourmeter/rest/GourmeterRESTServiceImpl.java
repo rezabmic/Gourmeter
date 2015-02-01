@@ -55,7 +55,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@POST
 	@Path("/cateringFacility")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)	
 	public Response createNewFacility(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
 		try {

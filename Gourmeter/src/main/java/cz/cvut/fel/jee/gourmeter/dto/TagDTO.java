@@ -22,6 +22,10 @@ public class TagDTO {
 		this.recommended = recommended;
 		this.reviewed = reviewed;
 	}
+	
+	public TagDTO(String name) {
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;

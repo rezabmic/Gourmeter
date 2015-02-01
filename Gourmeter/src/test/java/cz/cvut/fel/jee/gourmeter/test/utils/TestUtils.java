@@ -93,7 +93,7 @@ public class TestUtils {
 	
 	public static CateringFacilityDTO createFacilityDTO() {
 		AddressDTO a = new AddressDTO(TEST_CITY, TEST_STREET, TEST_HOUSE_NUMBER);
-		MenuDTO m = new MenuDTO(getHours(11, 0), getHours(14, 30));
+		MenuDTO m = new MenuDTO(getHours(11, 0), getHours(14, 30), null);
 		OpeningHoursDTO o = getTestOpeningHoursDTO();
 		
 		CateringFacilityDTO cf = new CateringFacilityDTO();
@@ -105,6 +105,7 @@ public class TestUtils {
 		cf.setTitle(TEST_FACILITY_NAME);
 		cf.setUrl(TEST_URL);
 		cf.setOpeningHours(Arrays.asList(o));
+		cf.setCategoryId(1L);
 		
 		TagDTO fish = new TagDTO("rybka", -1, -1);
 		TagDTO dog = new TagDTO("pejsek", -1, -1);

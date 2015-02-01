@@ -1,13 +1,18 @@
 (function() {
-var appServices = angular.module("appServices",[])
+var appServices = angular.module("appServices",['ngResource']);
 
-appServices.value('Categories', function(){
-	return [{id:1, name:'hlavní jídlo'}, {id:2, name: 'rychlé občerstvení'}, {id:3, name:'potraviny'}];
-});
+appServices.factory('Categories', ['$resource',  function($resource){
+      return $resource('service/category/all', {}, {
+                 query: {method:'GET', isArray:true}
+      });
+}]);
 
-appServices.value('Tags', function(category){
-	return ['menu','česká kuchyně','mezinárodní kuchyně', 'regionální kuchyně', 'grilované pokrmy', 'vegetariánské pokrmy'];
-});
+
+appServices.factory('Tags',  ['$resource',  function($resource){
+	return $resource('service/tags/byCategory/:categoryId', {}, {
+        query: {method:'GET', params: {categoryId: '@categoryId'}, isArray:true}
+	});
+}]);
 
 appServices.value('MenuTag', function(){
 	return 'menu';
@@ -17,6 +22,10 @@ appServices.value('Days', function(){
 	return ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek',  'Pátek', 'Sobota', 'Neděle'];
 });
 
-
+appServices.factory('CateringFacility',  ['$resource',  function($resource){
+	return $resource('service/cateringFacility/:cfId', {cfId:'@id'}, {
+        save: {method:'POST', params: {userId: 1}}
+	});
+}]);
 
 })();

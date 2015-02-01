@@ -21,6 +21,7 @@
 
 	<dependencyManagement>
 		<dependencies>
+		
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
 				<artifactId>jboss-javaee-web-7.0</artifactId>

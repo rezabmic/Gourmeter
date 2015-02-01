@@ -29,7 +29,7 @@ public class CateringFacilityDTO {
 		description = f.getDescription();
 		latitude = f.getLatitude();
 		longitude = f.getLongitude();
-		menu = new MenuDTO(f.getMenuFrom(), f.getMenuTo());
+		menu = new MenuDTO(f.getMenuFrom(), f.getMenuTo(), f.getMenuUrl());
 		address = new AddressDTO(f.getCity(), f.getStreet(), f.getHouseNumber());
 		categoryId = f.getCategory().getId();
 		tags = DTOUtils.getFacilityTags(f);

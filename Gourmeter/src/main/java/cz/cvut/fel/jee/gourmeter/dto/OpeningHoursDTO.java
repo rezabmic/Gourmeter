@@ -5,11 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpeningHoursDTO {
 
-	private static final DateFormat df = new SimpleDateFormat("hh:mm");
+	private static final DateFormat df = new SimpleDateFormat("HH:mm");
 
 	private String openFrom;
 	private String openTo;
@@ -31,6 +35,7 @@ public class OpeningHoursDTO {
 		days.add(new Day(o.getDayNum(), false));
 	}
 
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Day {
 
 		private short dayNum;
