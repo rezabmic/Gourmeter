@@ -7,4 +7,3 @@ release.properties
 Gourmeter/.classpath
 Gourmeter/.project
 Gourmeter/.settings
-Gourmeter/src/test/resources/arquillian.xml
