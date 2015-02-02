@@ -49,7 +49,7 @@ public class TestServlet extends HttpServlet {
 
             EmailMessage em = new EmailMessage();
             em.setReceiverEmail("receiver@email.com");
-            em.setTemplateName("someEmailTemplate");
+            em.setTemplateName("InvitationMail");
             em.setParams(new HashMap<>());
             
             sender.sendMessage(em);

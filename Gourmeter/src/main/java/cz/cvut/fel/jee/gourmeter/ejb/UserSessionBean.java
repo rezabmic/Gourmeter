@@ -127,8 +127,7 @@ public class UserSessionBean implements UserSessionLocal {
 	}
 
 	private void setUserPassword(String password, User u) throws SignInException {
-		String encPasswd = getDecodedPassword(password);
-		u.setPasswdHash(getPasswordHash(encPasswd));
+		u.setPasswdHash(getPasswordHash(password));
 	}
 
 	private String getDecodedPassword(String password) throws SignInException {
