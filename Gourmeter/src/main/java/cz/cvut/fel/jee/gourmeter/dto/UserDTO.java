@@ -9,7 +9,13 @@ public class UserDTO {
 	private String fullName;
 	private String email;
 	private String city;
+	
+	/**
+	 * Password is send from client to server only in case of its change.
+	 * It should be encoded (base64).
+	 */
 	private String password;
+	private String newPassword;
 
 	public UserDTO() {
 	}
@@ -21,6 +27,7 @@ public class UserDTO {
 		email = u.getEmail();
 		city = u.getCity();
 		password = null;
+		newPassword = null;
 	}
 
 	public Long getUserId() {
@@ -71,4 +78,12 @@ public class UserDTO {
 		this.password = password;
 	}
 
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+	
 }

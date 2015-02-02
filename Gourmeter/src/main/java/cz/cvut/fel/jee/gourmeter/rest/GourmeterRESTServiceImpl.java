@@ -3,10 +3,11 @@ package cz.cvut.fel.jee.gourmeter.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
@@ -27,11 +28,8 @@ import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
-import cz.cvut.fel.jee.gourmeter.dto.UserDTO;
 import cz.cvut.fel.jee.gourmeter.ejb.DataSessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
-import cz.cvut.fel.jee.gourmeter.ejb.UserSessionLocal;
-import cz.cvut.fel.jee.gourmeter.exception.SignInException;
 
 @Path("")
 @ApplicationScoped
@@ -41,13 +39,11 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	private FacilitySessionLocal facilitySession;
 
 	@Inject
-	private UserSessionLocal userSession;
-
-	@Inject
 	private DataSessionLocal dataSession;
 
 	@GET
 	@Path("/hello")
+	@RolesAllowed({"user", "tester"})
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testMethod() {
 		return "testovaci metoda!!!";
@@ -55,6 +51,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@POST
 	@Path("/cateringFacility")
+	@PermitAll
 	@Consumes(MediaType.APPLICATION_JSON)	
 	public Response createNewFacility(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
@@ -119,21 +116,6 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	public UserDTO getCurrentUser() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public UserDTO signIn(String login, String password) {
-		try {
-			return userSession.authenticateUser(login, password);
-		} catch (SignInException e) {
-			throw new BadRequestException("Bad credentials");
-		}
-	}
-
-	@Override
 	@GET
 	@Path("/tags/all")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -170,6 +152,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@GET
 	@Path("/whatsyourip")
+	@RolesAllowed({"admin"})
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testIp(@Context HttpServletRequest request) {
 
