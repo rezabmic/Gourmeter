@@ -5,9 +5,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.ExternalContextFactory;
+import javax.faces.context.ExternalContextWrapper;
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +45,17 @@ public class EmailSender {
 
 		// vyber sablony
 		if (templateFile != null)
-			address = templateFile.getTemplateFileName();
+			address =  templateFile.getPath() + templateFile.getTemplateFileName();
 
 		// kontrola dostupnosti souboru
+		
+		URL url = this.getClass().getResource(address);
+		if (url != null)
+		{
+			address = url.getPath();
+		}
+				
+		
 		File file = new File(address);
 
 		String template = null;
@@ -66,6 +81,10 @@ public class EmailSender {
 
 	}
 
+	public void sendMessage(EmailMessage message)
+	{
+		this.sendMessage(message.getReceiverEmail(), message.getParams(), TemplateType.valueOf(message.getTemplateName()));
+	}
 	private String readTemplateFromFile(File file) {
 		FileReader fr = null;
 		try {
