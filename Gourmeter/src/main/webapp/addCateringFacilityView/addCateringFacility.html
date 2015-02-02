@@ -1,8 +1,8 @@
 ﻿
 <h2>Přidat stravovací zařízení</h2>
 
-<form name="addForm" class="css-form" ng-controller="MainController as main"
-	ng-submit="addForm.$valid && main.submit()" novalidate>
+<form name="addForm" class="css-form" ng-controller="AddCateringFacilityCtrl as addCFCtrl"
+	ng-submit="addForm.$valid && addCFCtrl.submit()" novalidate>
 <!-- novalidate is used to disable browser's native form validation. -->
 	<div class="form-group">
 		<label for="title">Název*</label> 
@@ -17,7 +17,7 @@
 		<label for="title">Kategorie*</label> 
 		<select class="form-control" name="categories" ng-model="cateringFacility.categoryId" 
 				ng-options="category.id as category.name for category in categoriesCtrl.categories"
-				ng-class="{inputError:(addForm.$submitted && addForm.categories.$error.required)}" ng-change="main.changeTags()" required>
+				ng-class="{inputError:(addForm.$submitted && addForm.categories.$error.required)}" ng-change="categoriesCtrl.changeTags()" required>
 			<option value="">-- vyberte kategorii --</option>
 		</select>
 		<div ng-show="addForm.$submitted || addForm.categories.$touched">
@@ -44,7 +44,7 @@
 		<fieldset ng-controller="TagController as tagCtrl">
 			<legend>Tagy</legend>
 			<label for="{{tag}}" class="checkbox-inline"
-				ng-repeat="tag in main.tags"> 
+				ng-repeat="tag in tags.array"> 
 				<input id="{{tag}}" type='checkbox' ng-checked="cateringFacility.tags.indexOf(tag) > -1"
 				ng-click="tagCtrl.toggleSelection(tag)">{{tag}}
 			</label>
