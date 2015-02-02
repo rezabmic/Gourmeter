@@ -6,16 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import javax.ejb.Stateless;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.ExternalContextFactory;
-import javax.faces.context.ExternalContextWrapper;
-import javax.servlet.ServletContext;
 
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,17 +42,16 @@ public class EmailSender {
 
 		// vyber sablony
 		if (templateFile != null)
-			address =  templateFile.getPath() + templateFile.getTemplateFileName();
+			address = templateFile.getPath()
+					+ templateFile.getTemplateFileName();
 
 		// kontrola dostupnosti souboru
-		
+
 		URL url = this.getClass().getResource(address);
-		if (url != null)
-		{
+		if (url != null) {
 			address = url.getPath();
 		}
-				
-		
+
 		File file = new File(address);
 
 		String template = null;
@@ -77,14 +73,14 @@ public class EmailSender {
 		}
 
 		// odeslani emailu
-		// TODO
-
+		this.sendEmail(emailAddress, templateFile.getSubject(), template);
 	}
 
-	public void sendMessage(EmailMessage message)
-	{
-		this.sendMessage(message.getReceiverEmail(), message.getParams(), TemplateType.valueOf(message.getTemplateName()));
+	public void sendMessage(EmailMessage message) {
+		this.sendMessage(message.getReceiverEmail(), message.getParams(),
+				TemplateType.valueOf(message.getTemplateName()));
 	}
+
 	private String readTemplateFromFile(File file) {
 		FileReader fr = null;
 		try {
@@ -127,5 +123,33 @@ public class EmailSender {
 			}
 		}
 		return result.toString();
+	}
+
+	private void sendEmail(String emailAddress, String subject, String text) {
+
+		// TODO
+		final String SMTP_SERVER = "nejaky SMTP";// "smtp.googlemail.com";
+		final Integer PORT = 465;
+		final String USERNAME = "username";
+		final String PASSWORD = "password";
+		final String FROM_FIELD = "Gourmeter";
+
+		
+		/*Email email = new SimpleEmail();
+		email.setHostName(SMTP_SERVER);
+		email.setSmtpPort(PORT);
+		email.setAuthenticator(new DefaultAuthenticator(USERNAME, PASSWORD));
+		// email.setSSLOnConnect(true);
+		try {
+			email.setFrom(FROM_FIELD);
+			email.setSubject("[Gourmeter] - " + subject);
+			email.setMsg(text);
+			email.addTo(emailAddress);
+			email.send();
+			log.info("Email sended");
+		} catch (Exception e) {
+			log.error("Could not send an email: " + emailAddress + " "
+					+ subject + " " + text + " " + e.getMessage());
+		}/**/
 	}
 }
