@@ -31,8 +31,8 @@ public class User extends AbstractBusinessObject {
 	private String passwdHash;
 
 	@NotNull
-	@Column(name = "full_name")
-	private String fullName;
+	@Column(name = "nickname")
+	private String nickname;
 
 	@Email
 	@Column(name = "email")
@@ -60,12 +60,12 @@ public class User extends AbstractBusinessObject {
 		this.passwdHash = passwdHash;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public UserRole getUserRole() {

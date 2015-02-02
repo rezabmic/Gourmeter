@@ -6,7 +6,7 @@ public class UserDTO {
 
 	private Long userId;
 	private String login;
-	private String fullName;
+	private String nickname;
 	private String email;
 	private String city;
 	
@@ -23,7 +23,7 @@ public class UserDTO {
 	public UserDTO(User u) {
 		userId = u.getId();
 		login = u.getLogin();
-		fullName = u.getFullName();
+		nickname = u.getNickname();
 		email = u.getEmail();
 		city = u.getCity();
 		password = null;
@@ -46,12 +46,12 @@ public class UserDTO {
 		this.login = login;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getEmail() {
