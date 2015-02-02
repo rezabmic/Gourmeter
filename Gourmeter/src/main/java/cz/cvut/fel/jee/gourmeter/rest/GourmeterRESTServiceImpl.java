@@ -43,7 +43,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@GET
 	@Path("/hello")
-	@RolesAllowed({"user", "tester"})
+	@RolesAllowed({ "user", "tester" })
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testMethod() {
 		return "testovaci metoda!!!";
@@ -52,7 +52,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@POST
 	@Path("/cateringFacility")
 	@PermitAll
-	@Consumes(MediaType.APPLICATION_JSON)	
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewFacility(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
 		try {
@@ -107,11 +107,13 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	public List<MarkerDTO> facilitiesNearLocation(
 			@PathParam("leftTop") double[] leftTopCorner,
 			@PathParam("rightBottom") double[] rightBottomCorner) {
-		// TODO Auto-generated method stub
+		List<CateringFacility> facilities = this.facilitySession
+				.getFacilitiesInArea(leftTopCorner, rightBottomCorner);
 
 		List<MarkerDTO> result = new ArrayList<>();
-		result.add(new MarkerDTO(new CateringFacility()));
-
+		for (int i = 0; i < facilities.size(); i++) {
+			result.add(new MarkerDTO(facilities.get(i)));
+		}
 		return result;
 	}
 
@@ -152,7 +154,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@GET
 	@Path("/whatsyourip")
-	@RolesAllowed({"admin"})
+	@RolesAllowed({ "admin" })
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testIp(@Context HttpServletRequest request) {
 

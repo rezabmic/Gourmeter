@@ -13,6 +13,9 @@ public interface FacilitySessionLocal {
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
 			double longitude);
 
+	public List<CateringFacility> getFacilitiesInArea(double[] leftTopCorner,
+			double[] rightBottomCorner);
+
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
 			double longitude, double kilometerSearchDistance);
 
