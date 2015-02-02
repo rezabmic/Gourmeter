@@ -82,13 +82,24 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		return dao.findFacilitiesByGPSAndTag(csw, tag);
 	}
 
+	/**
+	 * Vraci CateringFacility na zaklade "okna": format [latitude, longitude]
+	 */
+	public List<CateringFacility> getFacilitiesInArea(double[] leftTopCorner,
+			double[] rightBottomCorner) {
+		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
+				leftTopCorner[1], rightBottomCorner[1], rightBottomCorner[0],
+				leftTopCorner[0]);
+		return this.dao.findFacilitiesByGPS(csw);
+	}
+
 	@Override
 	public void createOrUpdateFacility(CateringFacilityDTO dto, Long userId) {
 		if (dto == null || dto.getAddress() == null) {
 			throw new IllegalArgumentException("Wrong dto format.");
 		}
 		DateFormat df = new SimpleDateFormat("HH:mm");
-		
+
 		CateringFacility f = new CateringFacility();
 		f.setId(dto.getId());
 		f.setCity(dto.getAddress().getCity());
@@ -107,10 +118,10 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		f.setName(dto.getTitle());
 		f.setStreet(dto.getAddress().getStreet());
 		f.setUrl(dto.getUrl());
-		
+
 		Category category = em.find(Category.class, dto.getCategoryId());
-		f.setCategory(category); 
-		
+		f.setCategory(category);
+
 		User creator = em.find(User.class, userId);
 		if (creator == null) {
 			log.warn("Catering facility creator not found");
@@ -119,8 +130,10 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		setOpeningHours(dto.getOpeningHours(), df, f);
 		setTags(dto.getTags(), f);
 
-		if (f.getId() == null) em.persist(f);
-		else em.merge(f);
+		if (f.getId() == null)
+			em.persist(f);
+		else
+			em.merge(f);
 	}
 
 	private void setTags(List<TagDTO> tags, CateringFacility f) {
@@ -142,7 +155,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				tag.setName(t.getName());
 				tag.setCategory(null); // TODO
 				em.persist(tag);
-				//throw new IllegalArgumentException("unknown tag '" + t.getName() + "'");
+				// throw new IllegalArgumentException("unknown tag '" +
+				// t.getName() + "'");
 			}
 
 			f.getTags().add(tag);
