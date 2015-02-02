@@ -18,10 +18,6 @@ public class MessageSender {
     
     @Resource(mappedName="java:global/jms/myQueue")
     Queue queue;
-
-    public void sendMessage(String message) {
-        context.createProducer().send(queue, message);
-    }
     
     public void sendMessage(EmailMessage message) {
         context.createProducer().send(queue, message);
