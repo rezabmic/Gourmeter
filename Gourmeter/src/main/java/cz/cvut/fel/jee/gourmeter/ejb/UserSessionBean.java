@@ -122,7 +122,7 @@ public class UserSessionBean implements UserSessionLocal {
 	private void setUserAttributes(UserDTO user, User u) {
 		u.setCity(user.getCity());
 		u.setEmail(user.getEmail());
-		u.setFullName(user.getFullName());
+		u.setNickname(user.getNickname());
 		u.setLogin(user.getLogin());
 	}
 
