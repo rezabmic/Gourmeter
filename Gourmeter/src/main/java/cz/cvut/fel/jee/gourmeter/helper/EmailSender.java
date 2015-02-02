@@ -8,7 +8,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
@@ -23,6 +30,9 @@ public class EmailSender {
 	private static final Logger log = LoggerFactory
 			.getLogger(FacilitySessionBean.class);
 
+	@Resource(mappedName = "java:jboss/mail/Default")
+	private Session mailSession;
+	
 	/**
 	 * Odesle zpravu, dle zvolene sablony a se zadanymi parametry, na zadanou
 	 * emailovou adresu
@@ -128,12 +138,34 @@ public class EmailSender {
 	private void sendEmail(String emailAddress, String subject, String text) {
 
 		// TODO
-		final String SMTP_SERVER = "nejaky SMTP";// "smtp.googlemail.com";
-		final Integer PORT = 465;
-		final String USERNAME = "username";
-		final String PASSWORD = "password";
+		//final String SMTP_SERVER = "smtp.gmail.com";
+		//final Integer PORT = 465;
+		//final String USERNAME = "username";
+		//final String PASSWORD = "password";
 		final String FROM_FIELD = "Gourmeter";
 
+		
+		try    {
+            MimeMessage m = new MimeMessage(mailSession);
+            Address from = new InternetAddress(FROM_FIELD);
+            Address[] to = new InternetAddress[] {new InternetAddress(emailAddress) };
+ 
+            m.setFrom(from);
+            m.setRecipients(Message.RecipientType.TO, to);
+            m.setSubject("WildFly Mail");
+            m.setSentDate(new java.util.Date());
+            m.setContent(text,"text/plain");
+            Transport.send(m);             
+        }
+        catch (javax.mail.MessagingException e)
+        {
+        	log.error("Could not send an email: " + emailAddress + " "
+					+ subject + " " + text + " " + e.getMessage());
+            //e.printStackTrace();             
+        } 
+		
+		
+		
 		
 		/*Email email = new SimpleEmail();
 		email.setHostName(SMTP_SERVER);
