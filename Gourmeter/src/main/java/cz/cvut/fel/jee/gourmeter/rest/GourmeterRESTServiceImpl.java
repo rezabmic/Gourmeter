@@ -51,7 +51,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@POST
 	@Path("/cateringFacility")
-	@PermitAll
+	@RolesAllowed({ "user", "tester", "admin" })
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewFacility(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
@@ -66,6 +66,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Override
 	@GET
 	@Path("/recommendation/{tagId}/{facilityId}/{userId}/{recommended} ")
+	@RolesAllowed({ "user", "tester", "admin" })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addRecommendation(@PathParam("tagId") Long tagId,
 			@PathParam("facilityId") Long facilityId,
@@ -79,6 +80,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Override
 	@POST
 	@Path("/cateringFacility/update")
+	@RolesAllowed({ "user", "tester", "admin" })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response testerApproval(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
@@ -90,6 +92,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Override
 	@GET
 	@Path("/cateringFacility/{id}")
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public CateringFacilityDTO getFacilityById(@PathParam("id") Long id) {
 		CateringFacility cf = this.facilitySession.getFacilityById(id);
@@ -104,6 +107,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@GET
 	@Path("/cateringFacility/near/{leftTop}/{rightBottom}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll
 	public List<MarkerDTO> facilitiesNearLocation(
 			@PathParam("leftTop") double[] leftTopCorner,
 			@PathParam("rightBottom") double[] rightBottomCorner) {
@@ -120,6 +124,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Override
 	@GET
 	@Path("/tags/all")
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getAllTags() {
 		List<Tag> list = this.dataSession.getAllTags();
@@ -133,6 +138,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Override
 	@GET
 	@Path("/tags/byCategory/{id}")
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getTagsForCategory(@PathParam("id") Long categoryId) {
 		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
@@ -146,6 +152,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Override
 	@GET
 	@Path("/category/all")
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<CategoryDTO> getAllCategories() {
 		List<Category> c = this.dataSession.getAllCategories();
@@ -154,7 +161,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@GET
 	@Path("/whatsyourip")
-	@RolesAllowed({ "admin" })
+	@PermitAll
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testIp(@Context HttpServletRequest request) {
 
