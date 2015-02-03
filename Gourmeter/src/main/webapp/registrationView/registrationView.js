@@ -16,31 +16,46 @@ registrationViewModule.factory('Registration',  ['$resource',  function($resourc
 	return $resource('service/user/create', {}, {});
 }]);
 
+////RESTfull client for testUniqueLogin
+registrationViewModule.factory('UniqueLogin',  ['$resource',  function($resource){
+	return $resource('service/user/testUniqueLogin', {login: '@login'}, {});
+}]);
+
+
 //Model
 var user = {
-	login: 'a',
-	nickname: 'a',
-	email: 'a@a',
-	city: 'a',
-	password: 'a',
-	password2: 'a',
+	login: '',
+	nickname: '',
+	email: '',
+	city: '',
+	password: '',
+	password2: '',
 };
 
 //Controllers
-registrationViewModule.controller("RegistrationCtrl", function($scope, Registration) {
+registrationViewModule.controller("RegistrationCtrl", function($scope, $location, Registration, UniqueLogin) {
 	$scope.user = user;
+	
+	var uniqueLogin = {unique: true};
+	$scope.uniqueLogin = uniqueLogin;
 	
 	this.submit = function(){
 		delete user.password2;
 		user.password = btoa(user.password);
 		Registration.save(user, function(value, responseHeaders){
 			//success callback
-			var a = 1;
+			$location.path("/index");
 		}, function(httpResponse){
 			//error callback
-			var a = 1;
 		});
 	}
+	
+	this.checkLogin = function(){
+		uniqueLogin.unique = UniqueLogin.get({login: user.login}, function(value, responseHeaders){
+			uniqueLogin.unique = value.$resolved;
+			//$scope.$apply();
+		});
+	};
 	
 	this.checkPassword = function(passwd1, passwd2){
 		var b = passwd1 === passwd2;

@@ -2,13 +2,20 @@
 
 (function() { 
 
-var mapViewModule =  angular.module('app.mapView', ['ngRoute', 'ngResource', 'uiGmapgoogle-maps']);
+var mapViewModule =  angular.module('app.mapView', ['ngRoute', 'ngResource', 'uiGmapgoogle-maps','app']);
 
 //routes configuration
 mapViewModule.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/map', {
 		templateUrl : 'mapView/map.html'
 	});
+}]);
+
+//RESTfull client for markers
+mapViewModule.factory('Markers',  ['$resource',  function($resource){
+	/*return $resource('service/tags/byCategory/:categoryId', {}, {
+        query: {method:'GET', params: {categoryId: '@categoryId'}, isArray:true}
+	});*/
 }]);
 
 //Controllers

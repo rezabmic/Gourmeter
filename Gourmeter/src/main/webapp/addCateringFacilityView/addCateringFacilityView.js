@@ -2,7 +2,7 @@
 
 (function() { 
 
-var addCFModule =  angular.module('app.addCateringFacilityView', ['ngRoute', 'ngResource']);
+var addCFModule =  angular.module('app.addCateringFacilityView', ['ngRoute', 'ngResource', 'app']);
 
 //routes configuration
 addCFModule.config(['$routeProvider', function($routeProvider) {
