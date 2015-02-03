@@ -38,7 +38,7 @@ public class MessageReceiverAsync implements MessageListener {
         try {
             EmailMessage em = message.getBody(EmailMessage.class);
             
-            this.log.info("Message received in MessageReceiverAsync: " + em);
+            this.log.info("Received message in MessageReceiverAsync: " + em);
             mailSender.sendMessage(em);
             
         } catch (JMSException ex) {

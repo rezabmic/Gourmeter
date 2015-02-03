@@ -238,12 +238,28 @@
 		</dependency>
 
 		<!-- END RESTeasy -->
+		
+		<!-- TODO -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
+		<!-- Import the Batch API -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.batch</groupId>
+			<artifactId>jboss-batch-api_1.0_spec</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+
+		<!-- Import the Mail API -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+
 
 	</dependencies>
 

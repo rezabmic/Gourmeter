@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 
 import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
+import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 
 public interface GourmeterRESTService {
@@ -25,7 +26,6 @@ public interface GourmeterRESTService {
 
 	public List<CategoryDTO> getAllCategories();
 
-	public List<MarkerDTO> facilitiesNearLocation(double[] leftTopCorner,
-			double[] rightBottomCorner);
+	public List<MarkerDTO> facilitiesNearLocation(MapPositionDTO position);
 
 }

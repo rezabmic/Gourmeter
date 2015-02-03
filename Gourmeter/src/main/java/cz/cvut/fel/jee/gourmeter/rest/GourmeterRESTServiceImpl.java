@@ -27,6 +27,7 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
+import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 import cz.cvut.fel.jee.gourmeter.ejb.DataSessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
@@ -104,15 +105,14 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	@GET
-	@Path("/cateringFacility/near/{leftTop}/{rightBottom}")
+	@POST
+	@Path("/cateringFacility/near")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
-	public List<MarkerDTO> facilitiesNearLocation(
-			@PathParam("leftTop") double[] leftTopCorner,
-			@PathParam("rightBottom") double[] rightBottomCorner) {
+	public List<MarkerDTO> facilitiesNearLocation(MapPositionDTO mapPos) {
 		List<CateringFacility> facilities = this.facilitySession
-				.getFacilitiesInArea(leftTopCorner, rightBottomCorner);
+				.getFacilitiesInArea(mapPos);
 
 		List<MarkerDTO> result = new ArrayList<>();
 		for (int i = 0; i < facilities.size(); i++) {
