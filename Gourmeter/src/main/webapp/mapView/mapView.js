@@ -13,13 +13,13 @@ mapViewModule.config(['$routeProvider', function($routeProvider) {
 
 //RESTfull client for markers
 mapViewModule.factory('Markers',  ['$resource',  function($resource){
-	/*return $resource('service/tags/byCategory/:categoryId', {}, {
-        query: {method:'GET', params: {categoryId: '@categoryId'}, isArray:true}
-	});*/
+	return $resource('service/cateringFacility/near', {}, {
+		get: {method:'POST', isArray:true}
+	});
 }]);
 
 //Controllers
-mapViewModule.controller("MapCtrl", function($scope) {
+mapViewModule.controller("MapCtrl", function($scope, Markers) {
 	var selected = {
 		options : {visible : false},	 
 	};
@@ -71,10 +71,81 @@ mapViewModule.controller("MapCtrl", function($scope) {
 				    	 var bounds = map.getBounds();
 				    	 var ne = bounds.getNorthEast();
 				    	 var sw = bounds.getSouthWest(); 
+				    	 Markers.get({
+				    		  latitudeTop: ne.k,
+				    		  longitudeTop: ne.D,
+				    		  latitudeBottom: sw.k,
+				    		  longitudeBottom: sw.D
+				    		}, function(markers,responseHeaders){
+				    			//success callback
+				    			$scope.map.markers = markers;
+				    			/*$scope.map.markers = [
+				    							{
+				    								id: 1,
+				    								latitude: 50.101500,
+				    								longitude: 14.390791,
+				    								title: 'U studny',
+				    								description : 'Skvělé pivo a tlačenka.',
+				    								category: {id:1, name: 'Restaurace'}, 
+				    								url : 'www.ustudny.cz',
+				    								tags: [{
+				    									name: 'česká kuchyně',
+				    									recommended : 10,
+				    									reviewed: 15
+				    								},
+				    								{
+				    									name: 'regionální kuchyně',
+				    									recommended : 8,
+				    									reviewed: 10
+				    								}],
+				    								menu: {
+				    									from : t1,
+				    								    to : t2,
+				    								    url : 'www.ustudny.cz/denni-menu.html'
+				    								},
+				    								openingHours: []
+				    							},
+				    							{
+				    								id: 2,
+				    								latitude: 50.102246,
+				    								longitude: 14.392576,
+				    								title: 'Pražská pivnice',
+				    								description : 'Skvělé regionální pokrmy.',
+				    								category: {id:1, name: 'Restaurace'}, 
+				    								url : 'www.prazska-pivnice.cz',
+				    								tags: [{
+				    									name: 'česká kuchyně',
+				    									recommended : 10,
+				    									reviewed: 15
+				    								},
+				    								{
+				    									name: 'regionální kuchyně',
+				    									recommended : 8,
+				    									reviewed: 10
+				    								}],
+				    								menu: null,
+				    								 openingHours: []
+				    							}
+				    							];*/
+				    			_.each($scope.map.markers, function (marker) {
+				    	  		  	//move infowindow below the marker
+				    				marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
+				    				marker.closeClick = function () {
+				    					selected.options.visible = false;
+				    					return $scope.$apply();	
+				    				};
+				    				marker.onClicked = function () {
+				    					selected = marker;
+				    					selected.options.visible = true;
+				    					$scope.selected = selected;
+				    				};
+				    			});
+				    			$scope.$apply();
+				    		});
 				     } 
 				},
 				markers: [
-				{
+				/*{
 					id: 1,
 					latitude: 50.101500,
 					longitude: 14.390791,
@@ -119,23 +190,9 @@ mapViewModule.controller("MapCtrl", function($scope) {
 					}],
 					menu: null,
 					 openingHours: []
-				}
+				}*/
 				]	
   	    };
-  	    
-  	  _.each($scope.map.markers, function (marker) {
-  		  	//move infowindow below the marker
-			marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
-			marker.closeClick = function () {
-				selected.options.visible = false;
-				return $scope.$apply();	
-			};
-			marker.onClicked = function () {
-				selected = marker;
-				selected.options.visible = true;
-				$scope.selected = selected;
-			};
-		});
 	};
 	
 });

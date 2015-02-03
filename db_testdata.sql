@@ -13,3 +13,14 @@ INSERT INTO tag(id, name, category_id) VALUES
     (1, 'menu', 1), (2, 'česká kuchyně', 1), (3, 'regionální kuchyně', 1), (4, 'mezinárodní kuchyně', 1),
     (5, 'bio', 3), (6, 'farmářské', 3), (7, 'regionální', 3),
     (8, 'pizza', 2), (9, 'burger', 2), (10, 'bageta', 2);
+
+INSERT INTO catering_facility(
+            id, city, citydistrict, description, house_number, latitude, 
+            longitude, menufrom, menuto, menuurl, name, street, url, category_id, 
+            creator_id)
+    VALUES (1, 'Praha', 'Dejvice', 'Skvělé pivo a tlačenka.', 123, 50.101500, 
+            14.390791, null, null, null, 'U studny', 'street', 'www.ustudny.cz', 1, 
+            274),
+	   (2, 'Praha', 'Dejvice', 'Skvělé pivo.', 123, 50.102246, 
+            14.392576, null, null, null, 'Pražská pivnice', 'street', 'www.prazska-pivnice.cz', 1, 
+            274);
