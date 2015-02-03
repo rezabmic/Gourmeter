@@ -79,7 +79,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers) {
 				    		}, function(markers,responseHeaders){
 				    			//success callback
 				    			$scope.map.markers = markers;
-				    			
+				    			console.log(markers);
 				    			/*$scope.map.markers = [
 				    							{
 				    								id: 1,

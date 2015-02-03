@@ -1,3 +1,10 @@
+if (typeof String.prototype.startsWith != 'function') {
+  // see below for better implementation!
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) == 0;
+  };
+}
+
 (function() {
 	//ui.bootstrap dependency contains angularJS components(e.g timePicker)
 	var app = angular.module('app', ['ngRoute', 'app.signInView', 'app.addCateringFacilityView', 'app.mapView', 'app.registrationView', 'appControllers', 'ui.bootstrap']);
@@ -9,7 +16,9 @@
 	 var routeClean = function (route) {
 		 var b = false;
 		 _.each(routesThatDontRequireAuth, function (noAuthRoute) {
-			 if(route.startsWith(noAuthRoute)){
+			 if (route == 'undefined' || route == null) {
+				 b = false;
+			 } else if(route.startsWith(noAuthRoute)) {
 				 b = true;
 			 }
 		 });
@@ -20,7 +29,7 @@
 		  var userInfo = null;
 		 
 		  function login(userName, password) {
-		    var loginEnc = btoa(password); 
+		    var loginEnc = btoa(userName); 
 		    var passwordEnc = btoa(password);	
 		    
 		    var signIn = $resource('service/user/auth', {}, {});

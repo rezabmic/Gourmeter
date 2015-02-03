@@ -26,7 +26,7 @@ addCFModule.factory('Tags',  ['$resource',  function($resource){
 }]);
 
 //RESTfull client for cateringFacility
-addCFModule.factory('CateringFacility',  ['$resource',  function($resource){
+addCFModule.factory('CateringFacility',  ['$resource',  function($resource) {
 	return $resource('service/cateringFacility/:cfId', {cfId:'@id'}, {
         save: {method:'POST', params: {userId: 1}}
 	});

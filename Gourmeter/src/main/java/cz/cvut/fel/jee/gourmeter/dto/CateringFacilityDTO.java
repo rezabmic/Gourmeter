@@ -1,10 +1,8 @@
 package cz.cvut.fel.jee.gourmeter.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
-import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 
 public class CateringFacilityDTO {
 
@@ -33,10 +31,7 @@ public class CateringFacilityDTO {
 		address = new AddressDTO(f.getCity(), f.getStreet(), f.getHouseNumber());
 		categoryId = f.getCategory().getId();
 		tags = DTOUtils.getFacilityTags(f);
-		openingHours = new ArrayList<>();
-		for (OpeningHours oh : f.getOpeningHours()) {
-			openingHours.add(new OpeningHoursDTO(oh));
-		}
+		openingHours = DTOUtils.getHoursDTO(f);
 	}
 
 	public String getTitle() {

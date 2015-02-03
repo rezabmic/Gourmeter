@@ -7,6 +7,7 @@ import java.util.Map;
 
 import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
+import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Recommendation;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 
@@ -34,7 +35,12 @@ public class DTOUtils {
 		List<TagDTO> dtos = new ArrayList<>();
 		for (Tag tag : f.getTags()) {
 			TagReccommendations tr = recommendationsMap.get(tag.getId());
-			dtos.add(new TagDTO(tag.getName(), tr.getRecommended(), tr.getTotal()));
+			if (tr != null) {
+				dtos.add(new TagDTO(tag.getName(), tr.getRecommended(), tr
+						.getTotal()));
+			} else {
+				dtos.add(new TagDTO(tag, 0, 0));
+			}
 		}
 		return dtos;
 
@@ -51,15 +57,15 @@ public class DTOUtils {
 		}
 	}
 
-	public static CateringFacilityDTO
-			getCateringFacilityDTO(CateringFacility facility) {
+	public static CateringFacilityDTO getCateringFacilityDTO(CateringFacility facility) {
 		if (facility != null)
 			return new CateringFacilityDTO(facility);
 		else
 			return null;
 	}
 
-	public static TagDTO getTagDTO(Tag tag, Integer recommended,
+	public static TagDTO getTagDTO(	Tag tag,
+									Integer recommended,
 									Integer reviewed) {
 		if (tag == null)
 			return null;
@@ -84,22 +90,29 @@ public class DTOUtils {
 		}
 		return result;
 	}
-	
-	
+
+	public static List<OpeningHoursDTO> getHoursDTO(CateringFacility f) {
+		List<OpeningHoursDTO> openingHours = new ArrayList<>();
+		for (OpeningHours oh : f.getOpeningHours()) {
+			openingHours.add(new OpeningHoursDTO(oh));
+		}
+		return openingHours;
+	}
+
 	private static class TagReccommendations {
-		
+
 		private int recommended;
 		private int total;
-		
+
 		private TagReccommendations() {
 			recommended = 0;
 			total = 0;
 		}
-		
+
 		public void incRecommended() {
 			recommended += 1;
 		}
-		
+
 		public void incTotal() {
 			total += 1;
 		}
@@ -111,6 +124,6 @@ public class DTOUtils {
 		public int getTotal() {
 			return total;
 		}
-		
+
 	}
 }

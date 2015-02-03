@@ -52,7 +52,8 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@POST
 	@Path("/cateringFacility")
-	@RolesAllowed({ "user", "tester", "admin" })
+	//@RolesAllowed({ "user", "tester", "admin" })
+	@PermitAll
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createNewFacility(CateringFacilityDTO facility,
 			@QueryParam("userId") Long userId) {
@@ -111,7 +112,9 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
 	public List<MarkerDTO> facilitiesNearLocation(MapPositionDTO mapPos) {
-		return facilitySession.getFacilitiesInArea(mapPos);
+		List<MarkerDTO> facilities = facilitySession.getFacilitiesInArea(mapPos);
+		System.out.println(facilities.toString());
+		return facilities;
 	}
 
 	@Override
