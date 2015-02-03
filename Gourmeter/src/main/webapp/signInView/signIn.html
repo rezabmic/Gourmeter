@@ -1,4 +1,4 @@
-<form name="signInForm" class="css-form form-inline" ng-controller="SignInCtrl as signInCtrl"
+ï»¿<form name="signInForm" class="css-form form-inline" ng-controller="SignInCtrl as signInCtrl"
 	ng-submit="signInForm.$valid && signInCtrl.submit()" novalidate>
 <!-- novalidate is used to disable browser's native form validation. -->	
 
@@ -6,7 +6,7 @@
 		<input type="text" class="input-small" name="login" class="form-control" ng-class="{inputError:(signInForm.$submitted && signInForm.login.$error.required)}" 
 				id="login" ng-model="user.login" placeholder="Login" required>
 		<div ng-show="signInForm.$submitted || signInForm.login.$touched">
-	      <div ng-show="signInForm.login.$error.required" class="error">Zadejte prosím uivatelské jméno.</div>
+	      <div ng-show="signInForm.login.$error.required" class="error">Zadejte prosÃ­m uÅ¾ivatelskÃ© jmÃ©no.</div>
 	    </div>	
 	</div>
 	
@@ -14,10 +14,10 @@
 		<input type="password" class="input-small" name="password" class="form-control" ng-class="{inputError:(signInForm.$submitted && signInForm.password.$error.required)}" 
 				id="password" ng-model="user.password" placeholder="Password" required>
 		<div ng-show="signInForm.$submitted || signInForm.password.$touched">
-	      <div ng-show="signInForm.password.$error.required" class="error">Zadejte prosím heslo.</div>
+	      <div ng-show="signInForm.password.$error.required" class="error">Zadejte prosÃ­m heslo.</div>
 	    </div>	
 	</div>
 	
-	<button type="submit" class="btn btn-primary">Pøihlásit</button>
-	<button type="button" class="btn btn-primary" ng-click="signInCtrl.logout()">Odhlásit</button>
+	<button type="submit" class="btn btn-primary">PÅ™ihlÃ¡sit</button>
+	<button type="button" class="btn btn-primary" ng-click="signInCtrl.logout()">OdhlÃ¡sit</button>
 </form>

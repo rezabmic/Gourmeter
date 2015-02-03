@@ -79,6 +79,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers) {
 				    		}, function(markers,responseHeaders){
 				    			//success callback
 				    			$scope.map.markers = markers;
+				    			
 				    			/*$scope.map.markers = [
 				    							{
 				    								id: 1,
@@ -144,54 +145,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers) {
 				    		});
 				     } 
 				},
-				markers: [
-				/*{
-					id: 1,
-					latitude: 50.101500,
-					longitude: 14.390791,
-					title: 'U studny',
-					description : 'Skvělé pivo a tlačenka.',
-					category: {id:1, name: 'Restaurace'}, 
-					url : 'www.ustudny.cz',
-					tags: [{
-						name: 'česká kuchyně',
-						recommended : 10,
-						reviewed: 15
-					},
-					{
-						name: 'regionální kuchyně',
-						recommended : 8,
-						reviewed: 10
-					}],
-					menu: {
-						from : t1,
-					    to : t2,
-					    url : 'www.ustudny.cz/denni-menu.html'
-					},
-					openingHours: []
-				},
-				{
-					id: 2,
-					latitude: 50.102246,
-					longitude: 14.392576,
-					title: 'Pražská pivnice',
-					description : 'Skvělé regionální pokrmy.',
-					category: {id:1, name: 'Restaurace'}, 
-					url : 'www.prazska-pivnice.cz',
-					tags: [{
-						name: 'česká kuchyně',
-						recommended : 10,
-						reviewed: 15
-					},
-					{
-						name: 'regionální kuchyně',
-						recommended : 8,
-						reviewed: 10
-					}],
-					menu: null,
-					 openingHours: []
-				}*/
-				]	
+				markers: []	
   	    };
 	};
 	

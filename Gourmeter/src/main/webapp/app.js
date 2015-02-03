@@ -31,7 +31,7 @@
 			    }, function(value, responseHeaders){
 				//success callback
 				userInfo = value;
-				$window.sessionStorage["userInfo"] = userInfo;
+				$window.sessionStorage["userInfo"] = JSON.stringify(userInfo);
 				$location.path("/index");
 			}, function(httpResponse){
 				//error callback
@@ -57,7 +57,7 @@
 		  
 		  function init() {
 			  if ($window.sessionStorage["userInfo"]) {
-			    userInfo = $window.sessionStorage["userInfo"];
+			    userInfo = JSON.parse($window.sessionStorage["userInfo"]);
 			  }
 		  }
 		  
@@ -98,5 +98,4 @@
 		  });  
 		}]);
 	
-
 })();

@@ -74,15 +74,15 @@ var DAYS = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek',  'Pátek', 'Sobota', 
 
 //MODEL
 var cateringFacility = {
-	title : 'title',
+	title : '',
 	categoryId : null,
 	tags : [],
 	url : null,
-	description : 'description',
+	description : '',
 	address : {
-		city: 'Praha',
-		street: 'Zikova',
-		houseNumber : 702
+		city: '',
+		street: '',
+		houseNumber : null
 	},
 	menu : {
 		from: MENU_DEFAULT_VALUES.from,
