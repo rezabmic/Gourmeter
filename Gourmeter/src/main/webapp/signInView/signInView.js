@@ -32,7 +32,6 @@ signInViewModule.controller("SignInCtrl", function($scope, $location, Authentica
 	
 	this.logout = function(){
 		AuthenticationSvc.logout();
-		$location.path("/signIn");
 	};
 	
 });

@@ -52,21 +52,21 @@
 		  }
 		  
 		  function isLoggedIn() {
-			  return userInfo != null;
+			  return userInfo != null && userInfo != "null";
 		  }
 		  
-		  /*function init() {
+		  function init() {
 			  if ($window.sessionStorage["userInfo"]) {
 			    userInfo = $window.sessionStorage["userInfo"];
 			  }
-		  }*/
+		  }
 		  
 		  
 		  return {
 		    login: login,
 		    logout: logout,
 		    getUserInfo: getUserInfo,
-		    /*init: init,*/
+		    init: init,
 		    isLoggedIn: isLoggedIn
 		  };
 	});
@@ -89,6 +89,7 @@
 	
 	app.run(["$rootScope", "$location", 'AuthenticationSvc', function($rootScope, $location, AuthenticationSvc) {
 		$rootScope.$on('$routeChangeStart', function (event, next, current) {
+			AuthenticationSvc.init();
 		    // if route requires auth and user is not logged in
 		    if (!routeClean($location.url()) && !AuthenticationSvc.isLoggedIn()) {
 		      // redirect back to login
