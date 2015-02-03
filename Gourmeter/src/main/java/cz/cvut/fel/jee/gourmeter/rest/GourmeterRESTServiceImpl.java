@@ -111,14 +111,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
 	public List<MarkerDTO> facilitiesNearLocation(MapPositionDTO mapPos) {
-		List<CateringFacility> facilities = this.facilitySession
-				.getFacilitiesInArea(mapPos);
-
-		List<MarkerDTO> result = new ArrayList<>();
-		for (int i = 0; i < facilities.size(); i++) {
-			result.add(new MarkerDTO(facilities.get(i)));
-		}
-		return result;
+		return facilitySession.getFacilitiesInArea(mapPos);
 	}
 
 	@Override

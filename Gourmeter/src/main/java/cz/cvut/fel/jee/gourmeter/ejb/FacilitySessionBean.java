@@ -3,6 +3,7 @@ package cz.cvut.fel.jee.gourmeter.ejb;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -22,6 +23,7 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
+import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO.Day;
 import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
@@ -50,8 +52,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	private DataSessionLocal dao;
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(double latitude,
-			double longitude) {
+	public List<CateringFacility> getFacilitiesInArea(	double latitude,
+														double longitude) {
 		// use default circle radius
 		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
 				longitude, DEFAULT_SEARCH_RADIUS_KM);
@@ -59,8 +61,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	}
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(double latitude,
-			double longitude, double kmCircle) {
+	public List<CateringFacility> getFacilitiesInArea(	double latitude,
+														double longitude,
+														double kmCircle) {
 
 		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
 				longitude, kmCircle);
@@ -68,8 +71,10 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	}
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(double latitude,
-			double longitude, double kmCircle, long tagId) {
+	public List<MarkerDTO> getFacilitiesInArea(	double latitude,
+												double longitude,
+												double kmCircle,
+												long tagId) {
 
 		Tag tag = em.find(Tag.class, tagId);
 		if (tag == null) {
@@ -80,26 +85,17 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 
 		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
 				longitude, kmCircle);
-		return dao.findFacilitiesByGPSAndTag(csw, tag);
+		List<CateringFacility> facilities = dao.findFacilitiesByGPSAndTag(csw,
+				tag);
+		return convertMarkerDTOs(facilities);
 	}
 
-	/**
-	 * Vraci CateringFacility na zaklade "okna": format [latitude, longitude]
-	 */
-	public List<CateringFacility> getFacilitiesInArea(double[] leftTopCorner,
-			double[] rightBottomCorner) {
-		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
-				leftTopCorner[1], rightBottomCorner[1], rightBottomCorner[0],
-				leftTopCorner[0]);
-		return this.dao.findFacilitiesByGPS(csw);
-	}
-	
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(MapPositionDTO p) {
+	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO p) {
 		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
-				p.getLongitudeTop(), p.getLongitudeBottom(),
-				p.getLatitudeTop(), p.getLatitudeBottom());
-		return dao.findFacilitiesByGPS(csw);
+				p.getLongitudeBottom(), p.getLongitudeTop(),
+				p.getLatitudeBottom(), p.getLatitudeTop());
+		return convertMarkerDTOs(dao.findFacilitiesByGPS(csw));
 	}
 
 	@Override
@@ -172,8 +168,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 	}
 
-	private void setOpeningHours(List<OpeningHoursDTO> openingHours,
-			DateFormat df, CateringFacility f) {
+	private void setOpeningHours(	List<OpeningHoursDTO> openingHours,
+									DateFormat df,
+									CateringFacility f) {
 		if (openingHours == null || openingHours.isEmpty()) {
 			log.warn("Empty opening hours.");
 			return;
@@ -209,8 +206,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 	}
 
-	private CoordinateSearchWrapper getCoordinatesWrapper(double latitude,
-			double longitude, double kmCircle) {
+	private CoordinateSearchWrapper getCoordinatesWrapper(	double latitude,
+															double longitude,
+															double kmCircle) {
 		double radius = getSearchRadius(kmCircle);
 		double latMin = latitude - radius;
 		double latMax = latitude + radius;
@@ -237,6 +235,14 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 			return resultList.get(0);
 		}
 		return null;
+	}
+
+	private List<MarkerDTO> convertMarkerDTOs(List<CateringFacility> facilities) {
+		List<MarkerDTO> result = new ArrayList<>();
+		for (CateringFacility facility : facilities) {
+			result.add(new MarkerDTO(facility));
+		}
+		return result;
 	}
 
 }
