@@ -21,6 +21,7 @@ import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
+import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO.Day;
 import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
@@ -91,6 +92,14 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				leftTopCorner[1], rightBottomCorner[1], rightBottomCorner[0],
 				leftTopCorner[0]);
 		return this.dao.findFacilitiesByGPS(csw);
+	}
+	
+	@Override
+	public List<CateringFacility> getFacilitiesInArea(MapPositionDTO p) {
+		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
+				p.getLongitudeTop(), p.getLongitudeBottom(),
+				p.getLatitudeTop(), p.getLatitudeBottom());
+		return dao.findFacilitiesByGPS(csw);
 	}
 
 	@Override
