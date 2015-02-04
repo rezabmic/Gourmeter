@@ -153,7 +153,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers) {
 
 mapViewModule.controller('MenuController', function($scope, $filter){
 	this.menuToString = function(menu){
-		if(menu === null){
+		if(menu == null){
 			return "Restaurace nemá denní menu";
 		} else{
 			
