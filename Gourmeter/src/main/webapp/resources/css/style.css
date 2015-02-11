@@ -1,0 +1,120 @@
+div#wrapper {
+	padding: 40px;
+	width: 60%;
+	background-color: white;
+	margin: 0 auto;
+}
+
+body{
+	background-color: #f5f5f5;
+}
+
+h1 a {
+	color:black;
+}
+
+h1{
+	display: inline;
+}
+
+div#user{
+	float: right;
+	display: inline;
+	
+}
+
+.nav-inline{
+	margin: 20px 0 40px 0;
+	
+}
+.nav-inline ul{
+padding: 0;
+}
+
+.nav-inline li{
+	display: inline;
+	background-color: #f5f5f5;
+	padding: 10px 0;
+}
+.nav-inline li a{
+	padding: 10px;
+}
+
+.nav, .pagination, .carousel, .panel-title a {
+	cursor: pointer;
+}
+
+.inline {
+	display: inline;
+}
+
+.css-form input.ng-invalid.ng-touched, select.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched {
+    border-color: #FA787E;
+}
+
+.inputError{
+	border-color: #FA787E;
+}
+
+.error{
+	color: #FA787E;
+}
+
+table#hours>tbody>tr>td {
+	padding-right: 20px;
+}
+
+#days label {
+	padding-right: 10px;
+}
+
+#address td {
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+
+.angular-google-map-container {
+	height: 550px;
+}
+
+table.paddingRight td {
+	padding-right: 10px;
+}
+
+.tag{
+	background-color: #d9edf7;
+	margin: 0 5px 0 0px;
+	padding: 2px 5px 2px 5px;
+}
+
+.infoWindow div{
+	padding: 5px 0; 
+	width: 220px;
+}
+
+.infoWindow table thead{
+	border-bottom: 1px solid black; 
+}
+
+.infoWindow table tbody tr:nth-of-type(2n+1){
+	background-color: #f5f5f5;
+}
+
+.infoWindow table  td{
+	padding-left: 10px;
+}
+
+.infoWindow div#info p{
+	margin: 0;
+}
+
+.infoWindow div#menu ul{
+	padding: 0px 10px;
+}
+.infoWindow div#menu ul li{
+	list-style: none;
+}
+
+
+
+

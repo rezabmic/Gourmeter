@@ -1,0 +1,23 @@
+﻿<form name="signInForm" class="css-form form-inline" ng-controller="SignInCtrl as signInCtrl"
+	ng-submit="signInForm.$valid && signInCtrl.submit()" novalidate>
+<!-- novalidate is used to disable browser's native form validation. -->	
+
+	<div class="form-group ">
+		<input type="text" class="input-small" name="login" class="form-control" ng-class="{inputError:(signInForm.$submitted && signInForm.login.$error.required)}" 
+				id="login" ng-model="user.login" placeholder="Login" required>
+		<div ng-show="signInForm.$submitted || signInForm.login.$touched">
+	      <div ng-show="signInForm.login.$error.required" class="error">Zadejte prosím uživatelské jméno.</div>
+	    </div>	
+	</div>
+	
+	<div class="form-group">
+		<input type="password" class="input-small" name="password" class="form-control" ng-class="{inputError:(signInForm.$submitted && signInForm.password.$error.required)}" 
+				id="password" ng-model="user.password" placeholder="Password" required>
+		<div ng-show="signInForm.$submitted || signInForm.password.$touched">
+	      <div ng-show="signInForm.password.$error.required" class="error">Zadejte prosím heslo.</div>
+	    </div>	
+	</div>
+	
+	<button type="submit" class="btn btn-primary">Přihlásit</button>
+	<button type="button" class="btn btn-primary" ng-click="signInCtrl.logout()">Odhlásit</button>
+</form>

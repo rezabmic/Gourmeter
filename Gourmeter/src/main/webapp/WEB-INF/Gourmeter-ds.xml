@@ -1,0 +1,12 @@
+<datasources xmlns="http://www.ironjacamar.org/doc/schema/datasources_1_1.xsd">
+	<datasource jndi-name="java:jboss/datasources/GourmeterDS"
+		pool-name="PostgrePool" enabled="true">
+		<connection-url>jdbc:postgresql://localhost:5432/gourmeter
+		</connection-url>
+		<driver>postgres</driver>
+		<security>
+			<user-name>postgres</user-name>
+			<password>postgres</password>
+		</security>
+	</datasource>
+</datasources>

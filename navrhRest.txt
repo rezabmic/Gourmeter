@@ -1,0 +1,50 @@
+﻿Zakladni podporovane use case:
+[DONE]	1) vytvoreni noveho zarizeni - priorita:vysoká
+		- vstup 
+			- cateringfacility DTO 
+			- user id - long
+
+[]	2) pridani doporuceni - priorita:nízká		
+		2.1 
+		    - vstup 
+			- tag id - long
+			- CF id - long
+			- user id - long
+			- recommended - boolean // (ne)doporuceno
+		2.2- vstup
+			- pole dvojic [{tag= "název tagu", recommended = true/false},...]
+			- CF id - long
+			- user id - long
+
+[DONE]	3) schvaleni testerem - priorita:střední
+		- vstup
+			- user id - 
+			- facility DTO //editované  
+
+[DONE]	4) detail strav. zarizeni - priorita:vysoká
+		- vstup
+			- fac. ID -long
+		- vystup 
+			- facility DTO 
+
+[]	5) strav. zarizeni v okoli - priorita:vysoká
+		- vstup
+			- leftTopCorner mapy - {latitude: double, longitude: double}
+			- rightBottomCorner mapy - {latitude: double, longitude: double}
+		- vystup
+			- seznam MarkerDTO 
+
+[]	6) Tagy  - priorita:vysoká
+ [DONE] 	6.1 getALL
+		- výstup - ["název tagu",...]
+ [DONE] 6.2 getByCategory 
+		- vstup - categoryId - long
+		- výstup - ["název tagu",...]
+[DONE]	7) getCategories  - priorita:vysoká
+		- výstup - [CategoryDTO,...]
+		
+[]	8) getCurrentUser - priorita:vysoká
+		- výstup UserDTO
+
+[]	9) getMapCenter - priorita:vysoká
+		- výstup  {latitude: double, longitude: double}

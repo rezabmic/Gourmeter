@@ -1,0 +1,61 @@
+TagDTO{
+   name: ,
+   recommended : ,
+   reviewed: 
+}
+
+CategoryDTO{
+   id: long
+   name: string
+}
+
+menuDTO: {
+          from : ,
+          to : ,
+	  url
+}
+
+MarkerDTO
+{
+     id: ,
+     title : '',
+     category: CategoryDTO,
+     url : '',
+     description : '',
+     latitude: ,
+     longitude: ,
+     tags: [TagDTO,...],
+     menu: menuDTO,
+     openingHours: [openingHourDTO,...],
+}
+
+CateringFacilityDTO 
+{
+     id: ,
+     title : '',
+     categoryId: null,
+     url : '',
+     description : '',
+     latitude: ,
+     longitude: ,
+     tags : ["název tagu",...],
+     menu: menuDTO,
+     openingHours: [openingHourDTO,...],
+}
+
+OpeningHourDTO
+{
+     time1 : ,
+     time2 : ,
+     time3 : ,
+     time4 : ,
+     days : [1, 2, 3,...] //selected days
+}
+
+UserDTO{
+	id: long,
+	login: string,
+	nickName: string,
+	email: string,
+	city: string,
+}

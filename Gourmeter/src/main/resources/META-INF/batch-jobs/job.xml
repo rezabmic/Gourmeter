@@ -1,0 +1,8 @@
+<job id="myJob" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+
+	<flow id="mainprocess">
+		<step id="kontrolaTagu">
+			<batchlet ref="tagCheckBachlet" />
+		</step>
+	</flow>
+</job> 

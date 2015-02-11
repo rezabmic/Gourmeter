@@ -1,0 +1,175 @@
+﻿
+<h2>Upravit stravovací zařízení</h2>
+
+<form name="addForm" class="css-form" ng-controller="EditCateringFacilityController as editCFCtrl"
+	ng-submit="addForm.$valid" novalidate>
+<!-- novalidate is used to disable browser's native form validation. -->
+	<div class="form-group">
+		<label for="title">Název*</label> 
+		<input type="text" name="title" class="form-control" ng-class="{inputError:(addForm.$submitted && addForm.title.$error.required)}" id="title" ng-model="cateringFacility.title" required>
+		<div ng-show="addForm.$submitted || addForm.title.$touched">
+	      <div ng-show="addForm.title.$error.required" class="error">Vyplňte prosím název.</div>
+	    </div>	
+	</div>
+	
+
+	<div class="form-group" ng-controller="CategoriesController as categoriesCtrl">
+		<label for="title">Kategorie*</label> 
+		<select class="form-control" name="categories" ng-model="cateringFacility.categoryId" 
+				ng-options="category.id as category.name for category in categoriesCtrl.categories"
+				ng-class="{inputError:(addForm.$submitted && addForm.categories.$error.required)}" ng-change="main.changeTags()" required>
+		</select>
+		<div ng-show="addForm.$submitted || addForm.categories.$touched">
+	      <div ng-show="addForm.categories.$error.required" class="error">Zvolte prosím kategorii.</div>
+	    </div>	
+	</div>
+
+	<div class="form-group">
+		<label for="url">Krátký popis*</label>
+		<textarea class="form-control" name="description" ng-model="cateringFacility.description" rows="3" 
+		ng-class="{inputError:(addForm.$submitted && addForm.description.$error.required)}" required>
+		</textarea>
+		<div ng-show="addForm.$submitted || addForm.description.$touched">
+	      <div ng-show="addForm.description.$error.required" class="error">Vyplňte prosím popis.</div>
+	    </div>
+	</div>
+	
+	<div class="form-group">
+		<label for="url">Webová stránka</label> 
+		<input type="text" class="form-control" id="url" ng-model="cateringFacility.url">
+	</div>
+
+	<div class="form-group">
+		<fieldset ng-controller="TagController as tagCtrl">
+			<legend>Tagy</legend>
+			<label for="{{tag}}" class="checkbox-inline"
+				ng-repeat="tag in main.tags"> 
+				<input id="{{tag}}" type='checkbox' ng-checked="cateringFacility.tags.indexOf(tag) > -1"
+				ng-click="tagCtrl.toggleSelection(tag)">{{tag}}
+			</label>
+		</fieldset>
+		<div ng-show="addForm.$submitted">
+	      <div ng-show="cateringFacility.tags.length == 0" class="error">Zvolte prosím vhodné tagy.</div>
+	    </div>
+	</div>
+
+	<div class="form-group">
+		<fieldset id="address">
+			<legend>Adresa</legend>
+			<table>
+				<tr>
+					<td><label for="city">Město</label></td>
+					<td><input type="text" id="city" name="city" ng-class="{inputError:(addForm.$submitted && addForm.city.$error.required)}" 
+						ng-model="cateringFacility.address.city" required></td>
+				</tr>
+				<tr ng-show="addForm.$submitted || addForm.city.$touched">
+					<td colspan="2" ng-show="addForm.city.$error.required" class="error">
+						Vyplňte prosím město.
+					</td>
+				</tr>
+				<tr>
+					<td><label for="street">Ulice</label></td>
+					<td><input type="text" id="street" name="street" ng-class="{inputError:(addForm.$submitted && addForm.street.$error.required)}" 
+						ng-model="cateringFacility.address.street" required></td>
+				</tr>
+				<tr ng-show="addForm.$submitted || addForm.street.$touched">
+					<td colspan="2" ng-show="addForm.street.$error.required" class="error">
+						Vyplňte prosím ulici.
+					</td>
+				</tr>
+				<tr>
+					<td><label for="houseNum">Číslo popisné</label></td>
+					<td><input type="text" id="houseNum" name="houseNum" 
+						ng-class="{inputError:(addForm.$submitted && addForm.houseNum.$error.required)}"
+						ng-model="cateringFacility.address.houseNumber" required></td>
+				</tr>
+				<tr ng-show="addForm.$submitted || addForm.houseNum.$touched">
+					<td colspan="2" ng-show="addForm.houseNum.$error.required" class="error">
+						Vyplňte prosím číslo popisné.
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+
+	<div class="form-group">
+		<fieldset ng-controller="OpeningHoursController as hoursCtrl">
+			<legend>Otevírací doba</legend>
+			<div ng-repeat="openingHour in cateringFacility.openingHours">
+				<table id="hours">
+					<tbody>
+						<tr>
+							<td>Od</td>
+							<td><timepicker class="inline" ng-model="openingHour.time1"
+									ng-change="hoursCtrl.changed(openingHour,1)" hour-step="1"
+									minute-step="10" show-meridian="false"></timepicker></td>
+							<td>Do</td>
+							<td><timepicker class="inline" ng-model="openingHour.time2"
+									ng-change="hoursCtrl.changed(openingHour,2)" hour-step="1"
+									minute-step="10" show-meridian="false"></timepicker></td>
+							<td ng-show="openingHour.pause">A</td>
+							<td ng-show="openingHour.pause"><timepicker class="inline"
+									ng-model="openingHour.time3"
+									ng-change="hoursCtrl.changed(openingHour,3)" hour-step="1"
+									minute-step="10" show-meridian="false"></timepicker></td>
+							<td ng-show="openingHour.pause">Do</td>
+							<td ng-show="openingHour.pause"><timepicker class="inline"
+									ng-model="openingHour.time4"
+									ng-change="hoursCtrl.changed(openingHour,4)" hour-step="1"
+									minute-step="10" show-meridian="false"></timepicker></td>
+						</tr>
+					</tbody>
+				</table>
+				<div>
+					<label for="pause_{{openingHour.id}}"> <input
+						type="checkbox" id="pause_{{openingHour.id}}"
+						ng-model="openingHour.pause"> Přestávka
+					</label>
+				</div>
+				<fieldset id="days">
+					<label for="d{{day.id}}_{{openingHour.id}}" class="checkbox-inline"
+						ng-repeat="day in openingHour.days"> <input
+						type='checkbox' id="d{{day.id}}_{{openingHour.id}}"
+						ng-checked="openingHour.days[day.id-1].selected"
+						ng-click="hoursCtrl.toggleSelection(day,openingHour.id)">{{hoursCtrl.days[day.id-1]}}
+					</label>
+				</fieldset>
+				<br />
+				<div ng-show="addForm.$submitted">
+					<div ng-hide="hoursCtrl.isValid(openingHour)" class="error">
+						 <p>Vyplňte prosím otevírací hodinu.</p>
+					</div>
+				</div>	
+			</div>
+			<div>
+				<button type="button" class="btn btn-default" ng-show="hoursCtrl.isEnabledButton()"
+					ng-click="hoursCtrl.addOpeningHours()">Přidat další</button>
+			</div>
+			
+		</fieldset>
+	</div>
+	<div class="form-group" ng-controller="TagController as tagCtrl">
+		<fieldset ng-show="tagCtrl.isMenuSelected()">
+			<legend>Polední menu</legend>
+			
+			<table id="hours">
+				<tbody>
+					<tr>
+						<td>Od</td>
+						<td><timepicker class="inline"
+								ng-model="cateringFacility.menu.from" hour-step="1"
+								minute-step="10" show-meridian="false"></timepicker></td>
+						<td>Do</td>
+						<td><timepicker class="inline"
+								ng-model="cateringFacility.menu.to" hour-step="1"
+								minute-step="10" show-meridian="false"></timepicker></td>
+					</tr>
+				</tbody>
+			</table>
+			<label for="menuUrl">Odkaz na menu</label> <input type="text"
+				id="menuUrl" class="form-control" ng-model="cateringFacility.menu.url">
+		</fieldset>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Editovat stravovací zařízení</button>
+</form>
