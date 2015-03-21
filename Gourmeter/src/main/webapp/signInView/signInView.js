@@ -6,9 +6,10 @@ var signInViewModule =  angular.module('app.signInView', ['ngRoute', 'ngResource
 
 //routes configuration
 signInViewModule.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/login', {
-		templateUrl : 'loginView/login.html'
-	});
+  $routeProvider.when('/signIn', {
+	  title: 'Přihlásit se',
+      templateUrl: 'signInView/signIn.html'
+  });
 }]);
 
 //Model
@@ -17,17 +18,20 @@ var user = {
 	password: '',
 };
 
+function clearModel(){
+	user = {
+			login: '',
+			password: '',
+	};
+}
+
 //Controllers
 signInViewModule.controller("SignInCtrl", function($scope, $location, AuthenticationSvc) {
 	$scope.user = user;
 	
 	this.submit = function(){
 		var a = AuthenticationSvc.login(user.login,user.password);
-		user = {
-				login: '',
-				password: '',
-		};
-		
+		clearModel();
 	};
 	
 	this.logout = function(){

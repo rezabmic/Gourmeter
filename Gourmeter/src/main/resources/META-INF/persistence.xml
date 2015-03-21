@@ -7,8 +7,14 @@
 		<jta-data-source>java:jboss/datasources/GourmeterDS</jta-data-source>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
 			
+			<!-- DB schema will be updated if needed -->
+        	<!-- nedoporucuje se pro produkcni prostredi, protoze to obcas tabulk smaze, ignoruje cizi klice, ... -->
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="show_sql" value="true" />
+        	<property name="format_sql" value="true" />
+			<!-- generates default table and column names that comply with the JPA specification -->
+			<property name="hibernate.ejb.naming_strategy_delegator" value="org.hibernate.cfg.naming.ImprovedNamingStrategyDelegator"/>
 			<!-- INFINISPAN as 2nd level cache of Hibernate -->
 			<!-- enable 2nd level cache -->
 			<property name="hibernate.cache.use_second_level_cache" value="true" />

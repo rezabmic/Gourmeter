@@ -13,7 +13,7 @@ if (typeof String.prototype.startsWith != 'function') {
 	var routesThatDontRequireAuth = ['/login', '/registration'];
 
 	 // check if current location matches route  
-	 var routeClean = function (route) {
+	var routeClean = function (route) {
 		 var b = false;
 		 _.each(routesThatDontRequireAuth, function (noAuthRoute) {
 			 if (route == 'undefined' || route == null) {
@@ -23,8 +23,8 @@ if (typeof String.prototype.startsWith != 'function') {
 			 }
 		 });
 		return b; 
-	 };
-	  
+	};
+	 
 	app.factory("AuthenticationSvc", function($window, $resource, $location) {
 		  var userInfo = null;
 		 
@@ -83,15 +83,14 @@ if (typeof String.prototype.startsWith != 'function') {
 	app.config([ '$routeProvider', function($routeProvider) {
 		$routeProvider.
 			when('/tester', {
+				title: 'Tester',
 				templateUrl : 'tester.html'
 			}).
 			when('/cateringFacilities/:catFacilityId', {
+				title: 'cateringFacility',
 		        templateUrl: 'testerReview.html'
 		    }).
-		    when('/signIn', {
-		        templateUrl: 'signInView/signIn.html'
-		    }).
-			otherwise({
+		    otherwise({
 				redirectTo : '/index'
 			});
 	}]);
@@ -104,7 +103,10 @@ if (typeof String.prototype.startsWith != 'function') {
 		      // redirect back to login
 		      $location.path('/signIn');
 		    }
-		  });  
-		}]);
-	
+		});  
+		
+		$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+	        $rootScope.title = current.$$route.title;
+	    });
+	}]);
 })();

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -39,43 +40,35 @@ public class CateringFacility extends AbstractBusinessObject {
 
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
-	@Column(nullable = false)
+	@NotEmpty
 	private String name;
 
-	@Column(nullable = false)
+	@NotEmpty
 	private String description;
 
-	@Column(nullable = true)
 	private String url;
 
-	@Column(nullable = false)
+	@NotEmpty
 	private String city;
 
-	@Column(name = "street", nullable = true)
 	private String street;
 
-	@Column(name = "house_number", nullable = true)
 	private String houseNumber;
 
-	@Column(nullable = true)
 	private String cityDistrict;
 
-	@Column(nullable = true)
 	private String menuUrl;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = true)
 	private Date menuFrom;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = true)
 	private Date menuTo;
 
-	@Column(name = "latitude", nullable = false)
+	@NotNull
 	private Double latitude;
 
-	@Column(name = "longitude", nullable = false)
+	@NotNull
 	private Double longitude;
 
 	@ManyToOne
@@ -91,10 +84,7 @@ public class CateringFacility extends AbstractBusinessObject {
 	private List<Recommendation> recommendations;
 
 	@ManyToMany
-	@JoinTable(name = "catering_facility_tags", 
-				joinColumns = @JoinColumn(name = "facility_id"), 
-				inverseJoinColumns = @JoinColumn(name = "tag_id")
-	)
+	@JoinTable(name = "catering_facility_tags", joinColumns = @JoinColumn(name = "facility_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags;
 
 	public String getName() {

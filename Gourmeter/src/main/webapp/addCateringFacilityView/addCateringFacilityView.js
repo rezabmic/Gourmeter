@@ -7,6 +7,7 @@ var addCFModule =  angular.module('app.addCateringFacilityView', ['ngRoute', 'ng
 //routes configuration
 addCFModule.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/index', {
+	title: 'Přidat stravovací zařázení',
     templateUrl: 'addCateringFacilityView/addCateringFacility.html'
   });
 }]);
@@ -93,6 +94,28 @@ var cateringFacility = {
 	longitude: null,
 };	
 
+function cleanModel(){
+	cateringFacility = {
+			title : '',
+			categoryId : null,
+			tags : [],
+			url : null,
+			description : '',
+			address : {
+				city: '',
+				street: '',
+				houseNumber : null
+			},
+			menu : {
+				from: MENU_DEFAULT_VALUES.from,
+				to : MENU_DEFAULT_VALUES.to,
+				url : null,
+			},
+			latitude: null,
+			longitude: null,
+		};
+}
+
 var tags = {array : []};
 
 //Controllers
@@ -110,7 +133,10 @@ addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFaci
 		    	cateringFacility.latitude = results[0].geometry.location.k;
 		    	cateringFacility.longitude = results[0].geometry.location.D;
 		    	
-		    	CateringFacility.save(cateringFacility);
+		    	CateringFacility.save(cateringFacility, function(value, responseHeaders){
+		    		//success callback
+		    		cleanModel();
+		    	});
 		    } else {
 		      alert('Geocode was not successful for the following reason: ' + status);
 		    }
