@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -18,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -36,9 +40,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 				+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
 				+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin "
 				+ "AND :tag MEMBER OF e.tags") })
+//TODO fetch profiles @FetchProfile(name = "CateringFacility-with-openingHours-and-recomendations", fetchOverrides = {
+//		   @FetchProfile.FetchOverride(entity = CateringFacility.class, association = "openingHours", mode = FetchMode.JOIN),
+//		   @FetchProfile.FetchOverride(entity = CateringFacility.class, association = "recommendations", mode = FetchMode.JOIN)
+//		})
 public class CateringFacility extends AbstractBusinessObject {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11170L;
 
 	@NotEmpty
 	private String name;
@@ -53,6 +61,7 @@ public class CateringFacility extends AbstractBusinessObject {
 
 	private String street;
 
+	@Column(name="house_number")
 	private String houseNumber;
 
 	private String cityDistrict;
@@ -71,16 +80,16 @@ public class CateringFacility extends AbstractBusinessObject {
 	@NotNull
 	private Double longitude;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Category category;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private User creator;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OpeningHours> openingHours;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Recommendation> recommendations;
 
 	@ManyToMany

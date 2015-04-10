@@ -25,6 +25,7 @@ import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
@@ -55,7 +56,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	//@RolesAllowed({ "user", "tester", "admin" })
 	@PermitAll
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNewFacility(CateringFacilityDTO facility,
+	public Response createNewFacility(CateringFacilityCreateDTO facility,
 			@QueryParam("userId") Long userId) {
 		try {
 			facilitySession.createOrUpdateFacility(facility, userId);
@@ -74,9 +75,18 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 			@PathParam("facilityId") Long facilityId,
 			@PathParam("userId") Long userId,
 			@PathParam("recommended") Boolean recommended) {
-		this.dataSession.addRecommendation(tagId, facilityId, userId,
-				recommended);
-		return Response.ok().build();
+		Response response;
+		
+		try{
+			this.dataSession.addRecommendation(tagId, facilityId, userId, recommended);
+		 
+			response = Response.ok().build();
+		} catch(IllegalArgumentException ex){
+			//tagId, facilityId or userId don't exist in DB. 
+			response = Response.serverError().build();
+		}
+		
+		return response;
 	}
 
 	@Override
@@ -84,7 +94,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility/update")
 	@RolesAllowed({ "user", "tester", "admin" })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response testerApproval(CateringFacilityDTO facility,
+	public Response testerApproval(CateringFacilityCreateDTO facility,
 			@QueryParam("userId") Long userId) {
 		// TODO - kontrola usera
 		this.facilitySession.createOrUpdateFacility(facility, userId);

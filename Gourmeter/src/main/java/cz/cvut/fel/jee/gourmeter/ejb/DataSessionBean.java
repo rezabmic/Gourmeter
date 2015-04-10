@@ -120,12 +120,12 @@ public class DataSessionBean implements DataSessionLocal {
 
 	@Override
 	public void addRecommendation(Long tagId, Long facilityId, Long userId,
-			Boolean recommended) {
+			Boolean recommended) throws IllegalArgumentException{
 		// TODO - budeme kontrolovat pritomnost Recommendation v DB??
 
-		CateringFacility cf = this.em.find(CateringFacility.class, facilityId);
-		Tag t = this.em.find(Tag.class, tagId);
-		User u = this.em.find(User.class, userId);
+		CateringFacility cf = em.find(CateringFacility.class, facilityId);
+		Tag t = em.find(Tag.class, tagId);
+		User u = em.find(User.class, userId);
 
 		if ((cf != null) && (t != null) && (u != null)) {
 			Recommendation r = new Recommendation();
@@ -133,7 +133,9 @@ public class DataSessionBean implements DataSessionLocal {
 			r.setUser(u);
 			r.setCateringFacility(cf);
 			r.setRecommended(recommended);
-			this.em.persist(r);
+			em.persist(r);
+		} else{
+			throw new IllegalArgumentException();
 		}
 
 	}

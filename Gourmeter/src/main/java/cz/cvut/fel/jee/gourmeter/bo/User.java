@@ -21,24 +21,21 @@ import org.hibernate.validator.constraints.Email;
 @Table(name = "users")
 public class User extends AbstractBusinessObject {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11130L;
 
 	@NotNull
-	@Column(name= "login", unique = true)
+	@Column(unique = true)
 	private String login;
 
 	@Column(name= "passwd_hash")
 	private String passwdHash;
 
 	@NotNull
-	@Column(name = "nickname")
 	private String nickname;
 
 	@Email
-	@Column(name = "email")
 	private String email;
 
-	@Column(name = "city")
 	private String city;
 
 	@ManyToOne

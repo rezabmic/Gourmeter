@@ -18,8 +18,12 @@ mapViewModule.factory('Markers',  ['$resource',  function($resource){
 	});
 }]);
 
+mapViewModule.factory('CateringFacility',  ['$resource',  function($resource){
+	return $resource('service/cateringFacility/:id',{id: '@id'});
+}]);
+
 //Controllers
-mapViewModule.controller("MapCtrl", function($scope, Markers) {
+mapViewModule.controller("MapCtrl", function($scope, Markers, CateringFacility) {
 	var selected = {
 		options : {visible : false},	 
 	};
@@ -80,54 +84,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers) {
 				    			//success callback
 				    			$scope.map.markers = markers;
 				    			console.log(markers);
-				    			/*$scope.map.markers = [
-				    							{
-				    								id: 1,
-				    								latitude: 50.101500,
-				    								longitude: 14.390791,
-				    								title: 'U studny',
-				    								description : 'Skvělé pivo a tlačenka.',
-				    								category: {id:1, name: 'Restaurace'}, 
-				    								url : 'www.ustudny.cz',
-				    								tags: [{
-				    									name: 'česká kuchyně',
-				    									recommended : 10,
-				    									reviewed: 15
-				    								},
-				    								{
-				    									name: 'regionální kuchyně',
-				    									recommended : 8,
-				    									reviewed: 10
-				    								}],
-				    								menu: {
-				    									from : t1,
-				    								    to : t2,
-				    								    url : 'www.ustudny.cz/denni-menu.html'
-				    								},
-				    								openingHours: []
-				    							},
-				    							{
-				    								id: 2,
-				    								latitude: 50.102246,
-				    								longitude: 14.392576,
-				    								title: 'Pražská pivnice',
-				    								description : 'Skvělé regionální pokrmy.',
-				    								category: {id:1, name: 'Restaurace'}, 
-				    								url : 'www.prazska-pivnice.cz',
-				    								tags: [{
-				    									name: 'česká kuchyně',
-				    									recommended : 10,
-				    									reviewed: 15
-				    								},
-				    								{
-				    									name: 'regionální kuchyně',
-				    									recommended : 8,
-				    									reviewed: 10
-				    								}],
-				    								menu: null,
-				    								 openingHours: []
-				    							}
-				    							];*/
+				    			
 				    			_.each($scope.map.markers, function (marker) {
 				    	  		  	//move infowindow below the marker
 				    				marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
@@ -136,10 +93,20 @@ mapViewModule.controller("MapCtrl", function($scope, Markers) {
 				    					return $scope.$apply();	
 				    				};
 				    				marker.onClicked = function () {
-				    					selected = marker;
-				    					selected.options.visible = true;
-				    					$scope.selected = selected;
-				    				};
+				    					//marker
+				    					
+				    					var cateringFacility = CateringFacility.get({},marker, function(){
+				    						marker.title =  cateringFacility.title;
+				    						marker.category = cateringFacility.category;
+				    						marker.tags =  cateringFacility.tags;
+				    						marker.openingHours =  cateringFacility.openingHours;
+				    						
+				    						selected = marker;
+				    						selected.options.visible = true;
+					    					$scope.selected = selected;
+				    					});
+				    					
+				    				}.bind(this);
 				    			});
 				    			$scope.$apply();
 				    		});

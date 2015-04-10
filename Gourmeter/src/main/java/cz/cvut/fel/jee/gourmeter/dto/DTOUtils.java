@@ -13,6 +13,12 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 
 public class DTOUtils {
 
+	/**
+	 * Computes reviews (number of recommendations, number of reviews) for each tag of the CateringFacility and returns List of TagDTO.
+	 * 
+	 * @param f CateringFacility
+	 * @return
+	 */
 	public static List<TagDTO> getFacilityTags(CateringFacility f) {
 		Map<Long, TagReccommendations> recommendationsMap = new HashMap<>();
 		for (Recommendation r : f.getRecommendations()) {

@@ -11,8 +11,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,7 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
@@ -51,6 +54,30 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	@EJB
 	private DataSessionLocal dao;
 
+	@Override
+	public CateringFacility getFacilityById(Long id) {
+
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.recommendations left join fetch c.category where c.id=:cfID").setParameter("cfID", id);
+		
+		
+//		TypedQuery<CateringFacility> q = em.createNamedQuery(
+//				"CateringFacility.findById", CateringFacility.class);
+//		q.setParameter("id", id);
+//		List<CateringFacility> resultList = q.getResultList();
+		List<CateringFacility> resultList = (List<CateringFacility>) query.getResultList();
+		
+		query = em.createQuery("select c from CateringFacility c left join fetch c.openingHours where c.id=:cfID").setParameter("cfID", id);
+		resultList = (List<CateringFacility>) query.getResultList();
+		
+		query = em.createQuery("select c from CateringFacility c left join fetch c.tags where c.id=:cfID").setParameter("cfID", id);
+		resultList = (List<CateringFacility>) query.getResultList();
+		
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
+		}
+		return null;
+	}
+	
 	@Override
 	public List<CateringFacility> getFacilitiesInArea(	double latitude,
 														double longitude) {
@@ -99,7 +126,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	}
 
 	@Override
-	public void createOrUpdateFacility(CateringFacilityDTO dto, Long userId) {
+	public void createOrUpdateFacility(CateringFacilityCreateDTO dto, Long userId) {
 		if (dto == null || dto.getAddress() == null) {
 			throw new IllegalArgumentException("Wrong dto format.");
 		}
@@ -225,17 +252,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		return COORDINATE_TO_KM * kilometerDistance / 2;
 	}
 
-	@Override
-	public CateringFacility getFacilityById(Long id) {
-		TypedQuery<CateringFacility> q = em.createNamedQuery(
-				"CateringFacility.findById", CateringFacility.class);
-		q.setParameter("id", id);
-		List<CateringFacility> resultList = q.getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0);
-		}
-		return null;
-	}
+	
 
 	private List<MarkerDTO> convertMarkerDTOs(List<CateringFacility> facilities) {
 		List<MarkerDTO> result = new ArrayList<>();

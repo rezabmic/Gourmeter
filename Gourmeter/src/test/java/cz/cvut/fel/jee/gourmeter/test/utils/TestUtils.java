@@ -11,6 +11,7 @@ import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.dto.AddressDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MenuDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
@@ -91,12 +92,12 @@ public class TestUtils {
 		return d;
 	}
 	
-	public static CateringFacilityDTO createFacilityDTO() {
+	public static CateringFacilityCreateDTO createFacilityDTO() {
 		AddressDTO a = new AddressDTO(TEST_CITY, TEST_STREET, TEST_HOUSE_NUMBER);
 		MenuDTO m = new MenuDTO(getHours(11, 0), getHours(14, 30), null);
 		OpeningHoursDTO o = getTestOpeningHoursDTO();
 		
-		CateringFacilityDTO cf = new CateringFacilityDTO();
+		CateringFacilityCreateDTO cf = new CateringFacilityCreateDTO();
 		cf.setAddress(a);
 		cf.setDescription(TEST_DECRIPTION);
 		cf.setLatitude(TEST_LATITUDE);
