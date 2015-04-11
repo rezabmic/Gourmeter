@@ -26,10 +26,17 @@ addCFModule.factory('Tags',  ['$resource',  function($resource){
 	});
 }]);
 
+//RESTfull client for tags
+addCFModule.factory('TagsByCategories',  ['$resource',  function($resource){
+	return $resource('service/tags/byCategories', {}, {
+        query: {method:'POST', isArray:true}
+	});
+}]);
+
 //RESTfull client for cateringFacility
 addCFModule.factory('CateringFacility',  ['$resource',  function($resource) {
-	return $resource('service/cateringFacility/:cfId', {cfId:'@id'}, {
-        save: {method:'POST', params: {userId: 1}}
+	return $resource('service/cateringFacility/:cfId:userId', {userId: "@userId", cfId:'@id'}, {
+        save: {method:'POST', params: {userId: "@userId"}}
 	});
 }]);
 
@@ -76,7 +83,7 @@ var DAYS = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek',  'Pátek', 'Sobota', 
 //MODEL
 var cateringFacility = {
 	title : '',
-	categoryId : null,
+	categories : [],
 	tags : [],
 	url : null,
 	description : '',
@@ -119,7 +126,7 @@ function cleanModel(){
 var tags = {array : []};
 
 //Controllers
-addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFacility) {
+addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFacility, AuthenticationSvc) {
 	$scope.cateringFacility = cateringFacility;
 	
 	this.submit = function() {
@@ -133,7 +140,7 @@ addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFaci
 		    	cateringFacility.latitude = results[0].geometry.location.k;
 		    	cateringFacility.longitude = results[0].geometry.location.D;
 		    	
-		    	CateringFacility.save(cateringFacility, function(value, responseHeaders){
+		    	CateringFacility.save({userId:AuthenticationSvc.getUserInfo().userId},cateringFacility, function(value, responseHeaders){
 		    		//success callback
 		    		cleanModel();
 		    	});
@@ -144,12 +151,13 @@ addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFaci
 	};	
 });
 
-addCFModule.controller("CategoriesController",  function($scope, Categories, Tags) {
+addCFModule.controller("CategoriesController",  function($scope, Categories, Tags, TagsByCategories) {
 	this.categories = Categories.query();
 	
 	this.changeTags = function(){
 		//get tags by categoryID
-		tags.array = Tags.query({categoryId: cateringFacility.categoryId});
+		//tags.array = Tags.query({categoryId: cateringFacility.categories[0]});
+		tags.array = TagsByCategories.query(cateringFacility.categories);
 	};
 });
 

@@ -1,5 +1,6 @@
 package cz.cvut.fel.jee.gourmeter.bo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;

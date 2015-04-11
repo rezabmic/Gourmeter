@@ -40,10 +40,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 				+ "WHERE e.latitude < :latitudeMax AND e.latitude > :latitudeMin "
 				+ "AND e.longitude < :longitudeMax AND e.longitude > :longitudeMin "
 				+ "AND :tag MEMBER OF e.tags") })
-//TODO fetch profiles @FetchProfile(name = "CateringFacility-with-openingHours-and-recomendations", fetchOverrides = {
-//		   @FetchProfile.FetchOverride(entity = CateringFacility.class, association = "openingHours", mode = FetchMode.JOIN),
-//		   @FetchProfile.FetchOverride(entity = CateringFacility.class, association = "recommendations", mode = FetchMode.JOIN)
-//		})
 public class CateringFacility extends AbstractBusinessObject {
 
 	private static final long serialVersionUID = 11170L;
@@ -80,8 +76,9 @@ public class CateringFacility extends AbstractBusinessObject {
 	@NotNull
 	private Double longitude;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Category category;
+	@ManyToMany
+	@JoinTable(name = "catering_facility_categories", joinColumns = @JoinColumn(name = "facility_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private List<Category> categories;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	private User creator;
@@ -112,12 +109,12 @@ public class CateringFacility extends AbstractBusinessObject {
 		this.description = description;
 	}
 
-	public Category getCategory() {
-		return category;
+	public List<Category> getCategories() {
+		return categories;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 
 	public String getUrl() {

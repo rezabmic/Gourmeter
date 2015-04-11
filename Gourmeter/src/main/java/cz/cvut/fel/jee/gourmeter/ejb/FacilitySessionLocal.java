@@ -6,7 +6,6 @@ import javax.ejb.Local;
 
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
-import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 
@@ -18,6 +17,9 @@ public interface FacilitySessionLocal {
 
 	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO position);
 
+	public List<MarkerDTO> findFacilitiesInAreaByCategory(
+			long categoryID, MapPositionDTO position);
+	
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
 			double longitude, double kilometerSearchDistance);
 

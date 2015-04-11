@@ -18,7 +18,7 @@ public interface DataSessionLocal {
 	public CriteriaBuilder getCriteriaBuilder();
 
 	public <T> List<T> executeCriteriaQuery(CriteriaQuery<T> cq);
-
+	
 	public List<CateringFacility> findFacilitiesByGPS(
 			CoordinateSearchWrapper csw);
 
@@ -32,6 +32,8 @@ public interface DataSessionLocal {
 	public List<Tag> getAllTags();
 
 	public List<Tag> getTagsForCategory(Long id);
+	
+	public List<Tag> getTagsForCategories(List<Long> categories);
 
 	public List<Category> getAllCategories();
 

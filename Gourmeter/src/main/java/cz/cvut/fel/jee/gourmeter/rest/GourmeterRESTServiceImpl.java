@@ -114,6 +114,17 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 			throw new NotFoundException("No such a facility with id: " + id);
 		}
 	}
+	
+	@Override
+	@POST
+	@Path("/cateringFacility/byCategory/{id}/near")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MarkerDTO> getFacilitiesNearLocationForCategory(@PathParam("id") Long categoryId, MapPositionDTO mapPos) {
+		List<MarkerDTO> facilities = facilitySession.findFacilitiesInAreaByCategory(categoryId, mapPos);
+		
+		return facilities;
+	}
 
 	@Override
 	@POST
@@ -154,7 +165,21 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 		}
 		return result;
 	}
-
+	
+	@Override
+	@POST
+	@Path("/tags/byCategories")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getTagsForCategories(List<Long> categories) {
+		List<Tag> list = this.dataSession.getTagsForCategories(categories);
+		List<String> result = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			result.add(list.get(i).getName());
+		}
+		return result;
+	}
+	
 	@Override
 	@GET
 	@Path("/category/all")

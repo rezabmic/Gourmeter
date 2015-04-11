@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -57,13 +58,8 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	@Override
 	public CateringFacility getFacilityById(Long id) {
 
-		Query query = em.createQuery("select c from CateringFacility c left join fetch c.recommendations left join fetch c.category where c.id=:cfID").setParameter("cfID", id);
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.recommendations where c.id=:cfID").setParameter("cfID", id);
 		
-		
-//		TypedQuery<CateringFacility> q = em.createNamedQuery(
-//				"CateringFacility.findById", CateringFacility.class);
-//		q.setParameter("id", id);
-//		List<CateringFacility> resultList = q.getResultList();
 		List<CateringFacility> resultList = (List<CateringFacility>) query.getResultList();
 		
 		query = em.createQuery("select c from CateringFacility c left join fetch c.openingHours where c.id=:cfID").setParameter("cfID", id);
@@ -124,6 +120,26 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				p.getLatitudeBottom(), p.getLatitudeTop());
 		return convertMarkerDTOs(dao.findFacilitiesByGPS(csw));
 	}
+	
+	@Override
+	public List<MarkerDTO> findFacilitiesInAreaByCategory(
+			long categoryID, MapPositionDTO position) {
+		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
+				position.getLongitudeBottom(), position.getLongitudeTop(),
+				position.getLatitudeBottom(), position.getLatitudeTop());
+		
+		Query query = em.createQuery("select c from CateringFacility c left join c.categories as categ"
+				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin"
+				+ "AND categ.id = :categoryID")
+				.setParameter("latitudeMax", csw.getLatitudeMax())
+				.setParameter("latitudeMin", csw.getLatitudeMin())
+				.setParameter("longitudeMax", csw.getLongitudeMax())
+				.setParameter("longitudeMin", csw.getLongitudeMin())
+				.setParameter("categoryID", categoryID);
+		
+		return convertMarkerDTOs(query.getResultList());
+	}
 
 	@Override
 	public void createOrUpdateFacility(CateringFacilityCreateDTO dto, Long userId) {
@@ -151,10 +167,14 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		f.setStreet(dto.getAddress().getStreet());
 		f.setUrl(dto.getUrl());
 
-		Category category = em.find(Category.class, dto.getCategoryId());
-		f.setCategory(category);
-
-		User creator = em.find(User.class, userId);
+		List<Category> categories = new ArrayList<Category>();
+		List<Long> references = dto.getCategories();
+		
+		for (long categoryID : references) {
+			categories.add(em.getReference(Category.class, categoryID));
+		}
+		
+		User creator = em.getReference(User.class, userId);
 		if (creator == null) {
 			log.warn("Catering facility creator not found");
 		}

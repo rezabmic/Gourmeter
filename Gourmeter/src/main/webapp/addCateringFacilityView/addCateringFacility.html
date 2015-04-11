@@ -15,7 +15,7 @@
 
 	<div class="form-group" ng-controller="CategoriesController as categoriesCtrl">
 		<label for="title">Kategorie*</label> 
-		<select class="form-control" name="categories" ng-model="cateringFacility.categoryId" 
+		<select multiple="multiple" class="form-control" name="categories" ng-model="cateringFacility.categories" 
 				ng-options="category.id as category.name for category in categoriesCtrl.categories"
 				ng-class="{inputError:(addForm.$submitted && addForm.categories.$error.required)}" ng-change="categoriesCtrl.changeTags()" required>
 			<option value="">-- vyberte kategorii --</option>

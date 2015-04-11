@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -25,6 +26,7 @@ public class Category extends AbstractBusinessObject {
 	private static final long serialVersionUID = 11180L;
 
 	@NotEmpty	
+	@Column(unique = true)	
 	private String name;
 
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)

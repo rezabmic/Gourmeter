@@ -2,8 +2,10 @@ package cz.cvut.fel.jee.gourmeter.test.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -60,7 +62,9 @@ public class TestUtils {
 
 	public static CateringFacility createCateringFacility(EntityManager em) {
 		CateringFacility cf = new CateringFacility();
-		cf.setCategory(createCategory(em));
+		List<Category> categories = new ArrayList<>();
+		categories.add(createCategory(em));
+		cf.setCategories(categories);
 		cf.setCity(TEST_CITY);
 		cf.setStreet(TEST_STREET);
 		cf.setHouseNumber(TEST_HOUSE_NUMBER);
@@ -96,7 +100,8 @@ public class TestUtils {
 		AddressDTO a = new AddressDTO(TEST_CITY, TEST_STREET, TEST_HOUSE_NUMBER);
 		MenuDTO m = new MenuDTO(getHours(11, 0), getHours(14, 30), null);
 		OpeningHoursDTO o = getTestOpeningHoursDTO();
-		
+		List<Long> categories = new ArrayList<Long>();
+		categories.add(1L);
 		CateringFacilityCreateDTO cf = new CateringFacilityCreateDTO();
 		cf.setAddress(a);
 		cf.setDescription(TEST_DECRIPTION);
@@ -106,7 +111,7 @@ public class TestUtils {
 		cf.setTitle(TEST_FACILITY_NAME);
 		cf.setUrl(TEST_URL);
 		cf.setOpeningHours(Arrays.asList(o));
-		cf.setCategoryId(1L);
+		cf.setCategories(categories);
 		
 		TagDTO fish = new TagDTO("rybka", -1, -1);
 		TagDTO dog = new TagDTO("pejsek", -1, -1);

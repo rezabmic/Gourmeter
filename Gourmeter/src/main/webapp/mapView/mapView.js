@@ -7,6 +7,7 @@ var mapViewModule =  angular.module('app.mapView', ['ngRoute', 'ngResource', 'ui
 //routes configuration
 mapViewModule.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/map', {
+	  	title: 'Mapa',
 		templateUrl : 'mapView/map.html'
 	});
 }]);
@@ -71,7 +72,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, CateringFacility) 
   	    		center: { latitude: latitude, longitude: longitude}, 
 				zoom: 15,
 				events : {
-				     bounds_changed: function(map){
+				     bounds_changed: _.debounce(function(map){
 				    	 var bounds = map.getBounds();
 				    	 var ne = bounds.getNorthEast();
 				    	 var sw = bounds.getSouthWest(); 
@@ -83,38 +84,40 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, CateringFacility) 
 				    		}, function(markers,responseHeaders){
 				    			//success callback
 				    			$scope.map.markers = markers;
-				    			console.log(markers);
-				    			
-				    			_.each($scope.map.markers, function (marker) {
-				    	  		  	//move infowindow below the marker
-				    				marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
-				    				marker.closeClick = function () {
-				    					selected.options.visible = false;
-				    					return $scope.$apply();	
-				    				};
-				    				marker.onClicked = function () {
-				    					//marker
-				    					
-				    					var cateringFacility = CateringFacility.get({},marker, function(){
-				    						marker.title =  cateringFacility.title;
-				    						marker.category = cateringFacility.category;
-				    						marker.tags =  cateringFacility.tags;
-				    						marker.openingHours =  cateringFacility.openingHours;
-				    						
-				    						selected = marker;
-				    						selected.options.visible = true;
-					    					$scope.selected = selected;
-				    					});
-				    					
-				    				}.bind(this);
-				    			});
-				    			$scope.$apply();
+
+				    			setOnClickHandler(markers);
 				    		});
-				     } 
+				     },333, false)   
 				},
 				markers: []	
   	    };
 	};
+	
+	function setOnClickHandler(markers){
+		_.each(markers, function (marker) {
+  		  	//move infowindow below the marker
+			marker.options = {visible : false, pixelOffset: new google.maps.Size(0, -25, 'px', 'px')};
+			marker.closeClick = function () {
+				$scope.selected.options.visible = false;
+				return $scope.$apply();	
+			};
+			marker.onClicked = markerClicked.bind(marker);
+		});
+		$scope.$apply();
+	}
+	
+	function markerClicked() {
+		var marker = this;
+		
+		var cateringFacility = CateringFacility.get({},marker, function(){
+			marker.title =  cateringFacility.title;
+			marker.category = cateringFacility.category;
+			marker.tags =  cateringFacility.tags;
+			marker.openingHours =  cateringFacility.openingHours;
+			marker.options.visible = true;
+			$scope.selected = marker;
+		});
+	}
 	
 });
 

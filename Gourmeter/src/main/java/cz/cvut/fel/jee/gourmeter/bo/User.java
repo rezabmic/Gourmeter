@@ -31,6 +31,7 @@ public class User extends AbstractBusinessObject {
 	private String passwdHash;
 
 	@NotNull
+	@Column(unique = true)
 	private String nickname;
 
 	@Email
