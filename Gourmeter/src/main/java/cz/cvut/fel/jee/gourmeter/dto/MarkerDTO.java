@@ -1,5 +1,7 @@
 package cz.cvut.fel.jee.gourmeter.dto;
 
+import java.util.List;
+
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 
 /**
@@ -15,12 +17,14 @@ public class MarkerDTO {
 	private final Long facilityId;
 	private final Double latitude;
 	private final Double longitude;
+	private List<TagDTO> tags;
 	
 	public MarkerDTO(CateringFacility f) {
 		id = f.getId();
 		facilityId = f.getId();
 		latitude = f.getLatitude();
-		longitude = f.getLongitude();
+		longitude = f.getLongitude();	
+		tags = DTOUtils.getTagDTOList(f.getTags());
 	}
 
 	public Long getFacilityId() {
@@ -39,4 +43,11 @@ public class MarkerDTO {
 		return id;
 	}
 
+	public List<TagDTO> getTags() {
+		return tags;
+	}
+	
+	public void setTags(List<TagDTO> tags) {
+		this.tags = tags;
+	}
 }

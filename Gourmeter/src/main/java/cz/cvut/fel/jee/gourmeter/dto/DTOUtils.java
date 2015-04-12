@@ -13,6 +13,15 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 
 public class DTOUtils {
 
+	
+	public static List<MarkerDTO> convertMarkerDTOs(List<CateringFacility> facilities) {
+		List<MarkerDTO> result = new ArrayList<>();
+		for (CateringFacility facility : facilities) {
+			result.add(new MarkerDTO(facility));
+		}
+		return result;
+	}
+	
 	/**
 	 * Computes reviews (number of recommendations, number of reviews) for each tag of the CateringFacility and returns List of TagDTO.
 	 * 

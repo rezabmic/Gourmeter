@@ -26,6 +26,7 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
+import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
@@ -37,17 +38,6 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(FacilitySessionBean.class);
-
-	/**
-	 * Conversion ratio for kilometer to coordinate degree. TODO check this
-	 * value
-	 */
-	private static final double COORDINATE_TO_KM = 0.009132;
-
-	/**
-	 * Default search radius is 3 kilometers from actual position.
-	 */
-	private static final double DEFAULT_SEARCH_RADIUS_KM = 3;
 
 	@PersistenceContext(unitName = "GourmeterPU")
 	private EntityManager em;
@@ -73,52 +63,22 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 		return null;
 	}
-	
-	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude) {
-		// use default circle radius
-		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
-				longitude, DEFAULT_SEARCH_RADIUS_KM);
-		return dao.findFacilitiesByGPS(csw);
-	}
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude,
-														double kmCircle) {
-
-		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
-				longitude, kmCircle);
-		return dao.findFacilitiesByGPS(csw);
-	}
-
-	@Override
-	public List<MarkerDTO> getFacilitiesInArea(	double latitude,
-												double longitude,
-												double kmCircle,
-												long tagId) {
-
-		Tag tag = em.find(Tag.class, tagId);
-		if (tag == null) {
-			String msg = "No tag found for id : " + tagId;
-			log.warn("No tag found for id : " + tagId);
-			throw new IllegalArgumentException(msg);
-		}
-
-		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
-				longitude, kmCircle);
-		List<CateringFacility> facilities = dao.findFacilitiesByGPSAndTag(csw,
-				tag);
-		return convertMarkerDTOs(facilities);
-	}
-
-	@Override
-	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO p) {
+	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO position) {
 		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
-				p.getLongitudeBottom(), p.getLongitudeTop(),
-				p.getLatitudeBottom(), p.getLatitudeTop());
-		return convertMarkerDTOs(dao.findFacilitiesByGPS(csw));
+				position.getLongitudeBottom(), position.getLongitudeTop(),
+				position.getLatitudeBottom(), position.getLatitudeTop());
+		
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.tags as t left join c.categories as categ "
+				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin ")
+				.setParameter("latitudeMax", csw.getLatitudeMax())
+				.setParameter("latitudeMin", csw.getLatitudeMin())
+				.setParameter("longitudeMax", csw.getLongitudeMax())
+				.setParameter("longitudeMin", csw.getLongitudeMin());
+		
+		return DTOUtils.convertMarkerDTOs(query.getResultList());
 	}
 	
 	@Override
@@ -128,7 +88,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				position.getLongitudeBottom(), position.getLongitudeTop(),
 				position.getLatitudeBottom(), position.getLatitudeTop());
 		
-		Query query = em.createQuery("select c from CateringFacility c left join c.categories as categ "
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.tags as t left join c.categories as categ "
 				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
 				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin "
 				+ "AND categ.id = :categoryID")
@@ -138,7 +98,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				.setParameter("longitudeMin", csw.getLongitudeMin())
 				.setParameter("categoryID", categoryID);
 		
-		return convertMarkerDTOs(query.getResultList());
+		return DTOUtils.convertMarkerDTOs(query.getResultList());
 	}
 	
 	@Override
@@ -149,7 +109,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				position.getLongitudeBottom(), position.getLongitudeTop(),
 				position.getLatitudeBottom(), position.getLatitudeTop());
 		
-		Query query = em.createQuery("select c from CateringFacility c left join c.categories as categ "
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.tags as t left join c.categories as categ "
 				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
 				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin "
 				+ "AND categ.id IN :categories")
@@ -159,7 +119,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				.setParameter("longitudeMin", csw.getLongitudeMin())
 				.setParameter("categories", categories);
 		
-		return convertMarkerDTOs(query.getResultList());
+		return DTOUtils.convertMarkerDTOs(query.getResultList());
 	}
 
 
@@ -259,34 +219,7 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 	}
 
-	private CoordinateSearchWrapper getCoordinatesWrapper(	double latitude,
-															double longitude,
-															double kmCircle) {
-		double radius = getSearchRadius(kmCircle);
-		double latMin = latitude - radius;
-		double latMax = latitude + radius;
-		double longMin = longitude - radius;
-		double longMax = longitude + radius;
-		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(longMin,
-				longMax, latMin, latMax);
-
-		return csw;
-	}
-
-	private double getSearchRadius(double kilometerDistance) {
-		// return search radius
-		return COORDINATE_TO_KM * kilometerDistance / 2;
-	}
-
 	
-
-	private List<MarkerDTO> convertMarkerDTOs(List<CateringFacility> facilities) {
-		List<MarkerDTO> result = new ArrayList<>();
-		for (CateringFacility facility : facilities) {
-			result.add(new MarkerDTO(facility));
-		}
-		return result;
-	}
 
 	
 }

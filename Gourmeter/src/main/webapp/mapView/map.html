@@ -38,19 +38,19 @@
 
 
 <div ng-controller="MapCtrl">
-
+	
 	<form>
 		<div ng-controller="NavigationCtrl" class="nav-inline">
 			<h2>Kategorie</h2>
 			<label ng-repeat="category in categories.array" class="checkbox-inline">
-				<input type="checkbox" ng-click="selectCategory(category.id)">{{category.name}}</input>
+				<input type="checkbox" ng-click="selectCategory(category.id)" ng-checked="checkedCategories.indexOf(category.id) > -1">{{category.name}}</input>
 			</label>
 		
 	
 			<div ng-controller="TagCtrl" ng-hide="checkedCategories.length == 0">
 				<h3>Tagy</h3>
 				<label ng-repeat="tag in tags.array" class="checkbox-inline">
-					<input type="checkbox" name="{{tag.name}}" ng-click="selectTag(tag.id)" />
+					<input type="checkbox" name="{{tag.name}}" ng-click="selectTag(tag.id)" ng-checked="checkedTags.indexOf(tag.id) > -1" />
 					{{tag.name}}
 				</label>
 			</div>
@@ -59,7 +59,7 @@
 	
 	<ui-gmap-google-map center="mapOptions.center" zoom="mapOptions.zoom" events="mapOptions.events">
 		
-		<ui-gmap-markers models="mapOptions.markers" coords="'self'" click="'onClicked'">		 
+		<ui-gmap-markers models="checkedTags.length != 0 ? mapOptions.filteredMarkers : mapOptions.markers" coords="'self'" click="'onClicked'">		 
 		</ui-gmap-markers>
 		
 		<ui-gmap-window coords="selected" id="selected.id" closeClick="selected.closeClick()" options="selected.options" templateUrl="'window.tpl.html'" templateParameter="selected" ng-cloak>

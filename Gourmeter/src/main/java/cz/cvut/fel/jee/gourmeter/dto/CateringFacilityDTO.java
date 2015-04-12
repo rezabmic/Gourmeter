@@ -10,8 +10,8 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
  * @author Michal
  *
  */
-public class CateringFacilityDTO extends MarkerDTO{
-
+public class CateringFacilityDTO{
+	private final Long id;
 	private final String title;
 	private final String description;
 	private final String url;
@@ -19,7 +19,7 @@ public class CateringFacilityDTO extends MarkerDTO{
 	private final List<OpeningHoursDTO> openingHours;
 
 	public CateringFacilityDTO(CateringFacility f) {
-		super(f);
+		id = f.getId();
 		title = f.getName();
 		description = f.getDescription();
 		url = f.getUrl();
@@ -27,6 +27,10 @@ public class CateringFacilityDTO extends MarkerDTO{
 		openingHours = DTOUtils.getHoursDTO(f);
 	}
 
+	public Long getId() {
+		return id;
+	}
+	
 	public String getTitle() {
 		return title;
 	}

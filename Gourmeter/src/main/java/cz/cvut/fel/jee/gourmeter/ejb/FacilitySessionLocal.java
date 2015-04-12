@@ -12,9 +12,6 @@ import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 @Local
 public interface FacilitySessionLocal {
 
-	public List<CateringFacility> getFacilitiesInArea(double latitude,
-			double longitude);
-
 	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO position);
 
 	public List<MarkerDTO> findFacilitiesInAreaByCategory(
@@ -22,12 +19,6 @@ public interface FacilitySessionLocal {
 	
 	public List<MarkerDTO> findFacilitiesInAreaByCategories(
 			List<Long> categories, MapPositionDTO position);
-	
-	public List<CateringFacility> getFacilitiesInArea(double latitude,
-			double longitude, double kilometerSearchDistance);
-
-	public List<MarkerDTO> getFacilitiesInArea(double latitude,
-			double longitude, double kilometerSearchDistance, long tagId);
 
 	public void createOrUpdateFacility(CateringFacilityCreateDTO dto, Long userId);
 

@@ -29,7 +29,7 @@ addCFModule.factory('Tags',  ['$resource',  function($resource){
 //RESTfull client for tags
 addCFModule.factory('TagsByCategories',  ['$resource',  function($resource){
 	return $resource('service/tags/byCategories', {}, {
-        query: {method:'POST', isArray:true}
+        get: {method:'POST', isArray:true}
 	});
 }]);
 
@@ -151,13 +151,11 @@ addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFaci
 	};	
 });
 
-addCFModule.controller("CategoriesController",  function($scope, Categories, Tags, TagsByCategories) {
+addCFModule.controller("CategoriesController",  function($scope, Categories, TagsByCategories) {
 	this.categories = Categories.query();
 	
 	this.changeTags = function(){
-		//get tags by categoryID
-		//tags.array = Tags.query({categoryId: cateringFacility.categories[0]});
-		tags.array = TagsByCategories.query(cateringFacility.categories);
+		tags.array = TagsByCategories.get(cateringFacility.categories);
 	};
 });
 
@@ -167,13 +165,9 @@ addCFModule.controller("TagController",  function($scope, MenuTag) {
 	$scope.tags = tags;
 	
 	this.isMenuSelected = function(){
-		var selected = cfTags;
-		for(var i = 0; i < selected.length; i++){
-			if(selected[i].name == MenuTag()){
-				return true;
-			}
-		}
-		return false;
+		return cfTags.some(function(tag){
+			return tag.name == MenuTag();
+		});
 	};
 
 	this.toggleSelection = function toggleSelection(tag) {

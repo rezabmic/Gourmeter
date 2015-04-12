@@ -153,7 +153,6 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, MarkersByCategorie
 			};
 			marker.onClicked = markerClicked.bind(marker);
 		});
-		$scope.$apply();
 	}
 	
 	function markerClicked() {
@@ -195,7 +194,7 @@ mapViewModule.controller('NavigationCtrl', function($scope, Categories){
 	
 });
 
-mapViewModule.controller('TagCtrl', function($scope, TagsByCategories){
+mapViewModule.controller('TagCtrl', function($scope, $filter, TagsByCategories){
 	var tags = {array : []};
 	
 	$scope.$watchCollection('checkedCategories', function(newValue, oldValue) {
@@ -208,7 +207,9 @@ mapViewModule.controller('TagCtrl', function($scope, TagsByCategories){
 	
 	$scope.selectTag = function(tagId){
 		toggleSelection(tagId, checkedTags);
-		filterMarkers(checkedTags);
+		
+		$scope.mapOptions.filteredMarkers = $filter('filterByTags')($scope.mapOptions.markers, checkedTags);
+		
 	}
 	
 	function filterMarkers(checkedTags){
@@ -216,6 +217,23 @@ mapViewModule.controller('TagCtrl', function($scope, TagsByCategories){
 	};
 });
 
+mapViewModule.filter('filterByTags', function () {
+    return function (markers, tags) {
+    	console.log("filter");
+        var filtered = []; 
+        (markers || []).forEach(
+        	function (marker) { 
+	            var matches = marker.tags.some(function (tag) {         
+	                return (tags.indexOf(tag.id) > -1);   
+	            });                                               
+	            if (matches) {           
+	                filtered.push(marker); 
+	            }
+        	}
+        );
+        return filtered;
+    };
+});
 
 
 })();

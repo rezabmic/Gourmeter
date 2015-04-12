@@ -113,9 +113,9 @@ public class TestUtils {
 		cf.setOpeningHours(Arrays.asList(o));
 		cf.setCategories(categories);
 		
-		TagDTO fish = new TagDTO("rybka", -1, -1);
-		TagDTO dog = new TagDTO("pejsek", -1, -1);
-		cf.setTags(Arrays.asList(fish, dog));
+//		TagDTO fish = new TagDTO("rybka", -1, -1);
+//		TagDTO dog = new TagDTO("pejsek", -1, -1);
+//		cf.setTags(Arrays.asList(fish, dog));
 		
 		return cf;
 	}

@@ -23,16 +23,6 @@ public class DataSessionBean implements DataSessionLocal {
 	private EntityManager em;
 
 	@Override
-	public List<CateringFacility> findFacilitiesByGPS(
-			CoordinateSearchWrapper csw) {
-
-		TypedQuery<CateringFacility> q = getFacilityGPSQuery(csw,
-				"CateringFacility.findByCoordinates");
-
-		return q.getResultList();
-	}
-
-	@Override
 	public List<CateringFacility> findFacilitiesByGPSAndTag(
 			CoordinateSearchWrapper csw, Tag tag) {
 

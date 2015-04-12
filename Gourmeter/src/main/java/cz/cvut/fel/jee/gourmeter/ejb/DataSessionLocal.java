@@ -18,9 +18,6 @@ public interface DataSessionLocal {
 	public CriteriaBuilder getCriteriaBuilder();
 
 	public <T> List<T> executeCriteriaQuery(CriteriaQuery<T> cq);
-	
-	public List<CateringFacility> findFacilitiesByGPS(
-			CoordinateSearchWrapper csw);
 
 	public List<CateringFacility> findFacilitiesByGPSAndTag(
 			CoordinateSearchWrapper csw, Tag tag);
