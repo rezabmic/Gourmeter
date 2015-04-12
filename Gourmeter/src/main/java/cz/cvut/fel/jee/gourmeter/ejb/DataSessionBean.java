@@ -1,6 +1,5 @@
 package cz.cvut.fel.jee.gourmeter.ejb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -16,7 +15,6 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Recommendation;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
-import cz.cvut.fel.jee.gourmeter.bo.UserRole;
 
 @Stateless
 public class DataSessionBean implements DataSessionLocal {
@@ -53,32 +51,6 @@ public class DataSessionBean implements DataSessionLocal {
 	@Override
 	public <T> List<T> executeCriteriaQuery(CriteriaQuery<T> cq) {
 		return em.createQuery(cq).getResultList();
-	}
-
-	@Override
-	public UserRole findRoleByName(String roleName) {
-		TypedQuery<UserRole> q = em.createNamedQuery("UserRole.findByName",
-				UserRole.class);
-		q.setParameter("name", roleName);
-
-		List<UserRole> resultList = q.getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0);
-		}
-		return null;
-	}
-
-	@Override
-	public User findUserByLogin(String login) {
-		TypedQuery<User> q = em
-				.createNamedQuery("User.findByLogin", User.class);
-		q.setParameter("login", login);
-
-		List<User> resultList = q.getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0);
-		}
-		return null;
 	}
 
 	private TypedQuery<CateringFacility> getFacilityGPSQuery(

@@ -104,7 +104,7 @@ var cateringFacility = {
 function cleanModel(){
 	cateringFacility = {
 			title : '',
-			categoryId : null,
+			categories : [],
 			tags : [],
 			url : null,
 			description : '',
@@ -169,7 +169,7 @@ addCFModule.controller("TagController",  function($scope, MenuTag) {
 	this.isMenuSelected = function(){
 		var selected = cfTags;
 		for(var i = 0; i < selected.length; i++){
-			if(selected[i] == MenuTag()){
+			if(selected[i].name == MenuTag()){
 				return true;
 			}
 		}

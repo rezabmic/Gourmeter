@@ -19,7 +19,7 @@ public class DTOUtils {
 	 * @param f CateringFacility
 	 * @return
 	 */
-	public static List<TagDTO> getFacilityTags(CateringFacility f) {
+	public static List<TagWithReviewsDTO> getFacilityTags(CateringFacility f) {
 		Map<Long, TagReccommendations> recommendationsMap = new HashMap<>();
 		for (Recommendation r : f.getRecommendations()) {
 			Tag tag = r.getTag();
@@ -38,14 +38,14 @@ public class DTOUtils {
 			}
 		}
 
-		List<TagDTO> dtos = new ArrayList<>();
+		List<TagWithReviewsDTO> dtos = new ArrayList<>();
 		for (Tag tag : f.getTags()) {
 			TagReccommendations tr = recommendationsMap.get(tag.getId());
 			if (tr != null) {
-				dtos.add(new TagDTO(tag.getName(), tr.getRecommended(), tr
+				dtos.add(new TagWithReviewsDTO(tag.getId(), tag.getName(), tr.getRecommended(), tr
 						.getTotal()));
 			} else {
-				dtos.add(new TagDTO(tag, 0, 0));
+				dtos.add(new TagWithReviewsDTO(tag.getId(), tag.getName(), 0, 0));
 			}
 		}
 		return dtos;
@@ -70,16 +70,6 @@ public class DTOUtils {
 			return null;
 	}
 
-	public static TagDTO getTagDTO(	Tag tag,
-									Integer recommended,
-									Integer reviewed) {
-		if (tag == null)
-			return null;
-		else {
-			return new TagDTO(tag, recommended, reviewed);
-		}
-	}
-
 	public static List<CategoryDTO> getListCategoryDTO(List<Category> list) {
 		List<CategoryDTO> result = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
@@ -89,10 +79,9 @@ public class DTOUtils {
 	}
 
 	public static List<TagDTO> getTagDTOList(List<Tag> tags) {
-		// TODO
 		List<TagDTO> result = new ArrayList<>();
-		for (int i = 0; i < tags.size(); i++) {
-			result.add(DTOUtils.getTagDTO(tags.get(i), 0, 0));
+		for (Tag tag : tags) {
+			result.add(new TagDTO(tag));
 		}
 		return result;
 	}

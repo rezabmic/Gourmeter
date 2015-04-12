@@ -2,12 +2,14 @@ package cz.cvut.fel.jee.gourmeter.ejb;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.jboss.resteasy.util.Base64;
 import org.slf4j.Logger;
@@ -36,14 +38,14 @@ public class UserSessionBean implements UserSessionLocal {
 		setUserAttributes(user, u);
 		setUserPassword(getDecodedPassword(user.getPassword()), u);
 
-		u.setUserRole(dao.findRoleByName(UserRole.USER_ROLE));
+		u.setUserRole(findRoleByName(UserRole.USER_ROLE));
 		em.persist(u);
 		return new UserDTO(u);
 	}
 
 	@Override
 	public UserDTO editUserAccount(UserDTO user) throws SignInException {
-		User u = dao.findUserByLogin(user.getLogin());
+		User u = findUserByLogin(user.getLogin());
 		setUserAttributes(user, u);
 		if (user.getPassword() != null) {
 			if (getPasswordHash(getDecodedPassword(user.getPassword())).equals(u.getPasswdHash())) {
@@ -60,7 +62,7 @@ public class UserSessionBean implements UserSessionLocal {
 	@Override
 	public UserDTO authenticateUser(String login, String password)
 			throws SignInException {
-		User u = dao.findUserByLogin(login);
+		User u = findUserByLogin(login);
 		if (u == null) {
 			throw new SignInException("User " + login + " not found.");
 		}
@@ -76,7 +78,7 @@ public class UserSessionBean implements UserSessionLocal {
 									String password,
 									Set<String> allowedRoles)
 			throws SignInException {
-		User u = dao.findUserByLogin(login);
+		User u = findUserByLogin(login);
 		if (u == null) {
 			throw new SignInException("User " + login + " not found.");
 		}
@@ -94,6 +96,32 @@ public class UserSessionBean implements UserSessionLocal {
 	public UserRole getUsersRole(Long userId) {
 		User u = em.find(User.class, userId);
 		return u.getUserRole();
+	}
+	
+	@Override
+	public UserRole findRoleByName(String roleName) {
+		TypedQuery<UserRole> q = em.createNamedQuery("UserRole.findByName",
+				UserRole.class);
+		q.setParameter("name", roleName);
+
+		List<UserRole> resultList = q.getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public User findUserByLogin(String login) {
+		TypedQuery<User> q = em
+				.createNamedQuery("User.findByLogin", User.class);
+		q.setParameter("login", login);
+
+		List<User> resultList = q.getResultList();
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
+		}
+		return null;
 	}
 
 	private String getPasswordHash(String password) throws SignInException {

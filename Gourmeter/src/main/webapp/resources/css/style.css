@@ -17,6 +17,14 @@ h1{
 	display: inline;
 }
 
+h2{
+	font-size: 1.8em;
+}
+
+h3{
+	font-size: 1.5em;
+}
+
 div#user{
 	float: right;
 	display: inline;
@@ -24,7 +32,7 @@ div#user{
 }
 
 .nav-inline{
-	margin: 20px 0 40px 0;
+	margin: 20px 0 20px 0;
 	
 }
 .nav-inline ul{
@@ -32,12 +40,10 @@ padding: 0;
 }
 
 .nav-inline li{
-	display: inline;
+	display: inline-block;
 	background-color: #f5f5f5;
-	padding: 10px 0;
-}
-.nav-inline li a{
-	padding: 10px;
+	padding: 5px 10px;
+	margin-right: 5px;
 }
 
 .nav, .pagination, .carousel, .panel-title a {
@@ -115,6 +121,9 @@ table.paddingRight td {
 	list-style: none;
 }
 
+.infoWindow div#menu ul li a{
+	display: inline-block;
+}
 
 
 

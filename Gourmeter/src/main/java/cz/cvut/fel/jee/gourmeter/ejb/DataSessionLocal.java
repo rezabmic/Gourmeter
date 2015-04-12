@@ -25,10 +25,6 @@ public interface DataSessionLocal {
 	public List<CateringFacility> findFacilitiesByGPSAndTag(
 			CoordinateSearchWrapper csw, Tag tag);
 
-	public UserRole findRoleByName(String roleName);
-
-	public User findUserByLogin(String login);
-
 	public List<Tag> getAllTags();
 
 	public List<Tag> getTagsForCategory(Long id);

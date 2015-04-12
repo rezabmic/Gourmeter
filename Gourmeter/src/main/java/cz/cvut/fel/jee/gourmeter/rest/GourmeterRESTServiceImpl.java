@@ -1,6 +1,5 @@
 package cz.cvut.fel.jee.gourmeter.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -21,10 +20,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
-import cz.cvut.fel.jee.gourmeter.bo.Tag;
-import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CategoriesMapPositionWrapperDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
@@ -128,6 +125,17 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 
 	@Override
 	@POST
+	@Path("/cateringFacility/byCategories/near")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MarkerDTO> getFacilitiesNearLocationForCategories(CategoriesMapPositionWrapperDTO wrapper) {
+		List<MarkerDTO> facilities = facilitySession.findFacilitiesInAreaByCategories(wrapper.getCategories(), wrapper.getMapPos());
+		
+		return facilities;
+	}
+	
+	@Override
+	@POST
 	@Path("/cateringFacility/near")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -136,58 +144,6 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 		List<MarkerDTO> facilities = facilitySession.getFacilitiesInArea(mapPos);
 		System.out.println(facilities.toString());
 		return facilities;
-	}
-
-	@Override
-	@GET
-	@Path("/tags/all")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getAllTags() {
-		List<Tag> list = this.dataSession.getAllTags();
-		List<String> result = new ArrayList<>();
-		for (int i = 0; i < result.size(); i++) {
-			result.add(list.get(i).getName());
-		}
-		return result;
-	}
-
-	@Override
-	@GET
-	@Path("/tags/byCategory/{id}")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getTagsForCategory(@PathParam("id") Long categoryId) {
-		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
-		List<String> result = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			result.add(list.get(i).getName());
-		}
-		return result;
-	}
-	
-	@Override
-	@POST
-	@Path("/tags/byCategories")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getTagsForCategories(List<Long> categories) {
-		List<Tag> list = this.dataSession.getTagsForCategories(categories);
-		List<String> result = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			result.add(list.get(i).getName());
-		}
-		return result;
-	}
-	
-	@Override
-	@GET
-	@Path("/category/all")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<CategoryDTO> getAllCategories() {
-		List<Category> c = this.dataSession.getAllCategories();
-		return DTOUtils.getListCategoryDTO(c);
 	}
 
 	@GET

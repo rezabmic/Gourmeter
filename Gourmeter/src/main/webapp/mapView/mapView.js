@@ -19,15 +19,47 @@ mapViewModule.factory('Markers',  ['$resource',  function($resource){
 	});
 }]);
 
+//RESTfull client for markers
+mapViewModule.factory('MarkersByCategory',  ['$resource',  function($resource){
+	return $resource('service/cateringFacility/byCategory/:id/near', {id: '@id'}, {
+		get: {method:'POST', isArray:true}
+	});
+}]);
+
+mapViewModule.factory('MarkersByCategories',  ['$resource',  function($resource){
+	return $resource('service/cateringFacility/byCategories/near', {}, {
+		get: {method:'POST', isArray:true}
+	});
+}]);
+
+//RESTfull client for tags
+mapViewModule.factory('TagsByCategories',  ['$resource',  function($resource){
+	return $resource('service/tags/byCategories',{},{
+		get: {method:'POST', isArray:true}
+	});
+}]);
+
+//RESTfull client for categories
+mapViewModule.factory('Categories',  ['$resource',  function($resource){
+	return $resource('service//category/all');
+}]);
+
 mapViewModule.factory('CateringFacility',  ['$resource',  function($resource){
 	return $resource('service/cateringFacility/:id',{id: '@id'});
 }]);
 
+var checkedCategories = [];
+var checkedTags = [];
+var map;
 //Controllers
-mapViewModule.controller("MapCtrl", function($scope, Markers, CateringFacility) {
+mapViewModule.controller("MapCtrl", function($scope, Markers, MarkersByCategories, CateringFacility) {
+	
+	$scope.checkedCategories = checkedCategories;
+	$scope.checkedTags = checkedTags;
+	
 	var selected = {
 		options : {visible : false},	 
-	};
+	}; //selected marker
 	
 	$scope.selected = selected;
 	
@@ -43,7 +75,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, CateringFacility) 
      * from the server then the object is populated with the data and the view 
      * automatically re-renders itself showing the new data.
     */
-    $scope.map = {}; 
+    $scope.mapOptions = {}; 
     
     // Try HTML5 geolocation
     if(navigator.geolocation) {
@@ -68,30 +100,48 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, CateringFacility) 
   	}
 	
 	function createMap(latitude,longitude){
-		$scope.map = {
+		$scope.mapOptions = {
   	    		center: { latitude: latitude, longitude: longitude}, 
 				zoom: 15,
+				
 				events : {
-				     bounds_changed: _.debounce(function(map){
-				    	 var bounds = map.getBounds();
-				    	 var ne = bounds.getNorthEast();
-				    	 var sw = bounds.getSouthWest(); 
-				    	 Markers.get({
-				    		  latitudeTop: ne.k,
-				    		  longitudeTop: ne.D,
-				    		  latitudeBottom: sw.k,
-				    		  longitudeBottom: sw.D
-				    		}, function(markers,responseHeaders){
-				    			//success callback
-				    			$scope.map.markers = markers;
-
-				    			setOnClickHandler(markers);
-				    		});
-				     },333, false)   
+					bounds_changed: _.debounce($scope.changeMarkers,333, false)
 				},
-				markers: []	
+				markers: []
+				
   	    };
 	};
+	
+	$scope.changeMarkers = function(map){
+		 if(map != null && map != undefined){
+			$scope.map = map;
+		 }
+	   	 var bounds = map.getBounds();
+		 var ne = bounds.getNorthEast();
+		 var sw = bounds.getSouthWest(); 
+		 var coordinates = {
+				  latitudeTop: ne.k,
+				  longitudeTop: ne.D,
+				  latitudeBottom: sw.k,
+				  longitudeBottom: sw.D
+		 };
+		 
+		 if(checkedCategories.length == 0){
+			 Markers.get(coordinates, function(markers,responseHeaders){
+					//success callback
+					$scope.mapOptions.markers = markers;
+		
+					setOnClickHandler(markers);
+			});
+		 } else{
+			 MarkersByCategories.get({},{categories: checkedCategories, mapPos: coordinates}, function(markers,responseHeaders){
+					//success callback
+					$scope.mapOptions.markers = markers;
+		
+					setOnClickHandler(markers);
+			});
+		 }
+	}
 	
 	function setOnClickHandler(markers){
 		_.each(markers, function (marker) {
@@ -131,5 +181,41 @@ mapViewModule.controller('MenuController', function($scope, $filter){
 		}
 	}	
 });
+
+mapViewModule.controller('NavigationCtrl', function($scope, Categories){
+	var categories = {array : Categories.query()};
+	
+	
+	$scope.categories = categories;
+	
+	$scope.selectCategory = function(categoryId){
+		toggleSelection(categoryId, checkedCategories);
+		$scope.changeMarkers($scope.map);
+	}
+	
+});
+
+mapViewModule.controller('TagCtrl', function($scope, TagsByCategories){
+	var tags = {array : []};
+	
+	$scope.$watchCollection('checkedCategories', function(newValue, oldValue) {
+		if(newValue.length > 0){
+			tags.array = TagsByCategories.get(newValue);
+		}
+	});
+	
+	$scope.tags = tags;
+	
+	$scope.selectTag = function(tagId){
+		toggleSelection(tagId, checkedTags);
+		filterMarkers(checkedTags);
+	}
+	
+	function filterMarkers(checkedTags){
+		
+	};
+});
+
+
 
 })();

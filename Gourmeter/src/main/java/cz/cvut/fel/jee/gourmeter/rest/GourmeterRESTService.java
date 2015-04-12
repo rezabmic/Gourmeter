@@ -5,8 +5,7 @@ import java.util.List;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import cz.cvut.fel.jee.gourmeter.bo.Tag;
-import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CategoriesMapPositionWrapperDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
@@ -14,30 +13,59 @@ import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 
 public interface GourmeterRESTService {
 
+	/**
+	 * TODO description
+	 * 
+	 * @param facility
+	 * @param userId
+	 * @return
+	 */
 	public Response createNewFacility(CateringFacilityCreateDTO facility, Long userId);
 
+	/**
+	 * TODO description
+	 * 
+	 * @param tagId
+	 * @param facilityId
+	 * @param userId
+	 * @param recommended
+	 * @return
+	 */
 	public Response addRecommendation(Long tagId, Long facilityId, Long userId,
 			Boolean recommended);
 
+	/**
+	 * TODO description
+	 * 
+	 * @param facility
+	 * @param userId
+	 * @return
+	 */
 	public Response testerApproval(CateringFacilityCreateDTO facility, Long userId);
 
+	/**
+	 * TODO description
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public CateringFacilityDTO getFacilityById(Long id);
 
-	public List<String> getAllTags();
-
-	public List<String> getTagsForCategory(Long categoryId);
-	
-	public List<String> getTagsForCategories(List<Long> categories);
-
-	public List<CategoryDTO> getAllCategories();
-
 	/**
+	 * TODO description
 	 * 
 	 * @param categoryId
 	 * @param mapPos
 	 * @return
 	 */
 	public List<MarkerDTO> getFacilitiesNearLocationForCategory(@PathParam("id") Long categoryId, MapPositionDTO mapPos);
+	
+	/**
+	 * 
+	 * @param wrapper
+	 * @return	
+	 */
+	public List<MarkerDTO> getFacilitiesNearLocationForCategories(CategoriesMapPositionWrapperDTO wrapper);
 	
 	/**
 	 * Returns map markers.

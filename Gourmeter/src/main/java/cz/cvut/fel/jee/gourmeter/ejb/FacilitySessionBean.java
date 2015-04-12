@@ -128,9 +128,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 				position.getLongitudeBottom(), position.getLongitudeTop(),
 				position.getLatitudeBottom(), position.getLatitudeTop());
 		
-		Query query = em.createQuery("select c from CateringFacility c left join c.categories as categ"
+		Query query = em.createQuery("select c from CateringFacility c left join c.categories as categ "
 				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
-				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin"
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin "
 				+ "AND categ.id = :categoryID")
 				.setParameter("latitudeMax", csw.getLatitudeMax())
 				.setParameter("latitudeMin", csw.getLatitudeMin())
@@ -140,6 +140,28 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		
 		return convertMarkerDTOs(query.getResultList());
 	}
+	
+	@Override
+	public List<MarkerDTO> findFacilitiesInAreaByCategories(
+			List<Long> categories, MapPositionDTO position) {
+		
+		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
+				position.getLongitudeBottom(), position.getLongitudeTop(),
+				position.getLatitudeBottom(), position.getLatitudeTop());
+		
+		Query query = em.createQuery("select c from CateringFacility c left join c.categories as categ "
+				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin "
+				+ "AND categ.id IN :categories")
+				.setParameter("latitudeMax", csw.getLatitudeMax())
+				.setParameter("latitudeMin", csw.getLatitudeMin())
+				.setParameter("longitudeMax", csw.getLongitudeMax())
+				.setParameter("longitudeMin", csw.getLongitudeMin())
+				.setParameter("categories", categories);
+		
+		return convertMarkerDTOs(query.getResultList());
+	}
+
 
 	@Override
 	public void createOrUpdateFacility(CateringFacilityCreateDTO dto, Long userId) {
@@ -167,11 +189,10 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		f.setStreet(dto.getAddress().getStreet());
 		f.setUrl(dto.getUrl());
 
-		List<Category> categories = new ArrayList<Category>();
-		List<Long> references = dto.getCategories();
+		List<Long> categories = dto.getCategories();
 		
-		for (long categoryID : references) {
-			categories.add(em.getReference(Category.class, categoryID));
+		for (long categoryID : categories) {
+			f.getCategories().add(em.getReference(Category.class, categoryID));
 		}
 		
 		User creator = em.getReference(User.class, userId);
@@ -194,24 +215,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 			return;
 		}
 
-		for (TagDTO t : tags) {
-			TypedQuery<Tag> q = em
-					.createNamedQuery("Tag.findByName", Tag.class);
-			q.setParameter("name", t.getName());
-			Tag tag = null;
-			try {
-				tag = q.getSingleResult();
-			} catch (NoResultException e) {
-				// TODO
-				tag = new Tag();
-				tag.setName(t.getName());
-				tag.setCategory(null); // TODO
-				em.persist(tag);
-				// throw new IllegalArgumentException("unknown tag '" +
-				// t.getName() + "'");
-			}
+		for (TagDTO dto : tags) {
 
-			f.getTags().add(tag);
+			f.getTags().add(em.getReference(Tag.class, dto.getId()));
 		}
 	}
 
@@ -282,4 +288,5 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		return result;
 	}
 
+	
 }

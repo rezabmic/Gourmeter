@@ -110,6 +110,9 @@ public class CateringFacility extends AbstractBusinessObject {
 	}
 
 	public List<Category> getCategories() {
+		if (categories == null) {
+			categories = new ArrayList<>();
+		}
 		return categories;
 	}
 

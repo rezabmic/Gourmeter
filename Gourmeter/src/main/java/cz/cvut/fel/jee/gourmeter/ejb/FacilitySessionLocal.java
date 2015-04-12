@@ -20,6 +20,9 @@ public interface FacilitySessionLocal {
 	public List<MarkerDTO> findFacilitiesInAreaByCategory(
 			long categoryID, MapPositionDTO position);
 	
+	public List<MarkerDTO> findFacilitiesInAreaByCategories(
+			List<Long> categories, MapPositionDTO position);
+	
 	public List<CateringFacility> getFacilitiesInArea(double latitude,
 			double longitude, double kilometerSearchDistance);
 

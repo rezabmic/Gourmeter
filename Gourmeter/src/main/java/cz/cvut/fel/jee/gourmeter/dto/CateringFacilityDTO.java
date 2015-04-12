@@ -15,8 +15,7 @@ public class CateringFacilityDTO extends MarkerDTO{
 	private final String title;
 	private final String description;
 	private final String url;
-	//private final CategoryDTO category;
-	private final List<TagDTO> tags;
+	private final List<TagWithReviewsDTO> tags;
 	private final List<OpeningHoursDTO> openingHours;
 
 	public CateringFacilityDTO(CateringFacility f) {
@@ -24,7 +23,6 @@ public class CateringFacilityDTO extends MarkerDTO{
 		title = f.getName();
 		description = f.getDescription();
 		url = f.getUrl();
-		//category = new CategoryDTO(f.getCategory());
 		tags = DTOUtils.getFacilityTags(f);
 		openingHours = DTOUtils.getHoursDTO(f);
 	}
@@ -41,11 +39,7 @@ public class CateringFacilityDTO extends MarkerDTO{
 		return url;
 	}
 
-//	public CategoryDTO getCategory() {
-//		return category;
-//	}
-
-	public List<TagDTO> getTags() {
+	public List<TagWithReviewsDTO> getTags() {
 		return tags;
 	}
 
