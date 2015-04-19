@@ -43,19 +43,21 @@
 		<div ng-controller="NavigationCtrl" class="nav-inline">
 			<h2>Kategorie</h2>
 			<label ng-repeat="category in categories.array" class="checkbox-inline">
-				<input type="checkbox" ng-click="selectCategory(category.id)" ng-checked="checkedCategories.indexOf(category.id) > -1">{{category.name}}</input>
+				<input type="checkbox" name="selectedCategories[]" value="{{category.id}}" ng-click="selectCategory(category.id)" ng-checked="checkedCategories.indexOf(category.id) > -1">{{category.name}}</input>
 			</label>
 		
 	
 			<div ng-controller="TagCtrl" ng-hide="checkedCategories.length == 0">
+				
 				<h3>Tagy</h3>
 				<label ng-repeat="tag in tags.array" class="checkbox-inline">
-					<input type="checkbox" name="{{tag.name}}" ng-click="selectTag(tag.id)" ng-checked="checkedTags.indexOf(tag.id) > -1" />
+					<input type="checkbox" name="selectedTags[]" value="{{tag.id}}" ng-click="selectTag(tag.id)" ng-checked="checkedTags.indexOf(tag.id) > -1" />
 					{{tag.name}}
 				</label>
 			</div>
 		</div>
 	</form>
+	
 	
 	<ui-gmap-google-map center="mapOptions.center" zoom="mapOptions.zoom" events="mapOptions.events">
 		

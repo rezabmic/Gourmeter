@@ -11,3 +11,12 @@ function toggleSelection(object, array) {
     	array.push(object);
     }
 };
+
+//helper method used to transform array to string which could be set as url param
+function $buildString(array){
+	var string = '';
+	array.forEach(function(item){
+		string = string + item + ",";
+	});
+	return string.substring(0, string.length - 1);
+}

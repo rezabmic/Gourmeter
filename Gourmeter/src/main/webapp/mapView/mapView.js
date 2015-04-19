@@ -8,7 +8,8 @@ var mapViewModule =  angular.module('app.mapView', ['ngRoute', 'ngResource', 'ui
 mapViewModule.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/map', {
 	  	title: 'Mapa',
-		templateUrl : 'mapView/map.html'
+		templateUrl : 'mapView/map.html',
+		reloadOnSearch: false
 	});
 }]);
 
@@ -48,12 +49,16 @@ mapViewModule.factory('CateringFacility',  ['$resource',  function($resource){
 	return $resource('service/cateringFacility/:id',{id: '@id'});
 }]);
 
-var checkedCategories = [];
-var checkedTags = [];
+var MAP_ZOOM = 13;
 var map;
+var checkedCategories;
+var checkedTags;
 //Controllers
-mapViewModule.controller("MapCtrl", function($scope, Markers, MarkersByCategories, CateringFacility) {
-	
+mapViewModule.controller("MapCtrl", function($scope, $location, $filter, Markers, MarkersByCategories, CateringFacility) {
+	var search = $location.search();
+	checkedCategories = search.categories == undefined ? [] : search.categories.split(",").map( Number );
+	checkedTags = search.tags == undefined ? [] : search.tags.split(",").map( Number );
+
 	$scope.checkedCategories = checkedCategories;
 	$scope.checkedTags = checkedTags;
 	
@@ -102,20 +107,23 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, MarkersByCategorie
 	function createMap(latitude,longitude){
 		$scope.mapOptions = {
   	    		center: { latitude: latitude, longitude: longitude}, 
-				zoom: 15,
+				zoom: MAP_ZOOM,
 				
 				events : {
 					bounds_changed: _.debounce($scope.changeMarkers,333, false)
 				},
-				markers: []
-				
+				markers: [],
+				filteredMarkers: []
   	    };
 	};
 	
 	$scope.changeMarkers = function(map){
-		 if(map != null && map != undefined){
-			$scope.map = map;
-		 }
+		if(map == undefined || map == null){
+			return ;
+		}
+		
+		$scope.map = map;
+		 
 	   	 var bounds = map.getBounds();
 		 var ne = bounds.getNorthEast();
 		 var sw = bounds.getSouthWest(); 
@@ -130,14 +138,18 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, MarkersByCategorie
 			 Markers.get(coordinates, function(markers,responseHeaders){
 					//success callback
 					$scope.mapOptions.markers = markers;
-		
+					
 					setOnClickHandler(markers);
 			});
 		 } else{
 			 MarkersByCategories.get({},{categories: checkedCategories, mapPos: coordinates}, function(markers,responseHeaders){
 					//success callback
 					$scope.mapOptions.markers = markers;
-		
+					
+					if(checkedTags.length != 0){
+						$scope.mapOptions.filteredMarkers = $filter('filterByTags')($scope.mapOptions.markers, checkedTags);
+					}
+					
 					setOnClickHandler(markers);
 			});
 		 }
@@ -167,7 +179,7 @@ mapViewModule.controller("MapCtrl", function($scope, Markers, MarkersByCategorie
 			$scope.selected = marker;
 		});
 	}
-	
+
 });
 
 mapViewModule.controller('MenuController', function($scope, $filter){
@@ -181,24 +193,33 @@ mapViewModule.controller('MenuController', function($scope, $filter){
 	}	
 });
 
-mapViewModule.controller('NavigationCtrl', function($scope, Categories){
+mapViewModule.controller('NavigationCtrl', function($scope, $location, Categories){
 	var categories = {array : Categories.query()};
-	
 	
 	$scope.categories = categories;
 	
 	$scope.selectCategory = function(categoryId){
 		toggleSelection(categoryId, checkedCategories);
+		
+		if(checkedCategories.length != 0){
+			$location.search('categories', $buildString(checkedCategories));
+		} else{
+			$location.search('categories', undefined);
+			$location.search('tags', undefined);
+			//checkedTags = [];  nefunguje - zacne blbnout pridavani tagu
+			checkedTags.length = 0;
+		}
+		
 		$scope.changeMarkers($scope.map);
 	}
 	
 });
 
-mapViewModule.controller('TagCtrl', function($scope, $filter, TagsByCategories){
-	var tags = {array : []};
+mapViewModule.controller('TagCtrl', function($scope, $filter, $location, TagsByCategories){
+	var tags = {array : checkedCategories.length == 0?  []: TagsByCategories.get(checkedCategories)};
 	
 	$scope.$watchCollection('checkedCategories', function(newValue, oldValue) {
-		if(newValue.length > 0){
+		if(newValue != undefined && newValue.length > 0){
 			tags.array = TagsByCategories.get(newValue);
 		}
 	});
@@ -208,18 +229,21 @@ mapViewModule.controller('TagCtrl', function($scope, $filter, TagsByCategories){
 	$scope.selectTag = function(tagId){
 		toggleSelection(tagId, checkedTags);
 		
-		$scope.mapOptions.filteredMarkers = $filter('filterByTags')($scope.mapOptions.markers, checkedTags);
+		if(checkedTags.length != 0){
+			$location.search('tags', $buildString(checkedTags));
+		} else{
+			$location.search('tags', undefined);
+		}
 		
+		$scope.mapOptions.filteredMarkers = $filter('filterByTags')($scope.mapOptions.markers, checkedTags);		
 	}
 	
-	function filterMarkers(checkedTags){
-		
-	};
 });
 
 mapViewModule.filter('filterByTags', function () {
     return function (markers, tags) {
     	console.log("filter");
+    	console.log(markers);
         var filtered = []; 
         (markers || []).forEach(
         	function (marker) { 
@@ -231,6 +255,7 @@ mapViewModule.filter('filterByTags', function () {
 	            }
         	}
         );
+        console.log(filtered);
         return filtered;
     };
 });
