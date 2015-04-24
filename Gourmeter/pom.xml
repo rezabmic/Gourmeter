@@ -310,6 +310,13 @@
 					<server-config>standalone-full.xml</server-config>
 				</configuration>
 			</plugin>
+			
+			<!-- GAE plugin -->
+			<plugin>
+			    <groupId>com.google.appengine</groupId>
+			    <artifactId>appengine-maven-plugin</artifactId>
+			    <version>1.9.18</version>
+			</plugin>
 		</plugins>
 	</build>
 
