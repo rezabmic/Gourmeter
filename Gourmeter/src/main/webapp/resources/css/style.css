@@ -1,6 +1,6 @@
 div#wrapper {
 	padding: 40px;
-	width: 60%;
+	width: 80%;
 	background-color: white;
 	margin: 0 auto;
 }
@@ -95,7 +95,7 @@ table.paddingRight td {
 
 .infoWindow div{
 	padding: 5px 0; 
-	width: 220px;
+	width: 270px;
 }
 
 .infoWindow table thead{

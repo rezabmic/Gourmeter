@@ -10,6 +10,7 @@ import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
+import cz.cvut.fel.jee.gourmeter.dto.RecommendationDTO;
 
 public interface GourmeterRESTService {
 
@@ -25,14 +26,10 @@ public interface GourmeterRESTService {
 	/**
 	 * TODO description
 	 * 
-	 * @param tagId
-	 * @param facilityId
-	 * @param userId
-	 * @param recommended
+	 * @param recommendation
 	 * @return
 	 */
-	public Response addRecommendation(Long tagId, Long facilityId, Long userId,
-			Boolean recommended);
+	public Response addRecommendation(RecommendationDTO recommendation);
 
 	/**
 	 * TODO description

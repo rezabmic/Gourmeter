@@ -49,6 +49,11 @@ mapViewModule.factory('CateringFacility',  ['$resource',  function($resource){
 	return $resource('service/cateringFacility/:id',{id: '@id'});
 }]);
 
+mapViewModule.factory('Recommendation',  ['$resource',  function($resource){
+	return $resource('service/recommendation');
+}]);
+
+
 var MAP_ZOOM = 13;
 var map;
 var checkedCategories;
@@ -142,7 +147,13 @@ mapViewModule.controller("MapCtrl", function($scope, $location, $filter, Markers
 					setOnClickHandler(markers);
 			});
 		 } else{
-			 MarkersByCategories.get({},{categories: checkedCategories, mapPos: coordinates}, function(markers,responseHeaders){
+//			 $scope.mapOptions.markers = $filter('filterByCategories')($scope.mapOptions.markers, checkedCategories);
+//			 if(checkedTags.length != 0){
+//					$scope.mapOptions.filteredMarkers = $filter('filterByTags')($scope.mapOptions.markers, checkedTags);
+//			 }
+//			 setOnClickHandler(markers);
+			 
+			 $scope.mapOptions.markers = MarkersByCategories.get({},{categories: checkedCategories, mapPos: coordinates}, function(markers,responseHeaders){
 					//success callback
 					$scope.mapOptions.markers = markers;
 					
@@ -242,7 +253,7 @@ mapViewModule.controller('TagCtrl', function($scope, $filter, $location, TagsByC
 
 mapViewModule.filter('filterByTags', function () {
     return function (markers, tags) {
-    	console.log("filter");
+    	console.log("filterTags");
     	console.log(markers);
         var filtered = []; 
         (markers || []).forEach(
@@ -258,6 +269,35 @@ mapViewModule.filter('filterByTags', function () {
         console.log(filtered);
         return filtered;
     };
+});
+
+mapViewModule.filter('filterByCategories', function () {
+    return function (markers, categories) {
+    	console.log("filterCategories");
+    	console.log(markers);
+        var filtered = []; 
+        (markers || []).forEach(
+        	function (marker) { 
+	            var matches = marker.categories.some(function (category) {         
+	                return (categories.indexOf(category.id) > -1);   
+	            });                                               
+	            if (matches) {           
+	                filtered.push(marker); 
+	            }
+        	}
+        );
+        console.log(filtered);
+        return filtered;
+    };
+});
+
+mapViewModule.controller('RecommendationCtrl', function($scope, Recommendation, AuthenticationSvc){
+	$scope.recommend = function(tag, facilityId, recommended){
+		tag.recommended = tag.recommended +1;
+		tag.reviewed = tag.reviewed +1;
+		Recommendation.save({recommended: recommended, facilityId: facilityId, tagId: tag.id, userId: AuthenticationSvc.getUserInfo().userId});
+	}
+	
 });
 
 

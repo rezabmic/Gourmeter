@@ -3,19 +3,16 @@ package cz.cvut.fel.jee.gourmeter.ejb;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,12 +22,12 @@ import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
-import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO.Day;
+import cz.cvut.fel.jee.gourmeter.dto.ReviewDTO;
 import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 
 @Stateless
@@ -219,7 +216,37 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 	}
 
-	
+	@Override
+	public Map<Long, List<ReviewDTO>> getTopN(int n) {
+		Map<Long, List<ReviewDTO>> topN = new HashMap<>(); 
+		
+		List<Category> categories = dao.getAllCategories();
+		for(Category category: categories){
+			long categoryId = category.getId();
+			topN.put(categoryId, getTopNByCategory(n, categoryId));
+		}
+		
+		return topN;
+	}
 
+	@Override
+	public List<ReviewDTO> getTopNByCategory(int n, long categoryId) {
+		//Query query = em.createQuery("select cf, sum( cf.recommendations ) as total from CateringFacility cf left join cf.recommendations as r where :category IN cf.categories and r.recommended = true order by total");
+		
+		Query query = em.createQuery("select cf.name, count( r.id ) as total from Recommendation as r join r.cateringFacility as cf join cf.categories as cat "
+				+ "where cat.id = :category and "
+				+ "r.recommended = true "
+				+ "group by cf.id "
+				+ "order by total DESC")
+				.setParameter("category", categoryId)
+				.setFirstResult(0)
+				.setMaxResults(n); 
+//		Query query = em.createQuery("select cf, count( r ) as total from CateringFacility cf left join fetch cf.recommendations as r "
+//				+ "where :category IN cf.categories and r.recommended = true "
+//				+ "group by cf.id "
+//				+ "order by total");
+		
+		return query.getResultList();
+	}
 	
 }

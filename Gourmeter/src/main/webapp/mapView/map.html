@@ -14,12 +14,14 @@
 				<tr>
 					<td>Název</td>
 					<td>Hodnocení</td>
+					<td>Doporučit</td>
 				</tr>
 			</thead>
-			<tbody>	
+			<tbody ng-controller="RecommendationCtrl">	
 				<tr ng-repeat="tag in parameter.tags">
 					<td>{{tag.name}}</td>
 					<td>{{tag.recommended}} / {{tag.reviewed}}</td>
+					<td><button ng-click="recommend(tag, parameter.id, true)">Doporučit</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -57,7 +59,6 @@
 			</div>
 		</div>
 	</form>
-	
 	
 	<ui-gmap-google-map center="mapOptions.center" zoom="mapOptions.zoom" events="mapOptions.events">
 		

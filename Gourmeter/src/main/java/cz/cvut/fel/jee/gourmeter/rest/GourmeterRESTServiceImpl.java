@@ -27,6 +27,7 @@ import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
+import cz.cvut.fel.jee.gourmeter.dto.RecommendationDTO;
 import cz.cvut.fel.jee.gourmeter.ejb.DataSessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
 
@@ -64,18 +65,16 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	@GET
-	@Path("/recommendation/{tagId}/{facilityId}/{userId}/{recommended} ")
-	@RolesAllowed({ "user", "tester", "admin" })
+	@POST
+	@Path("/recommendation")
+	//@RolesAllowed({ "user", "tester", "admin" })
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addRecommendation(@PathParam("tagId") Long tagId,
-			@PathParam("facilityId") Long facilityId,
-			@PathParam("userId") Long userId,
-			@PathParam("recommended") Boolean recommended) {
+	public Response addRecommendation(RecommendationDTO recommendation) {
 		Response response;
 		
 		try{
-			this.dataSession.addRecommendation(tagId, facilityId, userId, recommended);
+			this.dataSession.addRecommendation(recommendation.getTagId(), recommendation.getFacilityId(), recommendation.getUserId(), recommendation.isRecommended());
 		 
 			response = Response.ok().build();
 		} catch(IllegalArgumentException ex){

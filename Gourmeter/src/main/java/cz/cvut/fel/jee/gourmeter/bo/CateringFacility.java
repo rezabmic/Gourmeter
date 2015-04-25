@@ -86,7 +86,7 @@ public class CateringFacility extends AbstractBusinessObject {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OpeningHours> openingHours;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cateringFacility")
 	private List<Recommendation> recommendations;
 
 	@ManyToMany
