@@ -4,30 +4,27 @@ import java.util.List;
 
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 
-public class MarkerDTO {
+/**
+ * MarkerDTO uses only few attributes of CateringFacility BO needed to render markers on map. 
+ * Other attributes of CateringFacility are not queried (lazy fetching).
+ * 
+ * @author Michal
+ *
+ */
+public class MarkerDTO {	
 
 	private final Long id;
 	private final Long facilityId;
 	private final Double latitude;
 	private final Double longitude;
-	private final String title;
-	private final String description;
-	private final String url;
-	private final CategoryDTO category;
-	private final List<TagDTO> tags;
-	private final List<OpeningHoursDTO> openingHours;
-
+	private List<TagDTO> tags;
+	
 	public MarkerDTO(CateringFacility f) {
 		id = f.getId();
 		facilityId = f.getId();
 		latitude = f.getLatitude();
-		longitude = f.getLongitude();
-		title = f.getName();
-		description = f.getDescription();
-		url = f.getUrl();
-		category = new CategoryDTO(f.getCategory());
-		tags = DTOUtils.getFacilityTags(f);
-		openingHours = DTOUtils.getHoursDTO(f);
+		longitude = f.getLongitude();	
+		tags = DTOUtils.getTagDTOList(f.getTags());
 	}
 
 	public Long getFacilityId() {
@@ -42,32 +39,15 @@ public class MarkerDTO {
 		return longitude;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public CategoryDTO getCategory() {
-		return category;
+	public Long getId() {
+		return id;
 	}
 
 	public List<TagDTO> getTags() {
 		return tags;
 	}
-
-	public List<OpeningHoursDTO> getOpeningHours() {
-		return openingHours;
+	
+	public void setTags(List<TagDTO> tags) {
+		this.tags = tags;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
 }

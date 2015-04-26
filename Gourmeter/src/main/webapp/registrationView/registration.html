@@ -43,10 +43,10 @@
 	<div class="form-group">
 		<label for="title">Heslo znovu*</label> 
 		<input type="password" name="password2" class="form-control" ng-class="{inputError:(registrationForm.$submitted && registrationForm.password2.$error.required)}" 
-				id="password2" ng-model="user.password2" required>
+				id="password2" ng-model="user.password2" ng-change="checkPassword(user.password, user.password2)" required>
 		<div ng-show="registrationForm.$submitted || registrationForm.password2.$touched">
 			<div ng-show="registrationForm.password2.$error.required" class="error">Zadejte prosím heslo znovu.</div>
-	      <div ng-show="regCtrl.checkPasswd(user.password, user.password2)" class="error">Hesla se neshodují.</div>
+	      <div ng-show="!samePasswds" class="error">Hesla se neshodují.</div>
 	    </div>	
 	</div>
 	

@@ -4,41 +4,41 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author Jan Šrogl
+ * @author Jan Srogl
  */
 @Entity
 @Table(name = "opening_hours")
 public class OpeningHours extends AbstractBusinessObject {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11160L;
 
-	@Column(nullable = false)
+	@NotNull
 	private short dayNum;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = false)
+	@NotNull
 	private Date timeFrom;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = false)
+	@NotNull
 	private Date timeTo;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = true)
 	private Date breakFrom;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = true)
 	private Date breakTo;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private CateringFacility facility;
 
 	public short getDayNum() {

@@ -4,51 +4,36 @@ import cz.cvut.fel.jee.gourmeter.bo.Tag;
 
 public class TagDTO {
 
+	private long id;
 	private String name;
-	private Integer recommended;
-	private Integer reviewed;
 
 	public TagDTO() {
 	}
-
-	public TagDTO(Tag bo, Integer recommended, Integer reviewed) {
-		this.name = bo.getName();
-		this.recommended = recommended;
-		this.reviewed = reviewed;
-	}
-
-	public TagDTO(String name, Integer recommended, Integer reviewed) {
+	
+	public TagDTO(long id, String name) {
+		this.id = id;
 		this.name = name;
-		this.recommended = recommended;
-		this.reviewed = reviewed;
 	}
 	
-	public TagDTO(String name) {
-		this.name = name;
+	public TagDTO(Tag bo) {
+		this.id = bo.getId();
+		this.name = bo.getName();
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public Integer getRecommended() {
-		return recommended;
-	}
-
-	public Integer getReviewed() {
-		return reviewed;
-	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public void setRecommended(Integer recommended) {
-		this.recommended = recommended;
+	
+	public long getId() {
+		return id;
 	}
 
-	public void setReviewed(Integer reviewed) {
-		this.reviewed = reviewed;
+	public void setId(long id) {
+		this.id = id;
 	}
-
 }

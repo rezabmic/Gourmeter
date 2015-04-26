@@ -19,19 +19,14 @@ public interface DataSessionLocal {
 
 	public <T> List<T> executeCriteriaQuery(CriteriaQuery<T> cq);
 
-	public List<CateringFacility> findFacilitiesByGPS(
-			CoordinateSearchWrapper csw);
-
 	public List<CateringFacility> findFacilitiesByGPSAndTag(
 			CoordinateSearchWrapper csw, Tag tag);
-
-	public UserRole findRoleByName(String roleName);
-
-	public User findUserByLogin(String login);
 
 	public List<Tag> getAllTags();
 
 	public List<Tag> getTagsForCategory(Long id);
+	
+	public List<Tag> getTagsForCategories(List<Long> categories);
 
 	public List<Category> getAllCategories();
 

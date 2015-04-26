@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -18,6 +19,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -37,64 +42,55 @@ import javax.validation.constraints.NotNull;
 				+ "AND :tag MEMBER OF e.tags") })
 public class CateringFacility extends AbstractBusinessObject {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11170L;
 
-	@NotNull
-	@Column(nullable = false)
+	@NotEmpty
 	private String name;
 
-	@Column(nullable = false)
+	@NotEmpty
 	private String description;
 
-	@Column(nullable = true)
 	private String url;
 
-	@Column(nullable = false)
+	@NotEmpty
 	private String city;
 
-	@Column(name = "street", nullable = true)
 	private String street;
 
-	@Column(name = "house_number", nullable = true)
+	@Column(name="house_number")
 	private String houseNumber;
 
-	@Column(nullable = true)
 	private String cityDistrict;
 
-	@Column(nullable = true)
 	private String menuUrl;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = true)
 	private Date menuFrom;
 
 	@Temporal(TemporalType.TIME)
-	@Column(nullable = true)
 	private Date menuTo;
 
-	@Column(name = "latitude", nullable = false)
+	@NotNull
 	private Double latitude;
 
-	@Column(name = "longitude", nullable = false)
+	@NotNull
 	private Double longitude;
 
-	@ManyToOne
-	private Category category;
+	@ManyToMany
+	@JoinTable(name = "catering_facility_categories", joinColumns = @JoinColumn(name = "facility_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private List<Category> categories;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private User creator;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OpeningHours> openingHours;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cateringFacility")
 	private List<Recommendation> recommendations;
 
 	@ManyToMany
-	@JoinTable(name = "catering_facility_tags", 
-				joinColumns = @JoinColumn(name = "facility_id"), 
-				inverseJoinColumns = @JoinColumn(name = "tag_id")
-	)
+	@JoinTable(name = "catering_facility_tags", joinColumns = @JoinColumn(name = "facility_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags;
 
 	public String getName() {
@@ -113,12 +109,15 @@ public class CateringFacility extends AbstractBusinessObject {
 		this.description = description;
 	}
 
-	public Category getCategory() {
-		return category;
+	public List<Category> getCategories() {
+		if (categories == null) {
+			categories = new ArrayList<>();
+		}
+		return categories;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 
 	public String getUrl() {

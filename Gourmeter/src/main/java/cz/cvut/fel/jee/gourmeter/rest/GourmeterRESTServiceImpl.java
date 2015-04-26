@@ -1,6 +1,5 @@
 package cz.cvut.fel.jee.gourmeter.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
@@ -21,14 +20,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import cz.cvut.fel.jee.gourmeter.bo.Category;
 import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
-import cz.cvut.fel.jee.gourmeter.bo.Tag;
-import cz.cvut.fel.jee.gourmeter.dto.CategoryDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CategoriesMapPositionWrapperDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
 import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
 import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
+import cz.cvut.fel.jee.gourmeter.dto.RecommendationDTO;
 import cz.cvut.fel.jee.gourmeter.ejb.DataSessionLocal;
 import cz.cvut.fel.jee.gourmeter.ejb.FacilitySessionLocal;
 
@@ -55,7 +54,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	//@RolesAllowed({ "user", "tester", "admin" })
 	@PermitAll
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNewFacility(CateringFacilityDTO facility,
+	public Response createNewFacility(CateringFacilityCreateDTO facility,
 			@QueryParam("userId") Long userId) {
 		try {
 			facilitySession.createOrUpdateFacility(facility, userId);
@@ -66,17 +65,24 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	}
 
 	@Override
-	@GET
-	@Path("/recommendation/{tagId}/{facilityId}/{userId}/{recommended} ")
-	@RolesAllowed({ "user", "tester", "admin" })
+	@POST
+	@Path("/recommendation")
+	//@RolesAllowed({ "user", "tester", "admin" })
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addRecommendation(@PathParam("tagId") Long tagId,
-			@PathParam("facilityId") Long facilityId,
-			@PathParam("userId") Long userId,
-			@PathParam("recommended") Boolean recommended) {
-		this.dataSession.addRecommendation(tagId, facilityId, userId,
-				recommended);
-		return Response.ok().build();
+	public Response addRecommendation(RecommendationDTO recommendation) {
+		Response response;
+		
+		try{
+			this.dataSession.addRecommendation(recommendation.getTagId(), recommendation.getFacilityId(), recommendation.getUserId(), recommendation.isRecommended());
+		 
+			response = Response.ok().build();
+		} catch(IllegalArgumentException ex){
+			//tagId, facilityId or userId don't exist in DB. 
+			response = Response.serverError().build();
+		}
+		
+		return response;
 	}
 
 	@Override
@@ -84,7 +90,7 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 	@Path("/cateringFacility/update")
 	@RolesAllowed({ "user", "tester", "admin" })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response testerApproval(CateringFacilityDTO facility,
+	public Response testerApproval(CateringFacilityCreateDTO facility,
 			@QueryParam("userId") Long userId) {
 		// TODO - kontrola usera
 		this.facilitySession.createOrUpdateFacility(facility, userId);
@@ -104,7 +110,29 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 			throw new NotFoundException("No such a facility with id: " + id);
 		}
 	}
+	
+	@Override
+	@POST
+	@Path("/cateringFacility/byCategory/{id}/near")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MarkerDTO> getFacilitiesNearLocationForCategory(@PathParam("id") Long categoryId, MapPositionDTO mapPos) {
+		List<MarkerDTO> facilities = facilitySession.findFacilitiesInAreaByCategory(categoryId, mapPos);
+		
+		return facilities;
+	}
 
+	@Override
+	@POST
+	@Path("/cateringFacility/byCategories/near")
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MarkerDTO> getFacilitiesNearLocationForCategories(CategoriesMapPositionWrapperDTO wrapper) {
+		List<MarkerDTO> facilities = facilitySession.findFacilitiesInAreaByCategories(wrapper.getCategories(), wrapper.getMapPos());
+		
+		return facilities;
+	}
+	
 	@Override
 	@POST
 	@Path("/cateringFacility/near")
@@ -115,44 +143,6 @@ public class GourmeterRESTServiceImpl implements GourmeterRESTService {
 		List<MarkerDTO> facilities = facilitySession.getFacilitiesInArea(mapPos);
 		System.out.println(facilities.toString());
 		return facilities;
-	}
-
-	@Override
-	@GET
-	@Path("/tags/all")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getAllTags() {
-		List<Tag> list = this.dataSession.getAllTags();
-		List<String> result = new ArrayList<>();
-		for (int i = 0; i < result.size(); i++) {
-			result.add(list.get(i).getName());
-		}
-		return result;
-	}
-
-	@Override
-	@GET
-	@Path("/tags/byCategory/{id}")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getTagsForCategory(@PathParam("id") Long categoryId) {
-		List<Tag> list = this.dataSession.getTagsForCategory(categoryId);
-		List<String> result = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			result.add(list.get(i).getName());
-		}
-		return result;
-	}
-
-	@Override
-	@GET
-	@Path("/category/all")
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<CategoryDTO> getAllCategories() {
-		List<Category> c = this.dataSession.getAllCategories();
-		return DTOUtils.getListCategoryDTO(c);
 	}
 
 	@GET

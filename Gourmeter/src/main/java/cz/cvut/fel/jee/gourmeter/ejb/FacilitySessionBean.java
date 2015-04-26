@@ -3,15 +3,15 @@ package cz.cvut.fel.jee.gourmeter.ejb;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +21,13 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.OpeningHours;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
-import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityDTO;
+import cz.cvut.fel.jee.gourmeter.dto.CateringFacilityCreateDTO;
+import cz.cvut.fel.jee.gourmeter.dto.DTOUtils;
 import cz.cvut.fel.jee.gourmeter.dto.MapPositionDTO;
 import cz.cvut.fel.jee.gourmeter.dto.MarkerDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO;
 import cz.cvut.fel.jee.gourmeter.dto.OpeningHoursDTO.Day;
+import cz.cvut.fel.jee.gourmeter.dto.ReviewDTO;
 import cz.cvut.fel.jee.gourmeter.dto.TagDTO;
 
 @Stateless
@@ -34,17 +36,6 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	private static final Logger log = LoggerFactory
 			.getLogger(FacilitySessionBean.class);
 
-	/**
-	 * Conversion ratio for kilometer to coordinate degree. TODO check this
-	 * value
-	 */
-	private static final double COORDINATE_TO_KM = 0.009132;
-
-	/**
-	 * Default search radius is 3 kilometers from actual position.
-	 */
-	private static final double DEFAULT_SEARCH_RADIUS_KM = 3;
-
 	@PersistenceContext(unitName = "GourmeterPU")
 	private EntityManager em;
 
@@ -52,54 +43,85 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 	private DataSessionLocal dao;
 
 	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude) {
-		// use default circle radius
-		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
-				longitude, DEFAULT_SEARCH_RADIUS_KM);
-		return dao.findFacilitiesByGPS(csw);
-	}
+	public CateringFacility getFacilityById(Long id) {
 
-	@Override
-	public List<CateringFacility> getFacilitiesInArea(	double latitude,
-														double longitude,
-														double kmCircle) {
-
-		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
-				longitude, kmCircle);
-		return dao.findFacilitiesByGPS(csw);
-	}
-
-	@Override
-	public List<MarkerDTO> getFacilitiesInArea(	double latitude,
-												double longitude,
-												double kmCircle,
-												long tagId) {
-
-		Tag tag = em.find(Tag.class, tagId);
-		if (tag == null) {
-			String msg = "No tag found for id : " + tagId;
-			log.warn("No tag found for id : " + tagId);
-			throw new IllegalArgumentException(msg);
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.recommendations where c.id=:cfID").setParameter("cfID", id);
+		
+		List<CateringFacility> resultList = (List<CateringFacility>) query.getResultList();
+		
+		query = em.createQuery("select c from CateringFacility c left join fetch c.openingHours where c.id=:cfID").setParameter("cfID", id);
+		resultList = (List<CateringFacility>) query.getResultList();
+		
+		query = em.createQuery("select c from CateringFacility c left join fetch c.tags where c.id=:cfID").setParameter("cfID", id);
+		resultList = (List<CateringFacility>) query.getResultList();
+		
+		if (!resultList.isEmpty()) {
+			return resultList.get(0);
 		}
-
-		CoordinateSearchWrapper csw = getCoordinatesWrapper(latitude,
-				longitude, kmCircle);
-		List<CateringFacility> facilities = dao.findFacilitiesByGPSAndTag(csw,
-				tag);
-		return convertMarkerDTOs(facilities);
+		return null;
 	}
 
 	@Override
-	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO p) {
+	public List<MarkerDTO> getFacilitiesInArea(MapPositionDTO position) {
 		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
-				p.getLongitudeBottom(), p.getLongitudeTop(),
-				p.getLatitudeBottom(), p.getLatitudeTop());
-		return convertMarkerDTOs(dao.findFacilitiesByGPS(csw));
+				position.getLongitudeBottom(), position.getLongitudeTop(),
+				position.getLatitudeBottom(), position.getLatitudeTop());
+		
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.tags as t left join c.categories as categ "
+				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin ")
+				.setParameter("latitudeMax", csw.getLatitudeMax())
+				.setParameter("latitudeMin", csw.getLatitudeMin())
+				.setParameter("longitudeMax", csw.getLongitudeMax())
+				.setParameter("longitudeMin", csw.getLongitudeMin());
+		
+		return DTOUtils.convertMarkerDTOs(query.getResultList());
+	}
+	
+	@Override
+	public List<MarkerDTO> findFacilitiesInAreaByCategory(
+			long categoryID, MapPositionDTO position) {
+		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
+				position.getLongitudeBottom(), position.getLongitudeTop(),
+				position.getLatitudeBottom(), position.getLatitudeTop());
+		
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.tags as t left join c.categories as categ "
+				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin "
+				+ "AND categ.id = :categoryID")
+				.setParameter("latitudeMax", csw.getLatitudeMax())
+				.setParameter("latitudeMin", csw.getLatitudeMin())
+				.setParameter("longitudeMax", csw.getLongitudeMax())
+				.setParameter("longitudeMin", csw.getLongitudeMin())
+				.setParameter("categoryID", categoryID);
+		
+		return DTOUtils.convertMarkerDTOs(query.getResultList());
+	}
+	
+	@Override
+	public List<MarkerDTO> findFacilitiesInAreaByCategories(
+			List<Long> categories, MapPositionDTO position) {
+		
+		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(
+				position.getLongitudeBottom(), position.getLongitudeTop(),
+				position.getLatitudeBottom(), position.getLatitudeTop());
+		
+		Query query = em.createQuery("select c from CateringFacility c left join fetch c.tags as t left join c.categories as categ "
+				+ "WHERE c.latitude < :latitudeMax AND c.latitude > :latitudeMin "
+				+ "AND c.longitude < :longitudeMax AND c.longitude > :longitudeMin "
+				+ "AND categ.id IN :categories")
+				.setParameter("latitudeMax", csw.getLatitudeMax())
+				.setParameter("latitudeMin", csw.getLatitudeMin())
+				.setParameter("longitudeMax", csw.getLongitudeMax())
+				.setParameter("longitudeMin", csw.getLongitudeMin())
+				.setParameter("categories", categories);
+		
+		return DTOUtils.convertMarkerDTOs(query.getResultList());
 	}
 
+
 	@Override
-	public void createOrUpdateFacility(CateringFacilityDTO dto, Long userId) {
+	public void createOrUpdateFacility(CateringFacilityCreateDTO dto, Long userId) {
 		if (dto == null || dto.getAddress() == null) {
 			throw new IllegalArgumentException("Wrong dto format.");
 		}
@@ -124,10 +146,13 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		f.setStreet(dto.getAddress().getStreet());
 		f.setUrl(dto.getUrl());
 
-		Category category = em.find(Category.class, dto.getCategoryId());
-		f.setCategory(category);
-
-		User creator = em.find(User.class, userId);
+		List<Long> categories = dto.getCategories();
+		
+		for (long categoryID : categories) {
+			f.getCategories().add(em.getReference(Category.class, categoryID));
+		}
+		
+		User creator = em.getReference(User.class, userId);
 		if (creator == null) {
 			log.warn("Catering facility creator not found");
 		}
@@ -147,24 +172,9 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 			return;
 		}
 
-		for (TagDTO t : tags) {
-			TypedQuery<Tag> q = em
-					.createNamedQuery("Tag.findByName", Tag.class);
-			q.setParameter("name", t.getName());
-			Tag tag = null;
-			try {
-				tag = q.getSingleResult();
-			} catch (NoResultException e) {
-				// TODO
-				tag = new Tag();
-				tag.setName(t.getName());
-				tag.setCategory(null); // TODO
-				em.persist(tag);
-				// throw new IllegalArgumentException("unknown tag '" +
-				// t.getName() + "'");
-			}
+		for (TagDTO dto : tags) {
 
-			f.getTags().add(tag);
+			f.getTags().add(em.getReference(Tag.class, dto.getId()));
 		}
 	}
 
@@ -206,43 +216,37 @@ public class FacilitySessionBean implements FacilitySessionLocal {
 		}
 	}
 
-	private CoordinateSearchWrapper getCoordinatesWrapper(	double latitude,
-															double longitude,
-															double kmCircle) {
-		double radius = getSearchRadius(kmCircle);
-		double latMin = latitude - radius;
-		double latMax = latitude + radius;
-		double longMin = longitude - radius;
-		double longMax = longitude + radius;
-		CoordinateSearchWrapper csw = new CoordinateSearchWrapper(longMin,
-				longMax, latMin, latMax);
-
-		return csw;
-	}
-
-	private double getSearchRadius(double kilometerDistance) {
-		// return search radius
-		return COORDINATE_TO_KM * kilometerDistance / 2;
+	@Override
+	public Map<Long, List<ReviewDTO>> getTopN(int n) {
+		Map<Long, List<ReviewDTO>> topN = new HashMap<>(); 
+		
+		List<Category> categories = dao.getAllCategories();
+		for(Category category: categories){
+			long categoryId = category.getId();
+			topN.put(categoryId, getTopNByCategory(n, categoryId));
+		}
+		
+		return topN;
 	}
 
 	@Override
-	public CateringFacility getFacilityById(Long id) {
-		TypedQuery<CateringFacility> q = em.createNamedQuery(
-				"CateringFacility.findById", CateringFacility.class);
-		q.setParameter("id", id);
-		List<CateringFacility> resultList = q.getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0);
-		}
-		return null;
+	public List<ReviewDTO> getTopNByCategory(int n, long categoryId) {
+		//Query query = em.createQuery("select cf, sum( cf.recommendations ) as total from CateringFacility cf left join cf.recommendations as r where :category IN cf.categories and r.recommended = true order by total");
+		
+		Query query = em.createQuery("select cf.name, count( r.id ) as total from Recommendation as r join r.cateringFacility as cf join cf.categories as cat "
+				+ "where cat.id = :category and "
+				+ "r.recommended = true "
+				+ "group by cf.id "
+				+ "order by total DESC")
+				.setParameter("category", categoryId)
+				.setFirstResult(0)
+				.setMaxResults(n); 
+//		Query query = em.createQuery("select cf, count( r ) as total from CateringFacility cf left join fetch cf.recommendations as r "
+//				+ "where :category IN cf.categories and r.recommended = true "
+//				+ "group by cf.id "
+//				+ "order by total");
+		
+		return query.getResultList();
 	}
-
-	private List<MarkerDTO> convertMarkerDTOs(List<CateringFacility> facilities) {
-		List<MarkerDTO> result = new ArrayList<>();
-		for (CateringFacility facility : facilities) {
-			result.add(new MarkerDTO(facility));
-		}
-		return result;
-	}
-
+	
 }

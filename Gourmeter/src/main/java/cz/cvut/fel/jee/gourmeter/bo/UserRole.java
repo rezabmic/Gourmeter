@@ -1,5 +1,6 @@
 package cz.cvut.fel.jee.gourmeter.bo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,9 @@ import javax.validation.constraints.NotNull;
 	@NamedQuery(name = "UserRole.findByName", query = "select e from UserRole e where e.name = :name")
 })
 @Table(name = "user_role")
-public class UserRole extends AbstractBusinessObject {
+public class UserRole extends AbstractBusinessObject implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11131L;
 	
 	public static final String USER_ROLE = "user";
 	public static final String TESTER_ROLE = "tester";

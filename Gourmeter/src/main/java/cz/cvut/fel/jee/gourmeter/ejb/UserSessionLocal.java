@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.ejb.Local;
 
+import cz.cvut.fel.jee.gourmeter.bo.User;
 import cz.cvut.fel.jee.gourmeter.bo.UserRole;
 import cz.cvut.fel.jee.gourmeter.dto.UserDTO;
 import cz.cvut.fel.jee.gourmeter.exception.SignInException;
@@ -20,4 +21,8 @@ public interface UserSessionLocal {
 	public UserRole getUsersRole(Long userId);
 
 	public UserDTO authenticateUser(String login, String password, Set<String> allowedRoles) throws SignInException;
+	
+	public UserRole findRoleByName(String roleName);
+
+	public User findUserByLogin(String login);
 }

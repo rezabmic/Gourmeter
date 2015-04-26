@@ -2,11 +2,13 @@ package cz.cvut.fel.jee.gourmeter.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -21,12 +23,12 @@ import javax.persistence.Table;
 		indexes = {@Index(name = "index_tag_name", columnList = "name", unique = true)})
 public class Tag extends AbstractBusinessObject {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11140L;
 
-	@Column(name = "name", nullable = false)
+	@NotNull
 	private String name;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Category category;
 
 	public String getName() {

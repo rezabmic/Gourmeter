@@ -7,6 +7,7 @@ var registrationViewModule =  angular.module('app.registrationView', ['ngRoute',
 //routes configuration
 registrationViewModule.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/registration', {
+	  	title: 'Registrace',
 		templateUrl : 'registrationView/registration.html'
 	});
 }]);
@@ -32,6 +33,17 @@ var user = {
 	password2: '',
 };
 
+function cleanModel(){
+	user = {
+		login: '',
+		nickname: '',
+		email: '',
+		city: '',
+		password: '',
+		password2: '',
+	};
+}
+
 //Controllers
 registrationViewModule.controller("RegistrationCtrl", function($scope, $location, Registration, UniqueLogin) {
 	$scope.user = user;
@@ -44,6 +56,7 @@ registrationViewModule.controller("RegistrationCtrl", function($scope, $location
 		user.password = btoa(user.password);
 		Registration.save(user, function(value, responseHeaders){
 			//success callback
+			cleanModel();
 			$location.path("/index");
 		}, function(httpResponse){
 			//error callback
@@ -56,14 +69,14 @@ registrationViewModule.controller("RegistrationCtrl", function($scope, $location
 			//$scope.$apply();
 		});
 	};
+	$scope.samePasswds = false;
 	
-	this.checkPassword = function(passwd1, passwd2){
-		var b = passwd1 === passwd2;
+	$scope.checkPassword = function(passwd1, passwd2){
+		$scope.samePasswds = passwd1 === passwd2;
 		if(b === false){
 			user.password = '';
 			user.password2 = '';
 		}
-		return b;
 	}
 });
 

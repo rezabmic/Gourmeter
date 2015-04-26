@@ -1,11 +1,11 @@
 package cz.cvut.fel.jee.gourmeter.ejb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -15,23 +15,12 @@ import cz.cvut.fel.jee.gourmeter.bo.CateringFacility;
 import cz.cvut.fel.jee.gourmeter.bo.Recommendation;
 import cz.cvut.fel.jee.gourmeter.bo.Tag;
 import cz.cvut.fel.jee.gourmeter.bo.User;
-import cz.cvut.fel.jee.gourmeter.bo.UserRole;
 
 @Stateless
 public class DataSessionBean implements DataSessionLocal {
 
 	@PersistenceContext(unitName = "GourmeterPU")
 	private EntityManager em;
-
-	@Override
-	public List<CateringFacility> findFacilitiesByGPS(
-			CoordinateSearchWrapper csw) {
-
-		TypedQuery<CateringFacility> q = getFacilityGPSQuery(csw,
-				"CateringFacility.findByCoordinates");
-
-		return q.getResultList();
-	}
 
 	@Override
 	public List<CateringFacility> findFacilitiesByGPSAndTag(
@@ -52,32 +41,6 @@ public class DataSessionBean implements DataSessionLocal {
 	@Override
 	public <T> List<T> executeCriteriaQuery(CriteriaQuery<T> cq) {
 		return em.createQuery(cq).getResultList();
-	}
-
-	@Override
-	public UserRole findRoleByName(String roleName) {
-		TypedQuery<UserRole> q = em.createNamedQuery("UserRole.findByName",
-				UserRole.class);
-		q.setParameter("name", roleName);
-
-		List<UserRole> resultList = q.getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0);
-		}
-		return null;
-	}
-
-	@Override
-	public User findUserByLogin(String login) {
-		TypedQuery<User> q = em
-				.createNamedQuery("User.findByLogin", User.class);
-		q.setParameter("login", login);
-
-		List<User> resultList = q.getResultList();
-		if (!resultList.isEmpty()) {
-			return resultList.get(0);
-		}
-		return null;
 	}
 
 	private TypedQuery<CateringFacility> getFacilityGPSQuery(
@@ -101,14 +64,19 @@ public class DataSessionBean implements DataSessionLocal {
 	@Override
 	public List<Tag> getTagsForCategory(Long id) {
 		// TODO
-		TypedQuery<Category> q = em.createNamedQuery("Category.findById",
-				Category.class);
-		q.setParameter("id", id);
-		Category c = q.getSingleResult();
-		if (c != null)
-			return c.getTags();
-		else
-			return new ArrayList<>();
+		Query query = em.createQuery("select t from Tag t left join fetch t.category as c where c.id = :id")
+				.setParameter("id", id);
+		
+		return query.getResultList();
+	}
+	
+	@Override
+	public List<Tag> getTagsForCategories(List<Long> categories) {
+		// TODO
+		Query query = em.createQuery("select t from Tag t left join fetch t.category as c where c.id IN :list")
+				.setParameter("list", categories);
+		
+		return query.getResultList();
 	}
 
 	@Override
@@ -120,12 +88,12 @@ public class DataSessionBean implements DataSessionLocal {
 
 	@Override
 	public void addRecommendation(Long tagId, Long facilityId, Long userId,
-			Boolean recommended) {
+			Boolean recommended) throws IllegalArgumentException{
 		// TODO - budeme kontrolovat pritomnost Recommendation v DB??
 
-		CateringFacility cf = this.em.find(CateringFacility.class, facilityId);
-		Tag t = this.em.find(Tag.class, tagId);
-		User u = this.em.find(User.class, userId);
+		CateringFacility cf = em.find(CateringFacility.class, facilityId);
+		Tag t = em.find(Tag.class, tagId);
+		User u = em.find(User.class, userId);
 
 		if ((cf != null) && (t != null) && (u != null)) {
 			Recommendation r = new Recommendation();
@@ -133,8 +101,12 @@ public class DataSessionBean implements DataSessionLocal {
 			r.setUser(u);
 			r.setCateringFacility(cf);
 			r.setRecommended(recommended);
-			this.em.persist(r);
+			em.persist(r);
+		} else{
+			throw new IllegalArgumentException();
 		}
 
 	}
+
+	
 }

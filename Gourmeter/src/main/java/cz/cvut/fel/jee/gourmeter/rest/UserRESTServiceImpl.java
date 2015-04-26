@@ -78,7 +78,7 @@ public class UserRESTServiceImpl implements UserRESTService {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON)
 	public Boolean testUniqueLogin(@QueryParam("login") String login) {
-		User user = dao.findUserByLogin(login);
+		User user = userSession.findUserByLogin(login);
 		return user == null; // if user was found, login is not unique -> return false
 	}
 	

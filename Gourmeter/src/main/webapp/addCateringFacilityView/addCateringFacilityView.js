@@ -7,6 +7,7 @@ var addCFModule =  angular.module('app.addCateringFacilityView', ['ngRoute', 'ng
 //routes configuration
 addCFModule.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/index', {
+	title: 'Přidat stravovací zařázení',
     templateUrl: 'addCateringFacilityView/addCateringFacility.html'
   });
 }]);
@@ -25,10 +26,17 @@ addCFModule.factory('Tags',  ['$resource',  function($resource){
 	});
 }]);
 
+//RESTfull client for tags
+addCFModule.factory('TagsByCategories',  ['$resource',  function($resource){
+	return $resource('service/tags/byCategories', {}, {
+        get: {method:'POST', isArray:true}
+	});
+}]);
+
 //RESTfull client for cateringFacility
 addCFModule.factory('CateringFacility',  ['$resource',  function($resource) {
-	return $resource('service/cateringFacility/:cfId', {cfId:'@id'}, {
-        save: {method:'POST', params: {userId: 1}}
+	return $resource('service/cateringFacility/:cfId:userId', {userId: "@userId", cfId:'@id'}, {
+        save: {method:'POST', params: {userId: "@userId"}}
 	});
 }]);
 
@@ -75,7 +83,7 @@ var DAYS = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek',  'Pátek', 'Sobota', 
 //MODEL
 var cateringFacility = {
 	title : '',
-	categoryId : null,
+	categories : [],
 	tags : [],
 	url : null,
 	description : '',
@@ -93,10 +101,32 @@ var cateringFacility = {
 	longitude: null,
 };	
 
+function cleanModel(){
+	cateringFacility = {
+			title : '',
+			categories : [],
+			tags : [],
+			url : null,
+			description : '',
+			address : {
+				city: '',
+				street: '',
+				houseNumber : null
+			},
+			menu : {
+				from: MENU_DEFAULT_VALUES.from,
+				to : MENU_DEFAULT_VALUES.to,
+				url : null,
+			},
+			latitude: null,
+			longitude: null,
+		};
+}
+
 var tags = {array : []};
 
 //Controllers
-addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFacility) {
+addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFacility, AuthenticationSvc) {
 	$scope.cateringFacility = cateringFacility;
 	
 	this.submit = function() {
@@ -110,7 +140,10 @@ addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFaci
 		    	cateringFacility.latitude = results[0].geometry.location.k;
 		    	cateringFacility.longitude = results[0].geometry.location.D;
 		    	
-		    	CateringFacility.save(cateringFacility);
+		    	CateringFacility.save({userId:AuthenticationSvc.getUserInfo().userId},cateringFacility, function(value, responseHeaders){
+		    		//success callback
+		    		cleanModel();
+		    	});
 		    } else {
 		      alert('Geocode was not successful for the following reason: ' + status);
 		    }
@@ -118,12 +151,11 @@ addCFModule.controller('AddCateringFacilityCtrl',  function($scope, CateringFaci
 	};	
 });
 
-addCFModule.controller("CategoriesController",  function($scope, Categories, Tags) {
+addCFModule.controller("CategoriesController",  function($scope, Categories, TagsByCategories) {
 	this.categories = Categories.query();
 	
 	this.changeTags = function(){
-		//get tags by categoryID
-		tags.array = Tags.query({categoryId: cateringFacility.categoryId});
+		tags.array = TagsByCategories.get(cateringFacility.categories);
 	};
 });
 
@@ -133,13 +165,9 @@ addCFModule.controller("TagController",  function($scope, MenuTag) {
 	$scope.tags = tags;
 	
 	this.isMenuSelected = function(){
-		var selected = cfTags;
-		for(var i = 0; i < selected.length; i++){
-			if(selected[i] == MenuTag()){
-				return true;
-			}
-		}
-		return false;
+		return cfTags.some(function(tag){
+			return tag.name == MenuTag();
+		});
 	};
 
 	this.toggleSelection = function toggleSelection(tag) {

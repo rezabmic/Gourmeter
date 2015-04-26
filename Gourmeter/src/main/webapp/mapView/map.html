@@ -1,7 +1,7 @@
 ﻿<script id="window.tpl.html" type="text/ng-template">
 <div class="infoWindow">
 
-    <strong>{{parameter.title}} | {{parameter.category.name}}</strong>
+    <strong>{{parameter.title}}</strong>
 	
 	<div id="info">
 		<p>{{parameter.description}}</p>
@@ -14,12 +14,14 @@
 				<tr>
 					<td>Název</td>
 					<td>Hodnocení</td>
+					<td>Doporučit</td>
 				</tr>
 			</thead>
-			<tbody>	
+			<tbody ng-controller="RecommendationCtrl">	
 				<tr ng-repeat="tag in parameter.tags">
 					<td>{{tag.name}}</td>
 					<td>{{tag.recommended}} / {{tag.reviewed}}</td>
+					<td><button ng-click="recommend(tag, parameter.id, true)">Doporučit</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -36,11 +38,31 @@
 </script>	
 
 
-<div ng-controller="MapCtrl">
 
-	<ui-gmap-google-map center="map.center" zoom="map.zoom" events="map.events">
+<div ng-controller="MapCtrl">
+	
+	<form>
+		<div ng-controller="NavigationCtrl" class="nav-inline">
+			<h2>Kategorie</h2>
+			<label ng-repeat="category in categories.array" class="checkbox-inline">
+				<input type="checkbox" name="selectedCategories[]" value="{{category.id}}" ng-click="selectCategory(category.id)" ng-checked="checkedCategories.indexOf(category.id) > -1">{{category.name}}</input>
+			</label>
 		
-		<ui-gmap-markers models="map.markers" coords="'self'" click="'onClicked'">		 
+	
+			<div ng-controller="TagCtrl" ng-hide="checkedCategories.length == 0">
+				
+				<h3>Tagy</h3>
+				<label ng-repeat="tag in tags.array" class="checkbox-inline">
+					<input type="checkbox" name="selectedTags[]" value="{{tag.id}}" ng-click="selectTag(tag.id)" ng-checked="checkedTags.indexOf(tag.id) > -1" />
+					{{tag.name}}
+				</label>
+			</div>
+		</div>
+	</form>
+	
+	<ui-gmap-google-map center="mapOptions.center" zoom="mapOptions.zoom" events="mapOptions.events">
+		
+		<ui-gmap-markers models="checkedTags.length != 0 ? mapOptions.filteredMarkers : mapOptions.markers" coords="'self'" click="'onClicked'">		 
 		</ui-gmap-markers>
 		
 		<ui-gmap-window coords="selected" id="selected.id" closeClick="selected.closeClick()" options="selected.options" templateUrl="'window.tpl.html'" templateParameter="selected" ng-cloak>

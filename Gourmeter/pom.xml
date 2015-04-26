@@ -289,8 +289,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.7</source>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -309,6 +309,13 @@
 				<configuration>
 					<server-config>standalone-full.xml</server-config>
 				</configuration>
+			</plugin>
+			
+			<!-- GAE plugin -->
+			<plugin>
+			    <groupId>com.google.appengine</groupId>
+			    <artifactId>appengine-maven-plugin</artifactId>
+			    <version>1.9.18</version>
 			</plugin>
 		</plugins>
 	</build>

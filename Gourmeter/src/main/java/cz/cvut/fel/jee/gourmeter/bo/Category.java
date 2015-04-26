@@ -3,13 +3,15 @@ package cz.cvut.fel.jee.gourmeter.bo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -21,12 +23,13 @@ import javax.persistence.Table;
 		@NamedQuery(name = "Category.getAll", query = "SELECT e FROM Category e") })
 @Table(name = "category")
 public class Category extends AbstractBusinessObject {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 11180L;
 
-	@Column(nullable = false)
+	@NotEmpty	
+	@Column(unique = true)	
 	private String name;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Tag> tags;
 
 	public String getName() {
